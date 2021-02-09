@@ -15,30 +15,29 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @RestController
 @RequestMapping("/api/v1/tag")
 public class TagController {
 
-    @Resource
-    private ArticleService articleService;
-    @Resource
-    private TagService tagService;
+  @Resource private ArticleService articleService;
+  @Resource private TagService tagService;
 
-    @GetMapping("/{name}")
-    public GlobalResult articles(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer rows, @PathVariable String name){
-        PageHelper.startPage(page, rows);
-        List<ArticleDTO> list = articleService.findArticlesByTagName(name);
-        PageInfo<ArticleDTO> pageInfo = new PageInfo(list);
-        Map map = Utils.getArticlesGlobalResult(pageInfo);
-        return GlobalResultGenerator.genSuccessResult(map);
-    }
+  @GetMapping("/{name}")
+  public GlobalResult articles(
+      @RequestParam(defaultValue = "0") Integer page,
+      @RequestParam(defaultValue = "10") Integer rows,
+      @PathVariable String name) {
+    PageHelper.startPage(page, rows);
+    List<ArticleDTO> list = articleService.findArticlesByTagName(name);
+    PageInfo<ArticleDTO> pageInfo = new PageInfo(list);
+    Map map = Utils.getArticlesGlobalResult(pageInfo);
+    return GlobalResultGenerator.genSuccessResult(map);
+  }
 
-    @GetMapping("/tags")
-    public GlobalResult tags() {
-        List<LabelModel> list = tagService.findTagLabels();
-        return GlobalResultGenerator.genSuccessResult(list);
-    }
+  @GetMapping("/tags")
+  public GlobalResult tags() {
+    List<LabelModel> list = tagService.findTagLabels();
+    return GlobalResultGenerator.genSuccessResult(list);
+  }
 }

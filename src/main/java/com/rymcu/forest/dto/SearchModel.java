@@ -2,16 +2,13 @@ package com.rymcu.forest.dto;
 
 import lombok.Data;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Data
 public class SearchModel {
 
-    private String label;
+  private String label;
 
-    private String value;
+  private String value;
 
-    private String type;
-
+  private String type;
 }

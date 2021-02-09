@@ -4,14 +4,11 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Data
 public class TagNlpDTO {
 
-    private BigDecimal score;
+  private BigDecimal score;
 
-    private String tag;
-
+  private String tag;
 }

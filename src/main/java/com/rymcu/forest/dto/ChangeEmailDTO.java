@@ -2,16 +2,13 @@ package com.rymcu.forest.dto;
 
 import lombok.Data;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Data
 public class ChangeEmailDTO {
 
-    private Integer idUser;
+  private Integer idUser;
 
-    private String email;
+  private String email;
 
-    private String code;
-
+  private String code;
 }

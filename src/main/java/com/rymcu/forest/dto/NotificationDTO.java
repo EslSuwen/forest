@@ -4,19 +4,16 @@ import com.rymcu.forest.entity.Notification;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class NotificationDTO extends Notification {
 
-    private Integer idNotification;
+  private Integer idNotification;
 
-    private String dataTitle;
+  private String dataTitle;
 
-    private String dataUrl;
+  private String dataUrl;
 
-    private Author author;
-
+  private Author author;
 }

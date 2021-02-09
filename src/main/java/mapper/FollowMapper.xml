@@ -10,15 +10,24 @@
         <result column="signature" property="signature"/>
     </resultMap>
     <select id="isFollow" resultType="java.lang.Boolean">
-        select ifnull((select true from forest_follow where follower_id = #{followerId}
-        and following_id = #{followingId} and following_type = #{followingType}), false)
+        select ifnull((select true
+                       from forest_follow
+                       where follower_id = #{followerId}
+                         and following_id = #{followingId}
+                         and following_type = #{followingType}), false)
     </select>
     <select id="selectUserFollowersByUser" resultMap="DTOResultMapper">
-        select id, nickname, avatar_type, avatar_url, account, signature from forest_user vu
-        where exists (select * from forest_follow vf where following_type = 0 and following_id = #{idUser} and follower_id = vu.id  limit 1)
+        select id, nickname, avatar_type, avatar_url, account, signature
+        from forest_user vu
+        where exists(select *
+                     from forest_follow vf
+                     where following_type = 0 and following_id = #{idUser} and follower_id = vu.id limit 1)
     </select>
     <select id="selectUserFollowingsByUser" resultMap="DTOResultMapper">
-        select id, nickname, avatar_type, avatar_url, account, signature from forest_user vu
-        where exists (select * from forest_follow vf where following_type = 0 and follower_id = #{idUser} and following_id = vu.id limit 1)
+        select id, nickname, avatar_type, avatar_url, account, signature
+        from forest_user vu
+        where exists(select *
+                     from forest_follow vf
+                     where following_type = 0 and follower_id = #{idUser} and following_id = vu.id limit 1)
     </select>
 </mapper>

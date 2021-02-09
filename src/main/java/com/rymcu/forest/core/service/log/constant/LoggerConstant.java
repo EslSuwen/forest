@@ -1,12 +1,9 @@
 package com.rymcu.forest.core.service.log.constant;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 public class LoggerConstant {
 
-    public final static String ARTICLE = "article";
+  public static final String ARTICLE = "article";
 
-    public final static String ARTICLES = "articles";
-
+  public static final String ARTICLES = "articles";
 }

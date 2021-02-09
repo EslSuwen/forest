@@ -2,18 +2,15 @@ package com.rymcu.forest.dto;
 
 import lombok.Data;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Data
 public class Author {
 
-    private Integer idUser;
+  private Integer idUser;
 
-    private String userNickname;
+  private String userNickname;
 
-    private String userAvatarURL;
+  private String userAvatarURL;
 
-    private String userArticleCount;
-
+  private String userArticleCount;
 }

@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ *
+ *
  * <pre>
  *  小程序临时素材接口
  *  Created by BinaryWang on 2017/6/16.
@@ -31,50 +33,52 @@ import java.util.List;
 @RestController
 @RequestMapping("/wx/media/{appId}")
 public class WxMaMediaController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /**
-     * 上传临时素材
-     *
-     * @return 素材的media_id列表，实际上如果有的话，只会有一个
-     */
-    @PostMapping("/upload")
-    public List<String> uploadMedia(@PathVariable String appId, HttpServletRequest request) throws WxErrorException {
-        final WxMaService wxService = WxMaConfiguration.getMaService(appId);
+  /**
+   * 上传临时素材
+   *
+   * @return 素材的media_id列表，实际上如果有的话，只会有一个
+   */
+  @PostMapping("/upload")
+  public List<String> uploadMedia(@PathVariable String appId, HttpServletRequest request)
+      throws WxErrorException {
+    final WxMaService wxService = WxMaConfiguration.getMaService(appId);
 
-        CommonsMultipartResolver resolver = new CommonsMultipartResolver(request.getSession().getServletContext());
+    CommonsMultipartResolver resolver =
+        new CommonsMultipartResolver(request.getSession().getServletContext());
 
-        if (!resolver.isMultipart(request)) {
-            return Lists.newArrayList();
-        }
-
-        MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
-        Iterator<String> it = multiRequest.getFileNames();
-        List<String> result = Lists.newArrayList();
-        while (it.hasNext()) {
-            try {
-                MultipartFile file = multiRequest.getFile(it.next());
-                File newFile = new File(Files.createTempDir(), file.getOriginalFilename());
-                this.logger.info("filePath is ：" + newFile.toString());
-                file.transferTo(newFile);
-                WxMediaUploadResult uploadResult = wxService.getMediaService().uploadMedia(WxMaConstants.KefuMsgType.IMAGE, newFile);
-                this.logger.info("media_id ： " + uploadResult.getMediaId());
-                result.add(uploadResult.getMediaId());
-            } catch (IOException e) {
-                this.logger.error(e.getMessage(), e);
-            }
-        }
-
-        return result;
+    if (!resolver.isMultipart(request)) {
+      return Lists.newArrayList();
     }
 
-    /**
-     * 下载临时素材
-     */
-    @GetMapping("/download/{mediaId}")
-    public File getMedia(@PathVariable String appId, @PathVariable String mediaId) throws WxErrorException {
-        final WxMaService wxService = WxMaConfiguration.getMaService(appId);
-
-        return wxService.getMediaService().getMedia(mediaId);
+    MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+    Iterator<String> it = multiRequest.getFileNames();
+    List<String> result = Lists.newArrayList();
+    while (it.hasNext()) {
+      try {
+        MultipartFile file = multiRequest.getFile(it.next());
+        File newFile = new File(Files.createTempDir(), file.getOriginalFilename());
+        this.logger.info("filePath is ：" + newFile.toString());
+        file.transferTo(newFile);
+        WxMediaUploadResult uploadResult =
+            wxService.getMediaService().uploadMedia(WxMaConstants.KefuMsgType.IMAGE, newFile);
+        this.logger.info("media_id ： " + uploadResult.getMediaId());
+        result.add(uploadResult.getMediaId());
+      } catch (IOException e) {
+        this.logger.error(e.getMessage(), e);
+      }
     }
+
+    return result;
+  }
+
+  /** 下载临时素材 */
+  @GetMapping("/download/{mediaId}")
+  public File getMedia(@PathVariable String appId, @PathVariable String mediaId)
+      throws WxErrorException {
+    final WxMaService wxService = WxMaConfiguration.getMaService(appId);
+
+    return wxService.getMediaService().getMedia(mediaId);
+  }
 }

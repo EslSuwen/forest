@@ -16,29 +16,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @RestController
 @RequestMapping("/api/v1/admin/bank")
 public class BankController {
 
-    @Resource
-    private BankService bankService;
+  @Resource private BankService bankService;
 
-    @GetMapping("/list")
-    public GlobalResult banks(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer rows) {
-        PageHelper.startPage(page, rows);
-        List<BankDTO> list = bankService.findBanks();
-        PageInfo<BankDTO> pageInfo = new PageInfo(list);
-        Map map = new HashMap(2);
-        map.put("banks", pageInfo.getList());
-        Map pagination = new HashMap(4);
-        pagination.put("pageSize", pageInfo.getPageSize());
-        pagination.put("total", pageInfo.getTotal());
-        pagination.put("currentPage", pageInfo.getPageNum());
-        map.put("pagination", pagination);
-        return GlobalResultGenerator.genSuccessResult(map);
-    }
-
+  @GetMapping("/list")
+  public GlobalResult banks(
+      @RequestParam(defaultValue = "0") Integer page,
+      @RequestParam(defaultValue = "10") Integer rows) {
+    PageHelper.startPage(page, rows);
+    List<BankDTO> list = bankService.findBanks();
+    PageInfo<BankDTO> pageInfo = new PageInfo(list);
+    Map map = new HashMap(2);
+    map.put("banks", pageInfo.getList());
+    Map pagination = new HashMap(4);
+    pagination.put("pageSize", pageInfo.getPageSize());
+    pagination.put("total", pageInfo.getTotal());
+    pagination.put("currentPage", pageInfo.getPageNum());
+    map.put("pagination", pagination);
+    return GlobalResultGenerator.genSuccessResult(map);
+  }
 }

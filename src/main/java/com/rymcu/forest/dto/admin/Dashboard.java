@@ -2,21 +2,19 @@ package com.rymcu.forest.dto.admin;
 
 import lombok.Data;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Data
 public class Dashboard {
 
-    private Integer countUserNum;
+  private Integer countUserNum;
 
-    private Integer newUserNum;
+  private Integer newUserNum;
 
-    private Integer countArticleNum;
+  private Integer countArticleNum;
 
-    private Integer newArticleNum;
+  private Integer newArticleNum;
 
-    private Integer countViewNum;
+  private Integer countViewNum;
 
-    private Integer todayViewNum;
+  private Integer todayViewNum;
 }

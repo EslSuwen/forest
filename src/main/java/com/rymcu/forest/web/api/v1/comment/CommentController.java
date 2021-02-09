@@ -15,19 +15,17 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @RestController
 @RequestMapping("/api/v1/comment")
 public class CommentController {
 
-    @Resource
-    private CommentService commentService;
+  @Resource private CommentService commentService;
 
-    @PostMapping("/post")
-    public GlobalResult postComment(@RequestBody Comment comment, HttpServletRequest request) throws BaseApiException, UnsupportedEncodingException {
-        Map map = commentService.postComment(comment,request);
-        return GlobalResultGenerator.genSuccessResult(map);
-    }
+  @PostMapping("/post")
+  public GlobalResult postComment(@RequestBody Comment comment, HttpServletRequest request)
+      throws BaseApiException, UnsupportedEncodingException {
+    Map map = commentService.postComment(comment, request);
+    return GlobalResultGenerator.genSuccessResult(map);
+  }
 }

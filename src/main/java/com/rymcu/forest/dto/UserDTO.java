@@ -2,21 +2,19 @@ package com.rymcu.forest.dto;
 
 import lombok.Data;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Data
 public class UserDTO {
 
-    private Integer idUser;
+  private Integer idUser;
 
-    private String account;
+  private String account;
 
-    private String avatarType;
+  private String avatarType;
 
-    private String avatarUrl;
+  private String avatarUrl;
 
-    private String nickname;
+  private String nickname;
 
-    private String signature;
+  private String signature;
 }

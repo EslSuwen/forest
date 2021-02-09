@@ -5,15 +5,15 @@ import lombok.Data;
 @Data
 public class RoleDTO {
 
-    // id
-    private String id;
+  // id
+  private String id;
 
-    // 名称
-    private String name;
+  // 名称
+  private String name;
 
-    // 英文名称
-    private String inputCode;
+  // 英文名称
+  private String inputCode;
 
-    // 角色授权菜单ids
-    private String menuIds;
+  // 角色授权菜单ids
+  private String menuIds;
 }

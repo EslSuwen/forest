@@ -23,71 +23,83 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/wx/user/{appId}")
 public class WxMaUserController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /**
-     * 登陆接口
-     */
-    @GetMapping("/login")
-    public String login(@PathVariable String appId, String code) {
-        if (StringUtils.isBlank(code)) {
-            return "empty jscode";
-        }
-
-        final WxMaService wxService = WxMaConfiguration.getMaService(appId);
-
-        try {
-            WxMaJscode2SessionResult session = wxService.getUserService().getSessionInfo(code);
-            this.logger.info(session.getSessionKey());
-            this.logger.info(session.getOpenid());
-            //TODO 可以增加自己的逻辑，关联业务相关数据
-            return JsonUtils.toJson(session);
-        } catch (WxErrorException e) {
-            this.logger.error(e.getMessage(), e);
-            return e.toString();
-        }
+  /** 登陆接口 */
+  @GetMapping("/login")
+  public String login(@PathVariable String appId, String code) {
+    if (StringUtils.isBlank(code)) {
+      return "empty jscode";
     }
 
-    /**
-     * <pre>
-     * 获取用户信息接口
-     * </pre>
-     */
-    @GetMapping("/info")
-    public String info(@PathVariable String appId, String sessionKey,
-                       String signature, String rawData, String encryptedData, String iv) {
-        final WxMaService wxService = WxMaConfiguration.getMaService(appId);
+    final WxMaService wxService = WxMaConfiguration.getMaService(appId);
 
-        // 用户信息校验
-        if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
-            return "user check failed";
-        }
+    try {
+      WxMaJscode2SessionResult session = wxService.getUserService().getSessionInfo(code);
+      this.logger.info(session.getSessionKey());
+      this.logger.info(session.getOpenid());
+      // TODO 可以增加自己的逻辑，关联业务相关数据
+      return JsonUtils.toJson(session);
+    } catch (WxErrorException e) {
+      this.logger.error(e.getMessage(), e);
+      return e.toString();
+    }
+  }
 
-        // 解密用户信息
-        WxMaUserInfo userInfo = wxService.getUserService().getUserInfo(sessionKey, encryptedData, iv);
+  /**
+   *
+   *
+   * <pre>
+   * 获取用户信息接口
+   * </pre>
+   */
+  @GetMapping("/info")
+  public String info(
+      @PathVariable String appId,
+      String sessionKey,
+      String signature,
+      String rawData,
+      String encryptedData,
+      String iv) {
+    final WxMaService wxService = WxMaConfiguration.getMaService(appId);
 
-        return JsonUtils.toJson(userInfo);
+    // 用户信息校验
+    if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
+      return "user check failed";
     }
 
-    /**
-     * <pre>
-     * 获取用户绑定手机号信息
-     * </pre>
-     */
-    @GetMapping("/phone")
-    public String phone(@PathVariable String appId, String sessionKey, String signature,
-                        String rawData, String encryptedData, String iv) {
-        final WxMaService wxService = WxMaConfiguration.getMaService(appId);
+    // 解密用户信息
+    WxMaUserInfo userInfo = wxService.getUserService().getUserInfo(sessionKey, encryptedData, iv);
 
-        // 用户信息校验
-        if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
-            return "user check failed";
-        }
+    return JsonUtils.toJson(userInfo);
+  }
 
-        // 解密
-        WxMaPhoneNumberInfo phoneNoInfo = wxService.getUserService().getPhoneNoInfo(sessionKey, encryptedData, iv);
+  /**
+   *
+   *
+   * <pre>
+   * 获取用户绑定手机号信息
+   * </pre>
+   */
+  @GetMapping("/phone")
+  public String phone(
+      @PathVariable String appId,
+      String sessionKey,
+      String signature,
+      String rawData,
+      String encryptedData,
+      String iv) {
+    final WxMaService wxService = WxMaConfiguration.getMaService(appId);
 
-        return JsonUtils.toJson(phoneNoInfo);
+    // 用户信息校验
+    if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
+      return "user check failed";
     }
 
+    // 解密
+    WxMaPhoneNumberInfo phoneNoInfo =
+        wxService.getUserService().getPhoneNoInfo(sessionKey, encryptedData, iv);
+
+    return JsonUtils.toJson(phoneNoInfo);
+  }
 }

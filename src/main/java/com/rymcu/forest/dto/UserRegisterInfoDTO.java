@@ -2,16 +2,13 @@ package com.rymcu.forest.dto;
 
 import lombok.Data;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Data
 public class UserRegisterInfoDTO {
 
-    private String email;
+  private String email;
 
-    private String password;
+  private String password;
 
-    private String code;
-
+  private String code;
 }

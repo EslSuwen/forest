@@ -11,20 +11,16 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.List;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @RestController
 @RequestMapping("/api/v1/rule/currency")
 public class CurrencyRuleController {
 
-    @Resource
-    private CurrencyRuleService currencyRuleService;
+  @Resource private CurrencyRuleService currencyRuleService;
 
-    @GetMapping("/list")
-    public GlobalResult list() {
-        List<CurrencyRule> list = currencyRuleService.findAll();
-        return GlobalResultGenerator.genSuccessResult(list);
-    }
-
+  @GetMapping("/list")
+  public GlobalResult list() {
+    List<CurrencyRule> list = currencyRuleService.findAll();
+    return GlobalResultGenerator.genSuccessResult(list);
+  }
 }

@@ -26,10 +26,14 @@
         </if>
     </select>
     <select id="selectBankAccount" resultMap="DTOResultMap">
-        select vb.bank_name, vba.* from forest_bank_account vba
-        join forest_bank vb on vba.id_bank = vb.id where vba.id = #{idBank}
+        select vb.bank_name, vba.*
+        from forest_bank_account vba
+                 join forest_bank vb on vba.id_bank = vb.id
+        where vba.id = #{idBank}
     </select>
     <select id="selectMaxBankAccount" resultType="java.lang.String">
-        select max(bank_account) as max_bank_account from forest_bank_account where account_type = 0
+        select max(bank_account) as max_bank_account
+        from forest_bank_account
+        where account_type = 0
     </select>
 </mapper>

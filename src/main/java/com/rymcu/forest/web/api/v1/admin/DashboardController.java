@@ -11,31 +11,28 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.Map;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @RestController
 @RequestMapping("/api/v1/admin/dashboard")
 public class DashboardController {
 
-    @Resource
-    private DashboardService dashboardService;
+  @Resource private DashboardService dashboardService;
 
-    @GetMapping
-    public GlobalResult dashboard() {
-        Dashboard dashboard = dashboardService.dashboard();
-        return GlobalResultGenerator.genSuccessResult(dashboard);
-    }
+  @GetMapping
+  public GlobalResult dashboard() {
+    Dashboard dashboard = dashboardService.dashboard();
+    return GlobalResultGenerator.genSuccessResult(dashboard);
+  }
 
-    @GetMapping("/last-thirty-days")
-    public GlobalResult LastThirtyDaysData() {
-        Map map = dashboardService.lastThirtyDaysData();
-        return GlobalResultGenerator.genSuccessResult(map);
-    }
+  @GetMapping("/last-thirty-days")
+  public GlobalResult LastThirtyDaysData() {
+    Map map = dashboardService.lastThirtyDaysData();
+    return GlobalResultGenerator.genSuccessResult(map);
+  }
 
-    @GetMapping("/history")
-    public GlobalResult history() {
-        Map map = dashboardService.history();
-        return GlobalResultGenerator.genSuccessResult(map);
-    }
+  @GetMapping("/history")
+  public GlobalResult history() {
+    Map map = dashboardService.history();
+    return GlobalResultGenerator.genSuccessResult(map);
+  }
 }

@@ -11,20 +11,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @RestController
 @RequestMapping("/api/v1/transaction")
 public class TransactionRecordController {
 
-    @Resource
-    private TransactionRecordService transactionRecordService;
+  @Resource private TransactionRecordService transactionRecordService;
 
-    @PostMapping("/transfer")
-    public GlobalResult transfer(@RequestBody TransactionRecord transactionRecord) throws Exception {
-        transactionRecord = transactionRecordService.transfer(transactionRecord);
-        return GlobalResultGenerator.genSuccessResult(transactionRecord);
-    }
-
+  @PostMapping("/transfer")
+  public GlobalResult transfer(@RequestBody TransactionRecord transactionRecord) throws Exception {
+    transactionRecord = transactionRecordService.transfer(transactionRecord);
+    return GlobalResultGenerator.genSuccessResult(transactionRecord);
+  }
 }

@@ -11,48 +11,45 @@ import org.springframework.stereotype.Controller;
 
 import java.util.HashMap;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Controller
 public class WebSocketController {
 
-    @Autowired
-    private SimpMessagingTemplate template;
+  @Autowired private SimpMessagingTemplate template;
 
-    @MessageMapping("/sendMessage")
-    @SendTo("/public/greetings")
-    public void sendMessage(JSONObject message, StompHeaderAccessor headerAccessor){
-        this.template.convertAndSend("/public/greetings",message);
-    }
+  @MessageMapping("/sendMessage")
+  @SendTo("/public/greetings")
+  public void sendMessage(JSONObject message, StompHeaderAccessor headerAccessor) {
+    this.template.convertAndSend("/public/greetings", message);
+  }
 
-    @MessageMapping("/message")
-    @SendToUser("/message")
-    public void message(JSONObject message){
-        String type = message.get("type").toString();
-        HashMap res = (HashMap) message.get("data");
-        HashMap mine = (HashMap) res.get("mine");
-        HashMap to = (HashMap) res.get("to");
-        System.out.println(to.get("type"));
-        boolean flag = to.get("type").equals("friend")?true:false;
-        String id = to.get("id").toString();
-        HashMap map = new HashMap();
-        map.put("id",mine.get("id"));
-        map.put("avatar",mine.get("avatar"));
-        map.put("formid",mine.get("id"));
-        map.put("username",mine.get("username"));
-        map.put("type",to.get("type"));
-        map.put("content",mine.get("content"));
-        map.put("mine",false);
-        map.put("cid",0);
-        map.put("timestamp","");
-        JSONObject json = new JSONObject();
-        json.put("type",type);
-        json.put("data",map);
-        if(flag){
-            this.template.convertAndSendToUser(id,"/message",json);
-        }else{
-            this.template.convertAndSendToUser(id,"/message",json);
-        }
+  @MessageMapping("/message")
+  @SendToUser("/message")
+  public void message(JSONObject message) {
+    String type = message.get("type").toString();
+    HashMap res = (HashMap) message.get("data");
+    HashMap mine = (HashMap) res.get("mine");
+    HashMap to = (HashMap) res.get("to");
+    System.out.println(to.get("type"));
+    boolean flag = to.get("type").equals("friend") ? true : false;
+    String id = to.get("id").toString();
+    HashMap map = new HashMap();
+    map.put("id", mine.get("id"));
+    map.put("avatar", mine.get("avatar"));
+    map.put("formid", mine.get("id"));
+    map.put("username", mine.get("username"));
+    map.put("type", to.get("type"));
+    map.put("content", mine.get("content"));
+    map.put("mine", false);
+    map.put("cid", 0);
+    map.put("timestamp", "");
+    JSONObject json = new JSONObject();
+    json.put("type", type);
+    json.put("data", map);
+    if (flag) {
+      this.template.convertAndSendToUser(id, "/message", json);
+    } else {
+      this.template.convertAndSendToUser(id, "/message", json);
     }
+  }
 }

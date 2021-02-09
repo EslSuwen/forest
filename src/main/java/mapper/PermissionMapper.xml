@@ -10,6 +10,8 @@
     </resultMap>
 
     <select id="selectMenuByIdRole" resultMap="BaseResultMap">
-        select * from forest_role_permission srm left join forest_permission sm on srm.id = sm.id
+        select *
+        from forest_role_permission srm
+                 left join forest_permission sm on srm.id = sm.id
     </select>
 </mapper>

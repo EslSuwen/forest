@@ -2,24 +2,21 @@ package com.rymcu.forest.dto;
 
 import lombok.Data;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Data
 public class TokenUser {
 
-    private Integer idUser;
+  private Integer idUser;
 
-    private String account;
+  private String account;
 
-    private String nickname;
+  private String nickname;
 
-    private String token;
+  private String token;
 
-    private String avatarType;
+  private String avatarType;
 
-    private String avatarUrl;
+  private String avatarUrl;
 
-    private Integer weights;
-
+  private Integer weights;
 }

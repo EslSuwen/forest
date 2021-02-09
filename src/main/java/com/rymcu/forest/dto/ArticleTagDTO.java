@@ -2,25 +2,23 @@ package com.rymcu.forest.dto;
 
 import lombok.Data;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Data
 public class ArticleTagDTO {
 
-    private Integer idArticleTag;
+  private Integer idArticleTag;
 
-    private Integer idTag;
+  private Integer idTag;
 
-    private Integer idArticle;
+  private Integer idArticle;
 
-    private String tagTitle;
+  private String tagTitle;
 
-    private String tagUri;
+  private String tagUri;
 
-    private String tagDescription;
+  private String tagDescription;
 
-    private String tagIconPath;
+  private String tagIconPath;
 
-    private Integer tagAuthorId;
+  private Integer tagAuthorId;
 }

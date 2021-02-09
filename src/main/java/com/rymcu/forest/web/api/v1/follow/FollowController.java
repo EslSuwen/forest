@@ -9,33 +9,30 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @RestController
 @RequestMapping("/api/v1/follow")
 public class FollowController {
 
-    @Resource
-    private FollowService followService;
+  @Resource private FollowService followService;
 
-    @GetMapping("/is-follow")
-    public GlobalResult isFollow(@RequestParam Integer followingId, @RequestParam String followingType) throws BaseApiException {
-        Boolean b = followService.isFollow(followingId, followingType);
-        return GlobalResultGenerator.genSuccessResult(b);
-    }
+  @GetMapping("/is-follow")
+  public GlobalResult isFollow(
+      @RequestParam Integer followingId, @RequestParam String followingType)
+      throws BaseApiException {
+    Boolean b = followService.isFollow(followingId, followingType);
+    return GlobalResultGenerator.genSuccessResult(b);
+  }
 
-    @PostMapping
-    public GlobalResult follow(@RequestBody Follow follow) throws BaseApiException {
-        Boolean b = followService.follow(follow);
-        return GlobalResultGenerator.genSuccessResult(b);
-    }
+  @PostMapping
+  public GlobalResult follow(@RequestBody Follow follow) throws BaseApiException {
+    Boolean b = followService.follow(follow);
+    return GlobalResultGenerator.genSuccessResult(b);
+  }
 
-    @PostMapping("cancel-follow")
-    public GlobalResult cancelFollow(@RequestBody Follow follow) throws BaseApiException {
-        Boolean b = followService.cancelFollow(follow);
-        return GlobalResultGenerator.genSuccessResult(b);
-    }
-
-
+  @PostMapping("cancel-follow")
+  public GlobalResult cancelFollow(@RequestBody Follow follow) throws BaseApiException {
+    Boolean b = followService.cancelFollow(follow);
+    return GlobalResultGenerator.genSuccessResult(b);
+  }
 }
