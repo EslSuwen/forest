@@ -4,7 +4,7 @@ import com.alibaba.fastjson.support.spring.FastJsonJsonView;
 import com.rymcu.forest.core.exception.ServiceException;
 import com.rymcu.forest.core.result.GlobalResult;
 import com.rymcu.forest.core.result.ResultCode;
-import com.rymcu.forest.web.api.exception.BaseApiException;
+import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;

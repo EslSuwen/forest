@@ -1,10 +1,11 @@
 package com.rymcu.forest.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.rymcu.forest.core.service.Service;
 import com.rymcu.forest.dto.ArticleDTO;
 import com.rymcu.forest.dto.ArticleSearchDTO;
 import com.rymcu.forest.entity.Article;
-import com.rymcu.forest.web.api.exception.BaseApiException;
+import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -14,7 +15,7 @@ import java.util.Map;
 /**
  * @author ronger
  */
-public interface ArticleService extends Service<Article> {
+public interface ArticleService extends IService<Article> {
 
     /**
      * 根据检索内容/标签查询文章列表

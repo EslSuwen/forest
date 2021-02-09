@@ -4,7 +4,7 @@ import com.rymcu.forest.core.service.Service;
 import com.rymcu.forest.dto.LabelModel;
 import com.rymcu.forest.entity.Article;
 import com.rymcu.forest.entity.Tag;
-import com.rymcu.forest.web.api.exception.BaseApiException;
+import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;

@@ -9,7 +9,7 @@ import com.rymcu.forest.mapper.FollowMapper;
 import com.rymcu.forest.service.FollowService;
 import com.rymcu.forest.util.NotificationUtils;
 import com.rymcu.forest.util.UserUtils;
-import com.rymcu.forest.web.api.exception.BaseApiException;
+import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

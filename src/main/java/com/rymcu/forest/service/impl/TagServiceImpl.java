@@ -13,7 +13,7 @@ import com.rymcu.forest.service.TagService;
 import com.rymcu.forest.util.BaiDuAipUtils;
 import com.rymcu.forest.util.CacheUtils;
 import com.rymcu.forest.util.UserUtils;
-import com.rymcu.forest.web.api.exception.BaseApiException;
+import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

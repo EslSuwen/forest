@@ -12,8 +12,8 @@ import com.rymcu.forest.service.PortfolioService;
 import com.rymcu.forest.service.UserService;
 import com.rymcu.forest.util.UserUtils;
 import com.rymcu.forest.util.Utils;
-import com.rymcu.forest.web.api.common.UploadController;
-import com.rymcu.forest.web.api.exception.BaseApiException;
+import com.rymcu.forest.web.api.v1.common.UploadController;
+import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 

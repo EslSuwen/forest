@@ -3,7 +3,7 @@ package com.rymcu.forest.service;
 import com.rymcu.forest.core.service.Service;
 import com.rymcu.forest.dto.UserDTO;
 import com.rymcu.forest.entity.Follow;
-import com.rymcu.forest.web.api.exception.BaseApiException;
+import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 
 import java.util.List;
 

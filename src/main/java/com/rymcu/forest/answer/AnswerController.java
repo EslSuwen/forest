@@ -2,12 +2,11 @@ package com.rymcu.forest.answer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.rymcu.forest.core.result.GlobalResult;
-import com.rymcu.forest.core.result.GlobalResultGenerator;
 import com.rymcu.forest.dto.AnswerDTO;
 import com.rymcu.forest.entity.User;
 import com.rymcu.forest.util.HttpUtils;
 import com.rymcu.forest.util.UserUtils;
-import com.rymcu.forest.web.api.exception.BaseApiException;
+import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;

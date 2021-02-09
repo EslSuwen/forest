@@ -1,5 +1,6 @@
 package com.rymcu.forest.entity;
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -47,6 +48,7 @@ public class Article implements Serializable,Cloneable {
     /** 更新时间 */
     private Date updatedTime;
     /** 文章状态 */
+    @TableLogic(value = "1",delval = "-1")
     private String articleStatus;
     /** 点赞总数 */
     private Integer articleThumbsUpCount;

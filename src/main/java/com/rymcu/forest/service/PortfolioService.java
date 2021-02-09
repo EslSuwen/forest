@@ -5,7 +5,7 @@ import com.rymcu.forest.dto.PortfolioArticleDTO;
 import com.rymcu.forest.dto.PortfolioDTO;
 import com.rymcu.forest.dto.UserDTO;
 import com.rymcu.forest.entity.Portfolio;
-import com.rymcu.forest.web.api.exception.BaseApiException;
+import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 
 import java.util.List;
 import java.util.Map;

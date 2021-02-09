@@ -13,7 +13,7 @@ import com.rymcu.forest.mapper.UserMapper;
 import com.rymcu.forest.service.UserService;
 import com.rymcu.forest.util.BeanCopierUtil;
 import com.rymcu.forest.util.Utils;
-import com.rymcu.forest.web.api.common.UploadController;
+import com.rymcu.forest.web.api.v1.common.UploadController;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.springframework.stereotype.Service;

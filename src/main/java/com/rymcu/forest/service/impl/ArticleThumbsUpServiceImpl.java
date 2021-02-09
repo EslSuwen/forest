@@ -8,7 +8,7 @@ import com.rymcu.forest.mapper.ArticleThumbsUpMapper;
 import com.rymcu.forest.service.ArticleService;
 import com.rymcu.forest.service.ArticleThumbsUpService;
 import com.rymcu.forest.util.UserUtils;
-import com.rymcu.forest.web.api.exception.BaseApiException;
+import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +38,7 @@ public class ArticleThumbsUpServiceImpl extends AbstractService<ArticleThumbsUp>
             map.put("success", false);
         } else {
             Integer thumbsUpNumber = 1;
-            Article article = articleService.findById(String.valueOf(articleThumbsUp.getIdArticle()));
+            Article article = articleService.getById(String.valueOf(articleThumbsUp.getIdArticle()));
             if (Objects.isNull(article)) {
                 map.put("message", "数据异常,文章不存在!");
                 map.put("success", false);

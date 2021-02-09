@@ -1,5 +1,6 @@
 package com.rymcu.forest.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.rymcu.forest.core.mapper.Mapper;
 import com.rymcu.forest.dto.ArticleDTO;
 import com.rymcu.forest.dto.ArticleTagDTO;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * @author ronger
  */
-public interface ArticleMapper extends Mapper<Article> {
+public interface ArticleMapper extends BaseMapper<Article> {
 
     /**
      * 获取文章列表

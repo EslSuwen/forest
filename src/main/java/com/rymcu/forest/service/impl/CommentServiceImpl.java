@@ -73,7 +73,7 @@ public class CommentServiceImpl extends AbstractService<Comment> implements Comm
             map.put("message","回帖内容不能为空！");
             return map;
         }
-        Article article = articleService.findById(comment.getCommentArticleId().toString());
+        Article article = articleService.getById(comment.getCommentArticleId().toString());
         if (article == null) {
             map.put("message","文章不存在！");
             return map;

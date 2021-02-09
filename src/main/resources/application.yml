@@ -11,8 +11,8 @@ spring:
     cache: false
   redis:
     host: 127.0.0.1
+#    port: 6688
     port: 6379
-    password: # redis 密码
     database: 1
     timeout: 3000
     jedis:
@@ -22,9 +22,10 @@ spring:
         max-idle: 500
         min-idle: 0
   datasource:
-    url: jdbc:mysql://localhost:3306/forest?characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://47.115.8.44:3306/forest?characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+#    url: jdbc:mysql://localhost:3306/forest?characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root
-    password: # 数据库密码
+    password: Liyu8824 # 数据库密码
     driver-class-name: com.mysql.cj.jdbc.Driver
     resources:
       add-mappings: true
@@ -33,6 +34,21 @@ spring:
     port: 465
     username: # 邮箱
     password: # 密码
+mybatis-plus:
+  mapper-locations: classpath*:com/rymcu/forest/mapper/xml/**/*Mapper.xml
+  global-config:
+    # 关闭MP3.0自带的banner
+    banner: false
+    db-config:
+      #主键类型
+      id-type: ASSIGN_ID
+      # 默认数据库表下划线命名
+      table-underline: true
+  configuration:
+    # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 返回类型为Map,显示null对应的字段
+    call-setters-on-nulls: true
 wx:
   open:
     componentAppId: #
