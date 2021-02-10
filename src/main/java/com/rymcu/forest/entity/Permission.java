@@ -1,29 +1,22 @@
 package com.rymcu.forest.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import tk.mybatis.mapper.annotation.ColumnType;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Data
-@Table(name = "forest_permission")
-public class Permission implements Serializable,Cloneable {
-
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(generator = "JDBC")
-    private Integer idPermission;
-
-    /**
-     * 权限标识
-     * */
-    @ColumnType(column = "permission_category")
-    private String permissionCategory;
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = false)
+@TableName("forest_permission")
+public class Permission implements Serializable, Cloneable {
+  @TableId(value = "id", type = IdType.AUTO)
+  private Integer idPermission;
+  /** 权限标识 */
+  private String permissionCategory;
 }

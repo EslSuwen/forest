@@ -1,18 +1,16 @@
 package com.rymcu.forest.web.api.v1.bank;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.core.result.GlobalResult;
 import com.rymcu.forest.core.result.GlobalResultGenerator;
 import com.rymcu.forest.dto.BankAccountDTO;
 import com.rymcu.forest.dto.BankAccountSearchDTO;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.service.BankAccountService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /** @author ronger */
 @RestController
@@ -22,21 +20,13 @@ public class BankAccountController {
   @Resource private BankAccountService bankAccountService;
 
   @GetMapping("/list")
-  public GlobalResult banks(
+  public Result<List<BankAccountDTO>> banks(
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows,
       BankAccountSearchDTO bankAccountSearchDTO) {
-    PageHelper.startPage(page, rows);
-    List<BankAccountDTO> list = bankAccountService.findBankAccounts(bankAccountSearchDTO);
-    PageInfo<BankAccountDTO> pageInfo = new PageInfo(list);
-    Map map = new HashMap(2);
-    map.put("bankAccounts", pageInfo.getList());
-    Map pagination = new HashMap(4);
-    pagination.put("pageSize", pageInfo.getPageSize());
-    pagination.put("total", pageInfo.getTotal());
-    pagination.put("currentPage", pageInfo.getPageNum());
-    map.put("pagination", pagination);
-    return GlobalResultGenerator.genSuccessResult(map);
+    List<BankAccountDTO> list =
+        bankAccountService.findBankAccounts(new Page<>(page, rows), bankAccountSearchDTO);
+    return Result.OK(list);
   }
 
   @GetMapping("/{idUser}")

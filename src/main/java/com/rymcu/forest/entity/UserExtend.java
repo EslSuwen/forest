@@ -1,28 +1,23 @@
 package com.rymcu.forest.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-/**
- * @author ronger
- */
+/** @author ronger */
 @Data
-@Table(name = "forest_user_extend")
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = false)
+@TableName("forest_user_extend")
 public class UserExtend {
-
-    @Id
-    private Integer idUser;
-
-    private String github;
-
-    private String weibo;
-
-    private String weixin;
-
-    private String qq;
-
-    private String blog;
-
+  @TableId(type = IdType.INPUT)
+  private Integer idUser;
+  private String github;
+  private String weibo;
+  private String weixin;
+  private String qq;
+  private String blog;
 }

@@ -1,6 +1,8 @@
 package com.rymcu.forest.service.impl;
 
-import com.rymcu.forest.core.service.AbstractService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.dto.BankAccountDTO;
 import com.rymcu.forest.dto.BankAccountSearchDTO;
 import com.rymcu.forest.dto.TransactionRecordDTO;
@@ -17,63 +19,69 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Service
-public class BankAccountServiceImpl extends AbstractService<BankAccount> implements BankAccountService {
+public class BankAccountServiceImpl extends ServiceImpl<BankAccountMapper, BankAccount>
+    implements BankAccountService {
 
-    private static String DEFAULT_ACCOUNT_TYPE = "0";
+  private static String DEFAULT_ACCOUNT_TYPE = "0";
 
-    @Resource
-    BankAccountMapper bankAccountMapper;
-    @Resource
-    TransactionRecordService transactionRecordService;
+  @Resource BankAccountMapper bankAccountMapper;
+  @Resource TransactionRecordService transactionRecordService;
 
-    @Override
-    public List<BankAccountDTO> findBankAccounts(BankAccountSearchDTO bankAccountSearchDTO) {
-        List<BankAccountDTO> bankAccounts = bankAccountMapper.selectBankAccounts(bankAccountSearchDTO.getBankName(), bankAccountSearchDTO.getAccountOwnerName(), bankAccountSearchDTO.getBankAccount());
-        return bankAccounts;
+  @Override
+  public List<BankAccountDTO> findBankAccounts(Page<?> page, BankAccountSearchDTO bankAccountSearchDTO) {
+    List<BankAccountDTO> bankAccounts =
+        bankAccountMapper.selectBankAccounts(page,
+                bankAccountSearchDTO.getBankName(),
+                bankAccountSearchDTO.getAccountOwnerName(), bankAccountSearchDTO.getBankAccount());
+    return bankAccounts;
+  }
+
+  @Override
+  public BankAccountDTO findBankAccountByIdUser(Integer idUser) {
+    BankAccount bankAccount = new BankAccount();
+    bankAccount.setAccountOwner(idUser);
+    bankAccount.setAccountType(DEFAULT_ACCOUNT_TYPE);
+    List<BankAccount> bankAccounts =
+        list(
+            new LambdaQueryWrapper<BankAccount>()
+                .eq(BankAccount::getAccountOwner, idUser)
+                .eq(BankAccount::getAccountType, DEFAULT_ACCOUNT_TYPE));
+    BankAccountDTO bankAccountDTO;
+    if (Objects.nonNull(bankAccounts) && bankAccounts.size() > 0) {
+      bankAccountDTO = bankAccountMapper.selectBankAccount(bankAccounts.get(0).getIdBankAccount());
+    } else {
+      bankAccount.setAccountBalance(new BigDecimal("0"));
+      // 默认为社区发展与改革银行
+      bankAccount.setIdBank(2);
+      bankAccount.setBankAccount(nextBankAccount());
+      bankAccount.setCreatedTime(new Date());
+      save(bankAccount);
+      bankAccountDTO = bankAccountMapper.selectBankAccount(bankAccount.getIdBankAccount());
     }
+    // 查询交易记录
+    List<TransactionRecordDTO> records =
+        transactionRecordService.findTransactionRecords(bankAccountDTO.getBankAccount());
+    bankAccountDTO.setTransactionRecords(records);
+    return bankAccountDTO;
+  }
 
-    @Override
-    public BankAccountDTO findBankAccountByIdUser(Integer idUser) {
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.setAccountOwner(idUser);
-        bankAccount.setAccountType(DEFAULT_ACCOUNT_TYPE);
-        List<BankAccount> bankAccounts = bankAccountMapper.select(bankAccount);
-        BankAccountDTO bankAccountDTO;
-        if (Objects.nonNull(bankAccounts) && bankAccounts.size() > 0) {
-             bankAccountDTO = bankAccountMapper.selectBankAccount(bankAccounts.get(0).getIdBankAccount());
-        } else {
-            bankAccount.setAccountBalance(new BigDecimal("0"));
-            // 默认为社区发展与改革银行
-            bankAccount.setIdBank(2);
-            bankAccount.setBankAccount(nextBankAccount());
-            bankAccount.setCreatedTime(new Date());
-            bankAccountMapper.insertSelective(bankAccount);
-            bankAccountDTO = bankAccountMapper.selectBankAccount(bankAccount.getIdBankAccount());
-        }
-        // 查询交易记录
-        List<TransactionRecordDTO> records = transactionRecordService.findTransactionRecords(bankAccountDTO.getBankAccount());
-        bankAccountDTO.setTransactionRecords(records);
-        return bankAccountDTO;
-    }
+  @Override
+  public BankAccount findByBankAccount(String bankAccount) {
+    BankAccount searchBankAccount = new BankAccount();
+    searchBankAccount.setBankAccount(bankAccount);
+    return getOne(
+        new LambdaQueryWrapper<BankAccount>().eq(BankAccount::getBankAccount, bankAccount));
+  }
 
-    @Override
-    public BankAccount findByBankAccount(String bankAccount) {
-        BankAccount searchBankAccount = new BankAccount();
-        searchBankAccount.setBankAccount(bankAccount);
-        return bankAccountMapper.selectOne(searchBankAccount);
+  private String nextBankAccount() {
+    String bankAccount = "600000001";
+    String maxBankAccount = bankAccountMapper.selectMaxBankAccount();
+    if (StringUtils.isNotBlank(maxBankAccount)) {
+      BigDecimal bigDecimal = new BigDecimal(maxBankAccount).add(new BigDecimal("1"));
+      return bigDecimal.toString();
     }
-
-    private String nextBankAccount() {
-        String bankAccount = "600000001";
-        String maxBankAccount = bankAccountMapper.selectMaxBankAccount();
-        if (StringUtils.isNotBlank(maxBankAccount)) {
-            BigDecimal bigDecimal = new BigDecimal(maxBankAccount).add(new BigDecimal("1"));
-            return bigDecimal.toString();
-        }
-        return bankAccount;
-    }
+    return bankAccount;
+  }
 }

@@ -1,11 +1,9 @@
 package com.rymcu.forest.lucene.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.Id;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 /**
  * ArticleLucene
@@ -17,9 +15,12 @@ import javax.persistence.Id;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = false)
 public class ArticleLucene {
 
   /** 文章编号 */
+  @TableId(value = "id", type = IdType.INPUT)
   private String idArticle;
 
   /** 文章标题 */

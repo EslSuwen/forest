@@ -1,5 +1,6 @@
 package com.rymcu.forest.lucene.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.rymcu.forest.dto.ArticleDTO;
 import com.rymcu.forest.lucene.model.ArticleLucene;
 import org.apache.ibatis.annotations.Mapper;
@@ -14,7 +15,7 @@ import java.util.List;
  * @date 2021/2/3 10:00
  */
 @Mapper
-public interface ArticleLuceneMapper {
+public interface ArticleLuceneMapper extends BaseMapper<ArticleLucene> {
 
   /**
    * 加载所有文章内容
@@ -31,7 +32,6 @@ public interface ArticleLuceneMapper {
    */
   List<ArticleDTO> getArticlesByIds(@Param("ids") String[] ids);
 
-
   /**
    * 加载文章内容
    *
@@ -39,5 +39,4 @@ public interface ArticleLuceneMapper {
    * @return
    */
   ArticleLucene getById(@Param("id") String id);
-
 }

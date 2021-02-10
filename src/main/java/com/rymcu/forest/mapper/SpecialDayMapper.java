@@ -1,10 +1,7 @@
 package com.rymcu.forest.mapper;
 
-import com.rymcu.forest.core.mapper.Mapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.rymcu.forest.entity.SpecialDay;
 
-/**
- * @author ronger
- */
-public interface SpecialDayMapper extends Mapper<SpecialDay> {
-}
+/** @author ronger */
+public interface SpecialDayMapper extends BaseMapper<SpecialDay> {}

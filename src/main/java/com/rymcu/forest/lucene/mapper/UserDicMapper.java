@@ -1,5 +1,6 @@
 package com.rymcu.forest.lucene.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.rymcu.forest.lucene.model.UserDic;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -13,7 +14,7 @@ import java.util.List;
  * @date 2021/2/4 09:11
  */
 @Mapper
-public interface UserDicMapper {
+public interface UserDicMapper extends BaseMapper<UserDic> {
 
   /**
    * 加载所有字典

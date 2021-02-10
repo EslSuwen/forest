@@ -1,6 +1,6 @@
 package com.rymcu.forest.service.impl;
 
-import com.rymcu.forest.core.service.AbstractService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.dto.ArticleDTO;
 import com.rymcu.forest.dto.Author;
 import com.rymcu.forest.dto.NotificationDTO;
@@ -20,150 +20,145 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Service
-public class NotificationServiceImpl extends AbstractService<Notification> implements NotificationService {
+public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Notification>
+    implements NotificationService {
 
-    @Resource
-    private NotificationMapper notificationMapper;
-    @Resource
-    private ArticleService articleService;
-    @Resource
-    private CommentService commentService;
-    @Resource
-    private UserService userService;
-    @Resource
-    private FollowService followService;
-    @Value("${resource.domain}")
-    private String domain;
+  @Resource private NotificationMapper notificationMapper;
+  @Resource private ArticleService articleService;
+  @Resource private CommentService commentService;
+  @Resource private UserService userService;
+  @Resource private FollowService followService;
 
-    private final static String unRead = "0";
+  @Value("${resource.domain}")
+  private String domain;
 
-    @Override
-    public List<Notification> findUnreadNotifications(Integer idUser) {
-        List<Notification> list = notificationMapper.selectUnreadNotifications(idUser);
-        return list;
-    }
+  private static final String unRead = "0";
 
-    @Override
-    public List<NotificationDTO> findNotifications(Integer idUser) {
-        List<Notification> list = notificationMapper.selectNotifications(idUser);
-        List<NotificationDTO> notifications = new ArrayList<>();
-        list.forEach(notification -> {
-            NotificationDTO notificationDTO = genNotification(notification);
-            // 判断关联数据是否已删除
-            if (Objects.nonNull(notificationDTO.getAuthor())) {
-                notifications.add(notificationDTO);
-            } else {
-                // 关联数据已删除,且未读
-                if (unRead.equals(notification.getHasRead())) {
-                    notificationMapper.readNotification(notification.getIdNotification());
-                }
-                NotificationDTO dto = new NotificationDTO();
-                dto.setDataSummary("该消息已被撤销!");
-                dto.setDataType("-1");
-                dto.setHasRead("1");
-                dto.setCreatedTime(notification.getCreatedTime());
-                notifications.add(dto);
+  @Override
+  public List<Notification> findUnreadNotifications(Integer idUser) {
+    return notificationMapper.selectUnreadNotifications(idUser);
+  }
+
+  @Override
+  public List<NotificationDTO> findNotifications(Integer idUser) {
+    List<Notification> list = notificationMapper.selectNotifications(idUser);
+    List<NotificationDTO> notifications = new ArrayList<>();
+    list.forEach(
+        notification -> {
+          NotificationDTO notificationDTO = genNotification(notification);
+          // 判断关联数据是否已删除
+          if (Objects.nonNull(notificationDTO.getAuthor())) {
+            notifications.add(notificationDTO);
+          } else {
+            // 关联数据已删除,且未读
+            if (unRead.equals(notification.getHasRead())) {
+              notificationMapper.readNotification(notification.getIdNotification());
             }
+            NotificationDTO dto = new NotificationDTO();
+            dto.setDataSummary("该消息已被撤销!");
+            dto.setDataType("-1");
+            dto.setHasRead("1");
+            dto.setCreatedTime(notification.getCreatedTime());
+            notifications.add(dto);
+          }
         });
-        return notifications;
-    }
+    return notifications;
+  }
 
-    private NotificationDTO genNotification(Notification notification) {
-        NotificationDTO notificationDTO = new NotificationDTO();
-        BeanCopierUtil.copy(notification, notificationDTO);
-        ArticleDTO article;
-        Comment comment;
-        User user;
-        Follow follow;
-        switch (notification.getDataType()) {
-            case "0":
-                // 系统公告/帖子
-                article = articleService.findArticleDTOById(notification.getDataId(), 0);
-                if (Objects.nonNull(article)) {
-                    notificationDTO.setDataTitle("系统公告");
-                    notificationDTO.setDataUrl(article.getArticlePermalink());
-                    user = userService.findById(article.getArticleAuthorId().toString());
-                    notificationDTO.setAuthor(genAuthor(user));
-                }
-                break;
-            case "1":
-                // 关注
-                follow = followService.findById(notification.getDataId().toString());
-                notificationDTO.setDataTitle("关注提醒");
-                if (Objects.nonNull(follow)) {
-                    user = userService.findById(follow.getFollowerId().toString());
-                    notificationDTO.setDataUrl(getFollowLink(follow.getFollowingType(), user.getNickname()));
-                    notificationDTO.setAuthor(genAuthor(user));
-                }
-                break;
-            case "2":
-                // 回帖
-                comment = commentService.findById(notification.getDataId().toString());
-                article = articleService.findArticleDTOById(comment.getCommentArticleId(), 0);
-                if (Objects.nonNull(article)) {
-                    notificationDTO.setDataTitle(article.getArticleTitle());
-                    notificationDTO.setDataUrl(comment.getCommentSharpUrl());
-                    user = userService.findById(comment.getCommentAuthorId().toString());
-                    notificationDTO.setAuthor(genAuthor(user));
-                }
-                break;
-            case "3":
-                // 关注用户发布文章
-            case "4":
-                // 关注文章更新
-                article = articleService.findArticleDTOById(notification.getDataId(), 0);
-                if (Objects.nonNull(article)) {
-                    notificationDTO.setDataTitle("关注通知");
-                    notificationDTO.setDataUrl(article.getArticlePermalink());
-                    user = userService.findById(article.getArticleAuthorId().toString());
-                    notificationDTO.setAuthor(genAuthor(user));
-                }
-                break;
-            default:
-                break;
+  private NotificationDTO genNotification(Notification notification) {
+    NotificationDTO notificationDTO = new NotificationDTO();
+    BeanCopierUtil.copy(notification, notificationDTO);
+    ArticleDTO article;
+    Comment comment;
+    User user;
+    Follow follow;
+    switch (notification.getDataType()) {
+      case "0":
+        // 系统公告/帖子
+        article = articleService.findArticleDTOById(notification.getDataId(), 0);
+        if (Objects.nonNull(article)) {
+          notificationDTO.setDataTitle("系统公告");
+          notificationDTO.setDataUrl(article.getArticlePermalink());
+          user = userService.getById(article.getArticleAuthorId().toString());
+          notificationDTO.setAuthor(genAuthor(user));
         }
-        return notificationDTO;
-    }
-
-    private String getFollowLink(String followingType, String id) {
-        StringBuilder url = new StringBuilder();
-        url.append(domain);
-        switch (followingType) {
-            case "0":
-                url = url.append("/user/").append(id);
-                break;
-            default:
-                url.append("/notification");
+        break;
+      case "1":
+        // 关注
+        follow = followService.getById(notification.getDataId().toString());
+        notificationDTO.setDataTitle("关注提醒");
+        if (Objects.nonNull(follow)) {
+          user = userService.getById(follow.getFollowerId().toString());
+          notificationDTO.setDataUrl(getFollowLink(follow.getFollowingType(), user.getNickname()));
+          notificationDTO.setAuthor(genAuthor(user));
         }
-        return url.toString();
+        break;
+      case "2":
+        // 回帖
+        comment = commentService.getById(notification.getDataId().toString());
+        article = articleService.findArticleDTOById(comment.getCommentArticleId(), 0);
+        if (Objects.nonNull(article)) {
+          notificationDTO.setDataTitle(article.getArticleTitle());
+          notificationDTO.setDataUrl(comment.getCommentSharpUrl());
+          user = userService.getById(comment.getCommentAuthorId().toString());
+          notificationDTO.setAuthor(genAuthor(user));
+        }
+        break;
+      case "3":
+        // 关注用户发布文章
+      case "4":
+        // 关注文章更新
+        article = articleService.findArticleDTOById(notification.getDataId(), 0);
+        if (Objects.nonNull(article)) {
+          notificationDTO.setDataTitle("关注通知");
+          notificationDTO.setDataUrl(article.getArticlePermalink());
+          user = userService.getById(article.getArticleAuthorId().toString());
+          notificationDTO.setAuthor(genAuthor(user));
+        }
+        break;
+      default:
+        break;
     }
+    return notificationDTO;
+  }
 
-    private Author genAuthor(User user) {
-        Author author = new Author();
-        author.setUserNickname(user.getNickname());
-        author.setUserAvatarURL(user.getAvatarUrl());
-        author.setIdUser(user.getIdUser());
-        return author;
+  private String getFollowLink(String followingType, String id) {
+    StringBuilder url = new StringBuilder();
+    url.append(domain);
+    switch (followingType) {
+      case "0":
+        url.append("/user/").append(id);
+        break;
+      default:
+        url.append("/notification");
     }
+    return url.toString();
+  }
 
-    @Override
-    public Notification findNotification(Integer idUser, Integer dataId, String dataType) {
-        return notificationMapper.selectNotification(idUser, dataId, dataType);
-    }
+  private Author genAuthor(User user) {
+    Author author = new Author();
+    author.setUserNickname(user.getNickname());
+    author.setUserAvatarURL(user.getAvatarUrl());
+    author.setIdUser(user.getIdUser());
+    return author;
+  }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Integer save(Integer idUser, Integer dataId, String dataType, String dataSummary) {
-        return notificationMapper.insertNotification(idUser, dataId, dataType, dataSummary);
-    }
+  @Override
+  public Notification findNotification(Integer idUser, Integer dataId, String dataType) {
+    return notificationMapper.selectNotification(idUser, dataId, dataType);
+  }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Integer readNotification(Integer id) {
-        return notificationMapper.readNotification(id);
-    }
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public Integer save(Integer idUser, Integer dataId, String dataType, String dataSummary) {
+    return notificationMapper.insertNotification(idUser, dataId, dataType, dataSummary);
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public Integer readNotification(Integer id) {
+    return notificationMapper.readNotification(id);
+  }
 }

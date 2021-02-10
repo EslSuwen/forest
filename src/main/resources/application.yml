@@ -35,7 +35,7 @@ spring:
     username: # 邮箱
     password: # 密码
 mybatis-plus:
-  mapper-locations: classpath*:com/rymcu/forest/mapper/xml/**/*Mapper.xml
+  mapper-locations: classpath:mapper/**/*Mapper.xml
   global-config:
     # 关闭MP3.0自带的banner
     banner: false

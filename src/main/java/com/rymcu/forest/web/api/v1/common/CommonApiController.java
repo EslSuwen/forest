@@ -1,16 +1,15 @@
 package com.rymcu.forest.web.api.v1.common;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.core.result.GlobalResult;
 import com.rymcu.forest.core.result.GlobalResultGenerator;
 import com.rymcu.forest.core.result.GlobalResultMessage;
 import com.rymcu.forest.core.service.log.annotation.VisitLogger;
 import com.rymcu.forest.dto.*;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.User;
 import com.rymcu.forest.service.*;
 import com.rymcu.forest.util.UserUtils;
-import com.rymcu.forest.util.Utils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -89,11 +88,11 @@ public class CommonApiController {
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows,
       ArticleSearchDTO searchDTO) {
-    PageHelper.startPage(page, rows);
+    /*  TODO PageHelper.startPage(page, rows);
     List<ArticleDTO> list = articleService.findArticles(searchDTO);
     PageInfo<ArticleDTO> pageInfo = new PageInfo(list);
-    Map map = Utils.getArticlesGlobalResult(pageInfo);
-    return GlobalResultGenerator.genSuccessResult(map);
+    Map map = Utils.getArticlesGlobalResult(pageInfo);*/
+    return GlobalResultGenerator.genSuccessResult();
   }
 
   @GetMapping("/article/{id}")
@@ -127,15 +126,12 @@ public class CommonApiController {
   }
 
   @GetMapping("/portfolio/{id}/articles")
-  public GlobalResult articles(
+  public Result<List<ArticleDTO>> articles(
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows,
       @PathVariable Integer id) {
-    PageHelper.startPage(page, rows);
-    List<ArticleDTO> list = articleService.findArticlesByIdPortfolio(id);
-    PageInfo<ArticleDTO> pageInfo = new PageInfo(list);
-    Map map = Utils.getArticlesGlobalResult(pageInfo);
-    return GlobalResultGenerator.genSuccessResult(map);
+    List<ArticleDTO> list = articleService.findArticlesByIdPortfolio(new Page<>(page, rows), id);
+    return Result.OK(list);
   }
 
   @GetMapping("/initial-search")

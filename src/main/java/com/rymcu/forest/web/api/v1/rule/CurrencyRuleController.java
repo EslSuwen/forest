@@ -20,7 +20,7 @@ public class CurrencyRuleController {
 
   @GetMapping("/list")
   public GlobalResult list() {
-    List<CurrencyRule> list = currencyRuleService.findAll();
+    List<CurrencyRule> list = currencyRuleService.list();
     return GlobalResultGenerator.genSuccessResult(list);
   }
 }

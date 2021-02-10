@@ -1,11 +1,11 @@
 package com.rymcu.forest.web.api.v1.article;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.core.result.GlobalResult;
 import com.rymcu.forest.core.result.GlobalResultGenerator;
 import com.rymcu.forest.dto.ArticleDTO;
 import com.rymcu.forest.dto.CommentDTO;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Article;
 import com.rymcu.forest.entity.ArticleThumbsUp;
 import com.rymcu.forest.entity.Sponsor;
@@ -13,7 +13,6 @@ import com.rymcu.forest.service.ArticleService;
 import com.rymcu.forest.service.ArticleThumbsUpService;
 import com.rymcu.forest.service.CommentService;
 import com.rymcu.forest.service.SponsorService;
-import com.rymcu.forest.util.Utils;
 import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,15 +71,12 @@ public class ArticleController {
   }
 
   @GetMapping("/drafts")
-  public GlobalResult drafts(
+  public Result<List<ArticleDTO>> drafts(
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows)
       throws BaseApiException {
-    PageHelper.startPage(page, rows);
-    List<ArticleDTO> list = articleService.findDrafts();
-    PageInfo<ArticleDTO> pageInfo = new PageInfo(list);
-    Map map = Utils.getArticlesGlobalResult(pageInfo);
-    return GlobalResultGenerator.genSuccessResult(map);
+    List<ArticleDTO> list = articleService.findDrafts(new Page<>(page, rows));
+    return Result.OK(list);
   }
 
   @GetMapping("/{id}/share")

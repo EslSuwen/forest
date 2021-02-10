@@ -1,58 +1,36 @@
 package com.rymcu.forest.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
-
-/**
- * @author ronger
- */
+/** @author ronger */
 @Data
-@Table(name="forest_notification")
-public class Notification implements Serializable,Cloneable {
-    /**
-     * 主键
-     */
-    @Id
-    @GeneratedValue(generator = "JDBC")
-    @Column(name = "id")
-    private Integer idNotification;
-    /**
-     * 用户id
-     */
-    @Column(name = "id_user")
-    private Integer idUser;
-    /**
-     * 数据类型
-     */
-    @Column(name = "data_type")
-    private String dataType;
-    /**
-     * 数据id
-     */
-    @Column(name = "data_id")
-    private Integer dataId;
-    /**
-     * 数据摘要
-     */
-    @Column(name = "data_summary")
-    private String dataSummary;
-    /**
-     * 是否已读
-     */
-    @Column(name = "has_read")
-    private String hasRead;
-    /**
-     * 是否已读
-     */
-    @Column(name = "created_time")
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    private Date createdTime;
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = false)
+@TableName("forest_notification")
+public class Notification implements Serializable, Cloneable {
+  /** 主键 */
+  @TableId(value = "id", type = IdType.AUTO)
+  private Integer idNotification;
+  /** 用户id */
+  private Integer idUser;
+  /** 数据类型 */
+  private String dataType;
+  /** 数据id */
+  private Integer dataId;
+  /** 数据摘要 */
+  private String dataSummary;
+  /** 是否已读 */
+  private String hasRead;
+  /** 是否已读 */
+  @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+  private Date createdTime;
 }

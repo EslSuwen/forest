@@ -1,24 +1,21 @@
 package com.rymcu.forest.web.api.v1.admin;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.core.result.GlobalResult;
 import com.rymcu.forest.core.result.GlobalResultGenerator;
 import com.rymcu.forest.dto.admin.TopicTagDTO;
 import com.rymcu.forest.dto.admin.UserRoleDTO;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.*;
 import com.rymcu.forest.service.*;
-import com.rymcu.forest.util.Utils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.Comparator.comparing;
 
 /** @author ronger */
 @RestController
@@ -32,19 +29,15 @@ public class AdminController {
   @Resource private SpecialDayService specialDayService;
 
   @GetMapping("/users")
-  public GlobalResult<Map<String, Object>> users(
+  public Result<IPage<User>> users(
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows) {
-    PageHelper.startPage(page, rows);
-    List<User> list = userService.findAll();
     // 按最后登录时间进行倒序排序
-    list.sort(comparing(User::getLastLoginTime).reversed());
-    PageInfo<User> pageInfo = new PageInfo<>(list);
-    Map<String, Object> map = new HashMap<String, Object>(2);
-    map.put("users", pageInfo.getList());
-    Map pagination = Utils.getPagination(pageInfo);
-    map.put("pagination", pagination);
-    return GlobalResultGenerator.genSuccessResult(map);
+    IPage<User> list =
+        userService.page(
+            new Page<>(page, rows),
+            new LambdaQueryWrapper<User>().orderByDesc(User::getLastLoginTime));
+    return Result.OK(list);
   }
 
   @GetMapping("/user/{idUser}/role")
@@ -54,17 +47,11 @@ public class AdminController {
   }
 
   @GetMapping("/roles")
-  public GlobalResult<Map<String, Object>> roles(
+  public Result<IPage<Role>> roles(
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows) {
-    PageHelper.startPage(page, rows);
-    List<Role> list = roleService.findAll();
-    PageInfo<Role> pageInfo = new PageInfo<>(list);
-    Map<String, Object> map = new HashMap<String, Object>(2);
-    map.put("roles", pageInfo.getList());
-    Map pagination = Utils.getPagination(pageInfo);
-    map.put("pagination", pagination);
-    return GlobalResultGenerator.genSuccessResult(map);
+    IPage<Role> list = roleService.page(new Page<>(page, rows));
+    return Result.OK(list);
   }
 
   @PatchMapping("/user/update-role")
@@ -98,17 +85,11 @@ public class AdminController {
   }
 
   @GetMapping("/topics")
-  public GlobalResult<Map<String, Object>> topics(
+  public Result<IPage<Role>> topics(
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows) {
-    PageHelper.startPage(page, rows);
-    List<Topic> list = topicService.findAll();
-    PageInfo<Topic> pageInfo = new PageInfo<>(list);
-    Map<String, Object> map = new HashMap<>(2);
-    map.put("topics", pageInfo.getList());
-    Map pagination = Utils.getPagination(pageInfo);
-    map.put("pagination", pagination);
-    return GlobalResultGenerator.genSuccessResult(map);
+    IPage<Role> list = roleService.page(new Page<>(page, rows));
+    return Result.OK(list);
   }
 
   @GetMapping("/topic/{topicUri}")
@@ -134,25 +115,19 @@ public class AdminController {
 
   @GetMapping("/topic/detail/{idTopic}")
   public GlobalResult<Topic> topicDetail(@PathVariable Integer idTopic) {
-    Topic topic = topicService.findById(idTopic.toString());
+    Topic topic = topicService.getById(idTopic.toString());
     return GlobalResultGenerator.genSuccessResult(topic);
   }
 
   @GetMapping("/topic/unbind-topic-tags")
-  public GlobalResult unbindTopicTags(
+  public Result<?> unbindTopicTags(
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows,
-      HttpServletRequest request) {
-    Integer idTopic = Integer.valueOf(request.getParameter("idTopic"));
-    String tagTitle = request.getParameter("tagTitle");
-    PageHelper.startPage(page, rows);
+      @RequestParam Integer idTopic,
+      @RequestParam String tagTitle) {
+    // TODO 等待重构
     List<Tag> list = topicService.findUnbindTagsById(idTopic, tagTitle);
-    PageInfo<Tag> pageInfo = new PageInfo<>(list);
-    Map<String, Object> map = new HashMap<>(2);
-    map.put("tags", pageInfo.getList());
-    Map pagination = Utils.getPagination(pageInfo);
-    map.put("pagination", pagination);
-    return GlobalResultGenerator.genSuccessResult(map);
+    return Result.error("等待重构");
   }
 
   @PostMapping("/topic/bind-topic-tag")
@@ -180,54 +155,35 @@ public class AdminController {
   }
 
   @GetMapping("/tags")
-  public GlobalResult<Map<String, Object>> tags(
+  public Result<IPage<Tag>> tags(
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows) {
-    PageHelper.startPage(page, rows);
-    List<Tag> list = tagService.findAll();
-    PageInfo<Tag> pageInfo = new PageInfo<>(list);
-    Map<String, Object> map = new HashMap<>(2);
-    map.put("tags", pageInfo.getList());
-    Map pagination = Utils.getPagination(pageInfo);
-    map.put("pagination", pagination);
-    return GlobalResultGenerator.genSuccessResult(map);
+    IPage<Tag> list = tagService.page(new Page<>(page, rows));
+    return Result.OK(list);
   }
 
   @DeleteMapping("/tag/clean-unused")
-  public GlobalResult<Map<String, Object>> cleanUnusedTag() {
-    Map map = tagService.cleanUnusedTag();
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<?> cleanUnusedTag() {
+    return Result.OK(tagService.cleanUnusedTag());
   }
 
   @GetMapping("/tag/detail/{idTag}")
-  public GlobalResult<Tag> tagDetail(@PathVariable Integer idTag) {
-    Tag tag = tagService.findById(idTag.toString());
-    return GlobalResultGenerator.genSuccessResult(tag);
+  public Result<Tag> tagDetail(@PathVariable Integer idTag) {
+    return Result.OK(tagService.getById(idTag));
   }
 
-  @PostMapping("/tag/post")
-  public GlobalResult<Map> addTag(@RequestBody Tag tag) {
-    Map map = tagService.saveTag(tag);
-    return GlobalResultGenerator.genSuccessResult(map);
-  }
-
-  @PutMapping("/tag/post")
-  public GlobalResult<Map> updateTag(@RequestBody Tag tag) {
-    Map map = tagService.saveTag(tag);
-    return GlobalResultGenerator.genSuccessResult(map);
+  @RequestMapping(
+      value = "/tag/post",
+      method = {RequestMethod.POST, RequestMethod.PUT})
+  public Result<?> addTag(@RequestBody Tag tag) {
+    return Result.OK(tagService.saveTag(tag));
   }
 
   @GetMapping("/special-days")
-  public GlobalResult<Map> specialDays(
+  public Result<IPage<SpecialDay>> specialDays(
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows) {
-    PageHelper.startPage(page, rows);
-    List<SpecialDay> list = specialDayService.findAll();
-    PageInfo<SpecialDay> pageInfo = new PageInfo<>(list);
-    Map<String, Object> map = new HashMap<>(2);
-    map.put("specialDays", pageInfo.getList());
-    Map pagination = Utils.getPagination(pageInfo);
-    map.put("pagination", pagination);
-    return GlobalResultGenerator.genSuccessResult(map);
+    IPage<SpecialDay> list = specialDayService.page(new Page<>(page, rows));
+    return Result.OK(list);
   }
 }

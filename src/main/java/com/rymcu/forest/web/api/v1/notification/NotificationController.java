@@ -1,21 +1,12 @@
 package com.rymcu.forest.web.api.v1.notification;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.rymcu.forest.core.result.GlobalResult;
 import com.rymcu.forest.core.result.GlobalResultGenerator;
-import com.rymcu.forest.dto.NotificationDTO;
-import com.rymcu.forest.entity.Notification;
-import com.rymcu.forest.entity.User;
 import com.rymcu.forest.service.NotificationService;
-import com.rymcu.forest.util.UserUtils;
-import com.rymcu.forest.util.Utils;
 import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 消息通知
@@ -33,12 +24,12 @@ public class NotificationController {
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows)
       throws BaseApiException {
-    User user = UserUtils.getCurrentUserByToken();
+    /*    User user = UserUtils.getCurrentUserByToken();
     PageHelper.startPage(page, rows);
     List<NotificationDTO> list = notificationService.findNotifications(user.getIdUser());
     PageInfo<NotificationDTO> pageInfo = new PageInfo(list);
-    Map map = Utils.getNotificationDTOsGlobalResult(pageInfo);
-    return GlobalResultGenerator.genSuccessResult(map);
+    Map map = Utils.getNotificationDTOsGlobalResult(pageInfo);*/
+    return GlobalResultGenerator.genSuccessResult();
   }
 
   @GetMapping("/unread")
@@ -46,12 +37,12 @@ public class NotificationController {
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows)
       throws BaseApiException {
-    User user = UserUtils.getCurrentUserByToken();
+    /*    User user = UserUtils.getCurrentUserByToken();
     PageHelper.startPage(page, rows);
     List<Notification> list = notificationService.findUnreadNotifications(user.getIdUser());
     PageInfo<Notification> pageInfo = new PageInfo(list);
-    Map map = Utils.getNotificationsGlobalResult(pageInfo);
-    return GlobalResultGenerator.genSuccessResult(map);
+    Map map = Utils.getNotificationsGlobalResult(pageInfo);*/
+    return GlobalResultGenerator.genSuccessResult();
   }
 
   @PutMapping("/read/{id}")

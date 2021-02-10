@@ -1,10 +1,11 @@
 package com.rymcu.forest.lucene.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * UserDic 用户个性化字典
@@ -13,11 +14,12 @@ import javax.persistence.Table;
  * @date 2021/2/4 09:09
  */
 @Data
-@Table(name = "lucene_user_dic")
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = false)
+@TableName("lucene_user_dic")
 public class UserDic {
   /** 主键 */
-  @Id
-  @GeneratedValue(generator = "JDBC")
+  @TableId(type = IdType.AUTO)
   private Integer id;
 
   /** 字典 */

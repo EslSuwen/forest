@@ -1,5 +1,7 @@
 package com.rymcu.forest.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.core.constant.NotificationConstant;
 import com.rymcu.forest.core.constant.ProjectConstant;
@@ -20,7 +22,6 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -48,11 +49,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
   private static final String defaultTopicUri = "news";
 
   @Override
-  public List<ArticleDTO> findArticles(ArticleSearchDTO searchDTO) {
+  public List<ArticleDTO> findArticles(Page<?> page, ArticleSearchDTO searchDTO) {
     List<ArticleDTO> list;
     if (StringUtils.isNotBlank(searchDTO.getTopicUri())
         && !defaultTopicUri.equals(searchDTO.getTopicUri())) {
-      list = articleMapper.selectArticlesByTopicUri(searchDTO.getTopicUri());
+      list = articleMapper.selectArticlesByTopicUri(page, searchDTO.getTopicUri());
     } else {
       list =
           articleMapper.selectArticles(
@@ -76,8 +77,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
   }
 
   @Override
-  public List<ArticleDTO> findArticlesByTopicUri(String name) {
-    List<ArticleDTO> articleDTOS = articleMapper.selectArticlesByTopicUri(name);
+  public List<ArticleDTO> findArticlesByTopicUri(Page<?> page, String name) {
+    List<ArticleDTO> articleDTOS = articleMapper.selectArticlesByTopicUri(page, name);
     articleDTOS.forEach(
         articleDTO -> {
           genArticle(articleDTO, 0);
@@ -86,14 +87,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
   }
 
   @Override
-  public List<ArticleDTO> findArticlesByTagName(String name) {
-    List<ArticleDTO> articleDTOS = articleMapper.selectArticlesByTagName(name);
+  public List<ArticleDTO> findArticlesByTagName(Page<?> page, String name) {
+    List<ArticleDTO> articleDTOS = articleMapper.selectArticlesByTagName(page, name);
     return articleDTOS;
   }
 
   @Override
-  public List<ArticleDTO> findUserArticlesByIdUser(Integer idUser) {
-    List<ArticleDTO> list = articleMapper.selectUserArticles(idUser);
+  public List<ArticleDTO> findUserArticlesByIdUser(Page<?> page, Integer idUser) {
+    List<ArticleDTO> list = articleMapper.selectUserArticles(page, idUser);
     list.forEach(
         article -> {
           genArticle(article, 0);
@@ -234,9 +235,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
       return "";
     }
     // 判断是否存在系统配置的保留标签词
-    Condition condition = new Condition(Tag.class);
-    condition.createCriteria().andEqualTo("tagReservation", "1");
-    List<Tag> tags = tagService.findByCondition(condition);
+    List<Tag> tags = tagService.list(new LambdaQueryWrapper<Tag>().eq(Tag::getTagReservation, "1"));
     if (tags.isEmpty()) {
       return "";
     } else {
@@ -245,7 +244,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         if (StringUtils.isBlank(tag.getTagTitle())) {
           continue;
         }
-
         for (String articleTag : articleTagArr) {
           if (StringUtils.isBlank(articleTag)) {
             continue;
@@ -306,9 +304,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
   }
 
   @Override
-  public List<ArticleDTO> findDrafts() throws BaseApiException {
+  public List<ArticleDTO> findDrafts(Page<?> page) throws BaseApiException {
     User user = UserUtils.getCurrentUserByToken();
-    List<ArticleDTO> list = articleMapper.selectDrafts(user.getIdUser());
+    List<ArticleDTO> list = articleMapper.selectDrafts(page, user.getIdUser());
     list.forEach(
         article -> {
           genArticle(article, 0);
@@ -317,8 +315,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
   }
 
   @Override
-  public List<ArticleDTO> findArticlesByIdPortfolio(Integer idPortfolio) {
-    List<ArticleDTO> list = articleMapper.selectArticlesByIdPortfolio(idPortfolio);
+  public List<ArticleDTO> findArticlesByIdPortfolio(Page<?> page, Integer idPortfolio) {
+    List<ArticleDTO> list = articleMapper.selectArticlesByIdPortfolio(page, idPortfolio);
     list.forEach(
         article -> {
           genArticle(article, 0);

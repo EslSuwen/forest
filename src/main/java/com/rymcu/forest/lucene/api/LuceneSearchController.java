@@ -1,14 +1,11 @@
 package com.rymcu.forest.lucene.api;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageInfo;
-import com.rymcu.forest.core.result.GlobalResult;
-import com.rymcu.forest.core.result.GlobalResultGenerator;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.dto.ArticleDTO;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.lucene.model.ArticleLucene;
 import com.rymcu.forest.lucene.service.LuceneService;
 import com.rymcu.forest.lucene.service.UserDicService;
-import com.rymcu.forest.util.Utils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -59,7 +56,7 @@ public class LuceneSearchController {
    * @return
    */
   @GetMapping("/searchArticle/{q}")
-  public GlobalResult searchArticle(
+  public Result<?> searchArticle(
       @PathVariable String q,
       @RequestParam(defaultValue = "1") Integer pageNum,
       @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -68,7 +65,7 @@ public class LuceneSearchController {
     // 分页组装文章详情
     int total = resList.size();
     if (total == 0) {
-      return GlobalResultGenerator.genSuccessResult("未找到相关文章");
+      return Result.error("未找到相关文章");
     }
     Page<ArticleDTO> page = new Page<>(pageNum, pageSize);
     page.setTotal(total);
@@ -86,8 +83,7 @@ public class LuceneSearchController {
       temp.setArticlePreviewContent(subList.get(i).getArticleContent());
       articleDTOList.set(i, temp);
     }
-    page.addAll(articleDTOList);
-    PageInfo<ArticleDTO> pageInfo = new PageInfo<>(page);
-    return GlobalResultGenerator.genSuccessResult(Utils.getArticlesGlobalResult(pageInfo));
+    page.setRecords(articleDTOList);
+    return Result.OK(page);
   }
 }

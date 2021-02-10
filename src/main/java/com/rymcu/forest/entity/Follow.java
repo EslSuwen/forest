@@ -1,31 +1,27 @@
 package com.rymcu.forest.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Data
-@Table(name="forest_follow")
-public class Follow implements Serializable,Cloneable {
-    /** 主键 */
-    @Id
-    @GeneratedValue(generator = "JDBC")
-    @Column(name = "id")
-    private Integer idFollow;
-    /** 关注者 id */
-    @Column(name = "follower_id")
-    private Integer followerId;
-    /** 关注数据 id */
-    @Column(name = "following_id")
-    private Integer followingId;
-    /** 0：用户，1：标签，2：帖子收藏，3：帖子关注 */
-    @Column(name = "following_type")
-    private String followingType;
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = false)
+@TableName("forest_follow")
+public class Follow implements Serializable, Cloneable {
+  /** 主键 */
+  @TableId(value = "id", type = IdType.AUTO)
+  private Integer idFollow;
+  /** 关注者 id */
+  private Integer followerId;
+  /** 关注数据 id */
+  private Integer followingId;
+  /** 0：用户，1：标签，2：帖子收藏，3：帖子关注 */
+  private String followingType;
 }

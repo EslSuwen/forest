@@ -1,6 +1,6 @@
 package com.rymcu.forest.service.impl;
 
-import com.rymcu.forest.core.service.AbstractService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.entity.CurrencyRule;
 import com.rymcu.forest.mapper.CurrencyRuleMapper;
 import com.rymcu.forest.service.CurrencyRuleService;
@@ -8,13 +8,10 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Service
-public class CurrencyRuleServiceImpl extends AbstractService<CurrencyRule> implements CurrencyRuleService {
+public class CurrencyRuleServiceImpl extends ServiceImpl<CurrencyRuleMapper, CurrencyRule>
+    implements CurrencyRuleService {
 
-    @Resource
-    private CurrencyRuleMapper currencyRuleMapper;
-
+  @Resource private CurrencyRuleMapper currencyRuleMapper;
 }

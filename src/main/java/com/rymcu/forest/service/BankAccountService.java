@@ -1,23 +1,25 @@
 package com.rymcu.forest.service;
 
-import com.rymcu.forest.core.service.Service;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.rymcu.forest.dto.BankAccountDTO;
 import com.rymcu.forest.dto.BankAccountSearchDTO;
 import com.rymcu.forest.entity.BankAccount;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 /**
  * @author ronger
  */
-public interface BankAccountService extends Service<BankAccount> {
+public interface BankAccountService extends IService<BankAccount> {
     /**
      * 查询银行账户列表
+     *
+     * @param page
      * @param bankAccountSearchDTO
      * @return
      */
-    List<BankAccountDTO> findBankAccounts(BankAccountSearchDTO bankAccountSearchDTO);
+    List<BankAccountDTO> findBankAccounts(Page<?> page, BankAccountSearchDTO bankAccountSearchDTO);
 
     /**
      * 查询用户银行账户

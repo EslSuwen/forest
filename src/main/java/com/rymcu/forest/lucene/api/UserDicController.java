@@ -1,18 +1,15 @@
 package com.rymcu.forest.lucene.api;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.core.result.GlobalResult;
 import com.rymcu.forest.core.result.GlobalResultGenerator;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.lucene.model.UserDic;
 import com.rymcu.forest.lucene.service.UserDicService;
-import com.rymcu.forest.util.Utils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * UserDicController
@@ -27,17 +24,11 @@ public class UserDicController {
   @Resource private UserDicService dicService;
 
   @GetMapping("/getAll")
-  public GlobalResult getAll(
+  public Result<IPage<UserDic>> getAll(
       @RequestParam(defaultValue = "0") Integer pageNum,
       @RequestParam(defaultValue = "10") Integer pageSize) {
-    PageHelper.startPage(pageNum, pageSize);
-    List<UserDic> list = dicService.getAll();
-    PageInfo<UserDic> pageInfo = new PageInfo<>(list);
-    Map<String, Object> map = new HashMap<>(2);
-    map.put("userDic", pageInfo.getList());
-    Map pagination = Utils.getPagination(pageInfo);
-    map.put("pagination", pagination);
-    return GlobalResultGenerator.genSuccessResult(map);
+    IPage<UserDic> list = dicService.page(new Page<>(pageNum, pageSize));
+    return Result.OK(list);
   }
 
   @PostMapping("/addDic/{dic}")

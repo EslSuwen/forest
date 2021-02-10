@@ -1,37 +1,28 @@
 package com.rymcu.forest.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Data
-@Table(name="forest_article_thumbs_up")
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = false)
+@TableName("forest_article_thumbs_up")
 public class ArticleThumbsUp implements Serializable, Cloneable {
-    /**
-     * 主键
-     */
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(generator = "JDBC")
-    private Integer idArticleThumbsUp;
-    /**
-     * 文章表主键
-     */
-    private Integer idArticle;
-    /**
-     * 用户表主键
-     */
-    private Integer idUser;
-    /**
-     * 点赞时间
-     */
-    private Date thumbsUpTime;
+  /** 主键 */
+  @TableId(value = "id", type = IdType.AUTO)
+  private Integer idArticleThumbsUp;
+  /** 文章表主键 */
+  private Integer idArticle;
+  /** 用户表主键 */
+  private Integer idUser;
+  /** 点赞时间 */
+  private Date thumbsUpTime;
 }

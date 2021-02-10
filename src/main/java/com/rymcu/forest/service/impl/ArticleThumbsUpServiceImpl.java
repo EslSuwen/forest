@@ -1,6 +1,6 @@
 package com.rymcu.forest.service.impl;
 
-import com.rymcu.forest.core.service.AbstractService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.entity.Article;
 import com.rymcu.forest.entity.ArticleThumbsUp;
 import com.rymcu.forest.entity.User;
@@ -18,53 +18,51 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- * @author ronger
- */
+/** @author ronger */
 @Service
-public class ArticleThumbsUpServiceImpl extends AbstractService<ArticleThumbsUp> implements ArticleThumbsUpService {
+public class ArticleThumbsUpServiceImpl extends ServiceImpl<ArticleThumbsUpMapper, ArticleThumbsUp>
+    implements ArticleThumbsUpService {
 
-    @Resource
-    private ArticleThumbsUpMapper articleThumbsUpMapper;
-    @Resource
-    private ArticleService articleService;
+  @Resource private ArticleThumbsUpMapper articleThumbsUpMapper;
+  @Resource private ArticleService articleService;
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Map thumbsUp(ArticleThumbsUp articleThumbsUp) throws BaseApiException {
-        Map map = new HashMap(3);
-        if (Objects.isNull(articleThumbsUp) || Objects.isNull(articleThumbsUp.getIdArticle())) {
-            map.put("message", "数据异常,文章不存在!");
-            map.put("success", false);
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public Map thumbsUp(ArticleThumbsUp articleThumbsUp) throws BaseApiException {
+    Map map = new HashMap(3);
+    if (Objects.isNull(articleThumbsUp) || Objects.isNull(articleThumbsUp.getIdArticle())) {
+      map.put("message", "数据异常,文章不存在!");
+      map.put("success", false);
+    } else {
+      Integer thumbsUpNumber = 1;
+      Article article = articleService.getById(String.valueOf(articleThumbsUp.getIdArticle()));
+      if (Objects.isNull(article)) {
+        map.put("message", "数据异常,文章不存在!");
+        map.put("success", false);
+      } else {
+        User user = UserUtils.getCurrentUserByToken();
+        articleThumbsUp.setIdUser(user.getIdUser());
+        ArticleThumbsUp thumbsUp = getById(articleThumbsUp);
+        if (Objects.isNull(thumbsUp)) {
+          articleThumbsUp.setThumbsUpTime(new Date());
+          save(articleThumbsUp);
+          // 更新文章点赞数
         } else {
-            Integer thumbsUpNumber = 1;
-            Article article = articleService.getById(String.valueOf(articleThumbsUp.getIdArticle()));
-            if (Objects.isNull(article)) {
-                map.put("message", "数据异常,文章不存在!");
-                map.put("success", false);
-            } else {
-                User user = UserUtils.getCurrentUserByToken();
-                articleThumbsUp.setIdUser(user.getIdUser());
-                ArticleThumbsUp thumbsUp = articleThumbsUpMapper.selectOne(articleThumbsUp);
-                if (Objects.isNull(thumbsUp)) {
-                    articleThumbsUp.setThumbsUpTime(new Date());
-                    articleThumbsUpMapper.insertSelective(articleThumbsUp);
-                    // 更新文章点赞数
-                } else {
-                    articleThumbsUpMapper.deleteByPrimaryKey(thumbsUp.getIdArticleThumbsUp());
-                    // 更新文章点赞数
-                    thumbsUpNumber = -1;
-                }
-                articleThumbsUpMapper.updateArticleThumbsUpNumber(articleThumbsUp.getIdArticle(), thumbsUpNumber);
-                map.put("success", true);
-                map.put("thumbsUpNumber", thumbsUpNumber);
-                if (thumbsUpNumber > 0) {
-                    map.put("message", "点赞成功");
-                } else {
-                    map.put("message", "已取消点赞");
-                }
-            }
+          removeById(thumbsUp.getIdArticleThumbsUp());
+          // 更新文章点赞数
+          thumbsUpNumber = -1;
         }
-        return map;
+        articleThumbsUpMapper.updateArticleThumbsUpNumber(
+            articleThumbsUp.getIdArticle(), thumbsUpNumber);
+        map.put("success", true);
+        map.put("thumbsUpNumber", thumbsUpNumber);
+        if (thumbsUpNumber > 0) {
+          map.put("message", "点赞成功");
+        } else {
+          map.put("message", "已取消点赞");
+        }
+      }
     }
+    return map;
+  }
 }

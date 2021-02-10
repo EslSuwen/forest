@@ -1,5 +1,6 @@
 package com.rymcu.forest.lucene.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.dto.ArticleDTO;
 import com.rymcu.forest.lucene.lucene.ArticleBeanIndex;
 import com.rymcu.forest.lucene.lucene.IKAnalyzer;
@@ -37,7 +38,8 @@ import java.util.concurrent.Executors;
  * @date 2021/2/3 10:29
  */
 @Service
-public class LuceneServiceImpl implements LuceneService {
+public class LuceneServiceImpl extends ServiceImpl<ArticleLuceneMapper, ArticleLucene>
+    implements LuceneService {
 
   @Resource private ArticleLuceneMapper luceneMapper;
 

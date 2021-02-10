@@ -1,49 +1,47 @@
 package com.rymcu.forest.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-/**
- * @author ronger
- */
+/** @author ronger */
 @Data
-@Table(name = "forest_wx_user")
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = false)
+@TableName("forest_wx_user")
 public class WxUser {
 
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(generator = "JDBC")
-    private Integer idWxUser;
+  @TableId(value = "id", type = IdType.AUTO)
+  private Integer idWxUser;
 
-    private Boolean subscribe;
+  private Boolean subscribe;
 
-    private String openId;
+  private String openId;
 
-    private String nickname;
+  private String nickname;
 
-    private String sexDesc;
+  private String sexDesc;
 
-    private Integer sex;
+  private Integer sex;
 
-    private String language;
+  private String language;
 
-    private String city;
+  private String city;
 
-    private String province;
+  private String province;
 
-    private String country;
+  private String country;
 
-    private String headImgUrl;
+  private String headImgUrl;
 
-    private Long subscribeTime;
+  private Long subscribeTime;
 
-    private String unionId;
+  private String unionId;
 
-    private String appId;
+  private String appId;
 
-    private String actToken;
+  private String actToken;
 }

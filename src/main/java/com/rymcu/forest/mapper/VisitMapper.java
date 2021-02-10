@@ -1,10 +1,7 @@
 package com.rymcu.forest.mapper;
 
-import com.rymcu.forest.core.mapper.Mapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.rymcu.forest.entity.Visit;
 
-/**
- * @author ronger
- */
-public interface VisitMapper extends Mapper<Visit> {
-}
+/** @author ronger */
+public interface VisitMapper extends BaseMapper<Visit> {}

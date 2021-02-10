@@ -1,5 +1,6 @@
 package com.rymcu.forest.lucene.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.lucene.dic.Dictionary;
 import com.rymcu.forest.lucene.mapper.UserDicMapper;
 import com.rymcu.forest.lucene.model.UserDic;
@@ -18,7 +19,8 @@ import java.util.List;
  * @date 2021/2/4 09:26
  */
 @Service
-public class UserDicServiceImpl implements UserDicService {
+public class UserDicServiceImpl extends ServiceImpl<UserDicMapper, UserDic>
+    implements UserDicService {
 
   @Resource private UserDicMapper userDicMapper;
 

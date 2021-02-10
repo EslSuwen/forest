@@ -1,12 +1,12 @@
 package com.rymcu.forest.mapper;
 
-import com.rymcu.forest.core.mapper.Mapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.rymcu.forest.entity.Permission;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface PermissionMapper extends Mapper<Permission> {
+public interface PermissionMapper extends BaseMapper<Permission> {
 
-    List<Permission> selectMenuByIdRole(@Param("role") Integer role);
+  List<Permission> selectMenuByIdRole(@Param("role") Integer role);
 }

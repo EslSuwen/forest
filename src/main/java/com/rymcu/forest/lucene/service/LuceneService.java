@@ -1,5 +1,6 @@
 package com.rymcu.forest.lucene.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.rymcu.forest.dto.ArticleDTO;
 import com.rymcu.forest.lucene.model.ArticleLucene;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @author suwen
  * @date 2021/2/3 10:10
  */
-public interface LuceneService {
+public interface LuceneService extends IService<ArticleLucene> {
 
   /**
    * 将文章的数据解析为一个个关键字词存储到索引文件中

@@ -1,5 +1,6 @@
 package com.rymcu.forest.lucene.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.rymcu.forest.lucene.model.UserDic;
 
 import java.io.FileNotFoundException;
@@ -11,7 +12,7 @@ import java.util.List;
  * @author suwen
  * @date 2021/2/4 09:25
  */
-public interface UserDicService {
+public interface UserDicService extends IService<UserDic> {
 
   /**
    * 加载所有字典
@@ -48,9 +49,6 @@ public interface UserDicService {
    */
   void updateDic(UserDic userDic);
 
-  /**
-   * 写入字典至内存
-   *
-   */
+  /** 写入字典至内存 */
   void writeUserDic() throws FileNotFoundException;
 }
