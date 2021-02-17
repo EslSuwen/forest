@@ -37,7 +37,7 @@ public class WebLogAspect {
      * <p>~ 第四个 * 定义在web包或者子包 ~ 第五个 * 任意方法 ~ .. 匹配任意数量的参数. execution(*
      * xiao.ze.demo.service.impl.*.*(..))
      */
-    @Pointcut("execution(* com.rymcu.forest.*.api.*.*.*(..))")
+    @Pointcut("execution(* com.rymcu.forest.*.api.*.*.*.*(..))")
     public void webLog() {
     }
 

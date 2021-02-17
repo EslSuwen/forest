@@ -2,6 +2,7 @@ package com.rymcu.forest.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rymcu.forest.dto.*;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.User;
 import com.rymcu.forest.entity.UserExtend;
 import org.apache.ibatis.exceptions.TooManyResultsException;
@@ -40,7 +41,7 @@ public interface UserService extends IService<User> {
    * @param password 密码
    * @return Map
    */
-  Map login(String account, String password);
+  Result<?> login(String account, String password);
 
   /**
    * 通过 nickname 获取用户信息接口
@@ -83,7 +84,7 @@ public interface UserService extends IService<User> {
    * @param idUser
    * @return
    */
-  Map findUserInfo(Integer idUser);
+  Result<?> findUserInfo(Integer idUser);
 
   /**
    * 更新用户信息
@@ -91,7 +92,7 @@ public interface UserService extends IService<User> {
    * @param user
    * @return
    */
-  Map updateUserInfo(UserInfoDTO user);
+  Result<?> updateUserInfo(UserInfoDTO user);
 
   /**
    * 验证昵称是否重复
@@ -100,7 +101,7 @@ public interface UserService extends IService<User> {
    * @param nickname
    * @return
    */
-  Map checkNickname(Integer idUser, String nickname);
+  Result<?> checkNickname(Integer idUser, String nickname);
 
   /**
    * 获取用户权限
@@ -124,7 +125,7 @@ public interface UserService extends IService<User> {
    * @param userExtend
    * @return
    */
-  Map updateUserExtend(UserExtend userExtend);
+  Result<?> updateUserExtend(UserExtend userExtend);
 
   /**
    * 获取用户扩展信息

@@ -1,5 +1,6 @@
 package com.rymcu.forest.web.api.v1.topic;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.core.result.GlobalResult;
 import com.rymcu.forest.core.result.GlobalResultGenerator;
@@ -29,11 +30,11 @@ public class TopicController {
 
   @GetMapping("/{name}")
   @VisitLogger
-  public Result<List<ArticleDTO>> articles(
+  public Result<IPage<ArticleDTO>> articles(
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows,
       @PathVariable String name) {
-    List<ArticleDTO> list = articleService.findArticlesByTopicUri(new Page<>(page, rows), name);
+    IPage<ArticleDTO> list = articleService.findArticlesByTopicUri(new Page<>(page, rows), name);
     return Result.OK(list);
   }
 }

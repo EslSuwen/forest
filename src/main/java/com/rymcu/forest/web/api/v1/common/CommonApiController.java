@@ -1,5 +1,6 @@
 package com.rymcu.forest.web.api.v1.common;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.core.result.GlobalResult;
 import com.rymcu.forest.core.result.GlobalResultGenerator;
@@ -72,9 +73,8 @@ public class CommonApiController {
   }
 
   @PostMapping("/login")
-  public GlobalResult<Map> login(@RequestBody User user) {
-    Map map = userService.login(user.getAccount(), user.getPassword());
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<?> login(@RequestBody User user) {
+    return userService.login(user.getAccount(), user.getPassword());
   }
 
   @GetMapping("/heartbeat")
@@ -84,15 +84,13 @@ public class CommonApiController {
 
   @GetMapping("/articles")
   @VisitLogger
-  public GlobalResult<Map> articles(
+  public Result<IPage<ArticleDTO>> articles(
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows,
       ArticleSearchDTO searchDTO) {
-    /*  TODO PageHelper.startPage(page, rows);
-    List<ArticleDTO> list = articleService.findArticles(searchDTO);
-    PageInfo<ArticleDTO> pageInfo = new PageInfo(list);
-    Map map = Utils.getArticlesGlobalResult(pageInfo);*/
-    return GlobalResultGenerator.genSuccessResult();
+
+    IPage<ArticleDTO> list = articleService.findArticles(new Page<>(page, rows), searchDTO);
+    return Result.OK(list);
   }
 
   @GetMapping("/article/{id}")

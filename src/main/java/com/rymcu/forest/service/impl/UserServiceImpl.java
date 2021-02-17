@@ -3,6 +3,7 @@ package com.rymcu.forest.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.core.service.redis.RedisService;
 import com.rymcu.forest.dto.*;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Role;
 import com.rymcu.forest.entity.User;
 import com.rymcu.forest.entity.UserExtend;
@@ -91,8 +92,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
   }
 
   @Override
-  public Map login(String account, String password) {
-    Map map = new HashMap(1);
+  public Result<?> login(String account, String password) {
     User user = userMapper.findByAccount(account);
     if (user != null) {
       if (Utils.comparePwd(password, user.getPassword())) {
@@ -101,14 +101,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         BeanCopierUtil.copy(user, tokenUser);
         tokenUser.setToken(tokenManager.createToken(account));
         tokenUser.setWeights(userMapper.selectRoleWeightsByUser(user.getIdUser()));
-        map.put("user", tokenUser);
+        return Result.OK(tokenUser);
       } else {
-        map.put("message", "密码错误！");
+        return Result.error("密码错误！");
       }
     } else {
-      map.put("message", "该账号不存在！");
+      return Result.error("该账号不存在！");
     }
-    return map;
   }
 
   @Override
@@ -154,11 +153,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
   }
 
   @Override
-  public Map findUserInfo(Integer idUser) {
-    Map map = new HashMap(1);
+  public Result<?> findUserInfo(Integer idUser) {
     UserInfoDTO user = userMapper.selectUserInfo(idUser);
     if (user == null) {
-      map.put("message", "用户不存在!");
+      return Result.error("用户不存在!");
     } else {
       UserExtend userExtend = userExtendMapper.selectById(user.getIdUser());
       if (Objects.isNull(userExtend)) {
@@ -166,21 +164,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userExtend.setIdUser(user.getIdUser());
         userExtendMapper.insert(userExtend);
       }
+      Map<String, Object> map = new HashMap<>(2);
       map.put("user", user);
       map.put("userExtend", userExtend);
+      return Result.OK(map);
     }
-    return map;
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public Map updateUserInfo(UserInfoDTO user) {
-    Map map = new HashMap(1);
+  public Result<?> updateUserInfo(UserInfoDTO user) {
     user.setNickname(formatNickname(user.getNickname()));
     Integer number = userMapper.checkNicknameByIdUser(user.getIdUser(), user.getNickname());
     if (number > 0) {
-      map.put("message", "该昵称已使用!");
-      return map;
+      return Result.error("该昵称已使用!");
     }
     if (StringUtils.isNotBlank(user.getAvatarType())
         && AVATAR_SVG_TYPE.equals(user.getAvatarType())) {
@@ -199,11 +196,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user.getSignature(),
             user.getSex());
     if (result == 0) {
-      map.put("message", "操作失败!");
-      return map;
+      return Result.error("操作失败!");
     }
-    map.put("user", user);
-    return map;
+    return Result.OK(user);
   }
 
   private String formatNickname(String nickname) {
@@ -211,13 +206,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
   }
 
   @Override
-  public Map checkNickname(Integer idUser, String nickname) {
-    Map map = new HashMap(1);
+  public Result<?> checkNickname(Integer idUser, String nickname) {
     Integer number = userMapper.checkNicknameByIdUser(idUser, nickname);
     if (number > 0) {
-      map.put("message", "该昵称已使用!");
+      Result.error("该昵称已使用!");
     }
-    return map;
+    return Result.OK();
   }
 
   @Override
@@ -231,15 +225,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
   }
 
   @Override
-  public Map updateUserExtend(UserExtend userExtend) {
-    Map map = new HashMap(1);
+  public Result<?> updateUserExtend(UserExtend userExtend) {
     int result = userExtendMapper.updateById(userExtend);
     if (result == 0) {
-      map.put("message", "操作失败!");
-      return map;
+      return Result.error("操作失败!");
     }
-    map.put("userExtend", userExtend);
-    return map;
+    return Result.OK(userExtend);
   }
 
   @Override

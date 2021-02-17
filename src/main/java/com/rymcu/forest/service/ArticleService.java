@@ -1,5 +1,6 @@
 package com.rymcu.forest.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rymcu.forest.dto.ArticleDTO;
@@ -21,7 +22,7 @@ public interface ArticleService extends IService<Article> {
    * @param searchDTO
    * @return
    */
-  List<ArticleDTO> findArticles(Page<?> page, ArticleSearchDTO searchDTO);
+  IPage<ArticleDTO> findArticles(Page<?> page, ArticleSearchDTO searchDTO);
 
   /**
    * 查询文章详情信息
@@ -38,7 +39,7 @@ public interface ArticleService extends IService<Article> {
    * @param name
    * @return
    */
-  List<ArticleDTO> findArticlesByTopicUri(Page<?> page, String name);
+  IPage<ArticleDTO> findArticlesByTopicUri(Page<?> page, String name);
 
   /**
    * 查询标签下文章列表

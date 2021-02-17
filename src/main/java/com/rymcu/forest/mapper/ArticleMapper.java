@@ -1,6 +1,7 @@
 package com.rymcu.forest.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.dto.ArticleDTO;
 import com.rymcu.forest.dto.ArticleTagDTO;
@@ -22,7 +23,8 @@ public interface ArticleMapper extends BaseMapper<Article> {
    * @param topicUri
    * @return
    */
-  List<ArticleDTO> selectArticles(
+  IPage<ArticleDTO> selectArticles(
+      Page<?> page,
       @Param("searchText") String searchText,
       @Param("tag") String tag,
       @Param("topicUri") String topicUri);
@@ -76,7 +78,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
    * @param topicName
    * @return
    */
-  List<ArticleDTO> selectArticlesByTopicUri(Page<?> page, @Param("topicName") String topicName);
+  IPage<ArticleDTO> selectArticlesByTopicUri(Page<?> page, @Param("topicName") String topicName);
 
   /**
    * 获取标签下文章列表
@@ -92,7 +94,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
    * @param idUser
    * @return
    */
-  List<ArticleDTO> selectUserArticles(Page<?> page,@Param("idUser") Integer idUser);
+  List<ArticleDTO> selectUserArticles(Page<?> page, @Param("idUser") Integer idUser);
 
   /**
    * 删除文章标签

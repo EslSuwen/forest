@@ -1,6 +1,7 @@
 package com.rymcu.forest.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.core.constant.NotificationConstant;
@@ -49,21 +50,23 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
   private static final String defaultTopicUri = "news";
 
   @Override
-  public List<ArticleDTO> findArticles(Page<?> page, ArticleSearchDTO searchDTO) {
-    List<ArticleDTO> list;
+  public IPage<ArticleDTO> findArticles(Page<?> page, ArticleSearchDTO searchDTO) {
+    IPage<ArticleDTO> articlePage;
     if (StringUtils.isNotBlank(searchDTO.getTopicUri())
         && !defaultTopicUri.equals(searchDTO.getTopicUri())) {
-      list = articleMapper.selectArticlesByTopicUri(page, searchDTO.getTopicUri());
+      articlePage = articleMapper.selectArticlesByTopicUri(page, searchDTO.getTopicUri());
     } else {
-      list =
+      articlePage =
           articleMapper.selectArticles(
-              searchDTO.getSearchText(), searchDTO.getTag(), searchDTO.getTopicUri());
+              page, searchDTO.getSearchText(), searchDTO.getTag(), searchDTO.getTopicUri());
     }
-    list.forEach(
-        article -> {
-          genArticle(article, 0);
-        });
-    return list;
+    articlePage
+        .getRecords()
+        .forEach(
+            article -> {
+              genArticle(article, 0);
+            });
+    return articlePage;
   }
 
   @Override
@@ -77,13 +80,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
   }
 
   @Override
-  public List<ArticleDTO> findArticlesByTopicUri(Page<?> page, String name) {
-    List<ArticleDTO> articleDTOS = articleMapper.selectArticlesByTopicUri(page, name);
-    articleDTOS.forEach(
+  public IPage<ArticleDTO> findArticlesByTopicUri(Page<?> page, String name) {
+    IPage<ArticleDTO> articleIPage = articleMapper.selectArticlesByTopicUri(page, name);
+    articleIPage.getRecords().forEach(
         articleDTO -> {
           genArticle(articleDTO, 0);
         });
-    return articleDTOS;
+    return articleIPage;
   }
 
   @Override

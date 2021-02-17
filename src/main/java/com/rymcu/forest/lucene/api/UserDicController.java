@@ -27,25 +27,24 @@ public class UserDicController {
   public Result<IPage<UserDic>> getAll(
       @RequestParam(defaultValue = "0") Integer pageNum,
       @RequestParam(defaultValue = "10") Integer pageSize) {
-    IPage<UserDic> list = dicService.page(new Page<>(pageNum, pageSize));
-    return Result.OK(list);
+    return Result.OK(dicService.page(new Page<>(pageNum, pageSize)));
   }
 
   @PostMapping("/addDic/{dic}")
-  public GlobalResult addDic(@PathVariable String dic) {
+  public Result<?> addDic(@PathVariable String dic) {
     dicService.addDic(dic);
-    return GlobalResultGenerator.genSuccessResult("新增字典成功");
+    return Result.OK();
   }
 
   @PutMapping("/editDic")
-  public GlobalResult getAllDic(@RequestBody UserDic dic) {
+  public Result<?> getAllDic(@RequestBody UserDic dic) {
     dicService.updateDic(dic);
-    return GlobalResultGenerator.genSuccessResult("更新字典成功");
+    return Result.OK();
   }
 
   @DeleteMapping("/deleteDic/{id}")
-  public GlobalResult deleteDic(@PathVariable String id) {
+  public Result<?> deleteDic(@PathVariable String id) {
     dicService.deleteDic(id);
-    return GlobalResultGenerator.genSuccessResult("删除字典成功");
+    return Result.OK();
   }
 }
