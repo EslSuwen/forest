@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.core.constant.NotificationConstant;
 import com.rymcu.forest.core.constant.ProjectConstant;
 import com.rymcu.forest.dto.*;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Article;
 import com.rymcu.forest.entity.ArticleContent;
 import com.rymcu.forest.entity.Tag;
@@ -67,6 +68,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
               genArticle(article, 0);
             });
     return articlePage;
+  }
+
+  @Override
+  public IPage<ArticleListDTO> getArticleList(Page<?> page) {
+    return baseMapper.selectArticleList(page);
   }
 
   @Override
@@ -263,21 +269,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public Map delete(Integer id) {
-    Map<String, String> map = new HashMap(1);
+  public Result<?> delete(Integer id) {
     // 判断是否有评论
     boolean isHavComment = articleMapper.existsCommentWithPrimaryKey(id);
     if (isHavComment) {
-      map.put("message", "已有评论的文章不允许删除!");
+      return Result.error("已有评论的文章不允许删除!");
     } else {
       // 删除关联数据(作品集关联关系,标签关联关系)
       deleteLinkedData(id);
       // 删除文章
       if (!removeById(id)) {
-        map.put("message", "删除失败!");
+        return Result.error("删除失败!");
       }
     }
-    return map;
+    return Result.OK();
   }
 
   private void deleteLinkedData(Integer id) {

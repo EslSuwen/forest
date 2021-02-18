@@ -1,5 +1,7 @@
 package com.rymcu.forest.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rymcu.forest.dto.NotificationDTO;
 import com.rymcu.forest.entity.Notification;
@@ -15,10 +17,12 @@ public interface NotificationService extends IService<Notification> {
   /**
    * 获取未读消息数据
    *
+   *
+   * @param page
    * @param idUser
    * @return
    */
-  List<Notification> findUnreadNotifications(Integer idUser);
+  IPage<Notification> findUnreadNotifications(Page<?> page, Integer idUser);
 
   /**
    * 获取消息数据

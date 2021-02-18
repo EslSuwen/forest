@@ -221,4 +221,21 @@
         where id_portfolio = #{idPortfolio}
         order by sort_no
     </select>
+    <select id="selectArticleList" resultType="com.rymcu.forest.dto.ArticleListDTO">
+        select art.id id_article,
+               art.article_title,
+               article_author_id,
+               article_type,
+               article_tags,
+               article_view_count,
+               article_link,
+               art.created_time,
+               art.updated_time,
+               article_perfect,
+               article_status,
+               nickname
+        from forest_article art
+                 left join forest_user user
+        on art.article_author_id = user.id
+    </select>
 </mapper>

@@ -33,13 +33,22 @@ public class ArticleController {
   @Resource private ArticleThumbsUpService articleThumbsUpService;
   @Resource private SponsorService sponsorService;
 
+  @GetMapping("/list")
+  public Result<?> listArticle(
+      @RequestParam(defaultValue = "1") Integer pageNum,
+      @RequestParam(defaultValue = "10") Integer pageSize) {
+    return Result.OK(articleService.getArticleList(new Page<>(pageNum, pageSize)));
+  }
+
   @GetMapping("/detail/{id}")
-  public GlobalResult<Map<String, Object>> detail(
+  public Result<ArticleDTO> detailArticle(
       @PathVariable Integer id, @RequestParam(defaultValue = "2") Integer type) {
-    ArticleDTO articleDTO = articleService.findArticleDTOById(id, type);
-    Map map = new HashMap<>(1);
-    map.put("article", articleDTO);
-    return GlobalResultGenerator.genSuccessResult(map);
+    return Result.OK(articleService.findArticleDTOById(id, type));
+  }
+
+  @PutMapping("/update")
+  public Result<Boolean> updateArticle(@RequestBody Article article) {
+    return Result.OK(articleService.updateById(article));
   }
 
   @PostMapping("/post")
@@ -57,9 +66,8 @@ public class ArticleController {
   }
 
   @DeleteMapping("/delete/{id}")
-  public GlobalResult delete(@PathVariable Integer id) {
-    Map map = articleService.delete(id);
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<?> delete(@PathVariable Integer id) {
+    return articleService.delete(id);
   }
 
   @GetMapping("/{id}/comments")

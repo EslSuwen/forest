@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rymcu.forest.dto.ArticleDTO;
+import com.rymcu.forest.dto.ArticleListDTO;
 import com.rymcu.forest.dto.ArticleSearchDTO;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Article;
 import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 
@@ -23,6 +25,14 @@ public interface ArticleService extends IService<Article> {
    * @return
    */
   IPage<ArticleDTO> findArticles(Page<?> page, ArticleSearchDTO searchDTO);
+
+  /**
+   * 根据检索内容/标签查询文章列表
+   *
+   * @param page
+   * @return
+   */
+  IPage<ArticleListDTO> getArticleList(Page<?> page);
 
   /**
    * 查询文章详情信息
@@ -76,7 +86,7 @@ public interface ArticleService extends IService<Article> {
    * @param id
    * @return
    */
-  Map delete(Integer id);
+  Result<?> delete(Integer id);
 
   /**
    * 增量文章浏览数

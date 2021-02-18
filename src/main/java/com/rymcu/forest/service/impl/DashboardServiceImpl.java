@@ -2,6 +2,7 @@ package com.rymcu.forest.service.impl;
 
 import com.rymcu.forest.dto.admin.Dashboard;
 import com.rymcu.forest.dto.admin.DashboardData;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.mapper.DashboardMapper;
 import com.rymcu.forest.service.DashboardService;
 import org.springframework.stereotype.Service;
@@ -32,12 +33,12 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public Map lastThirtyDaysData() {
-        Map map = new HashMap(4);
-        ArrayList<String> dates = new ArrayList(30);
-        ArrayList<Integer> articleData = new ArrayList(30);
-        ArrayList<Integer> userData = new ArrayList(30);
-        ArrayList<Integer> visitData = new ArrayList(30);
+    public Result<Map<String, Object>> lastThirtyDaysData() {
+        Map<String,Object> map = new HashMap<>(4);
+        ArrayList<String> dates = new ArrayList<>(30);
+        ArrayList<Integer> articleData = new ArrayList<>(30);
+        ArrayList<Integer> userData = new ArrayList<>(30);
+        ArrayList<Integer> visitData = new ArrayList<>(30);
         List<DashboardData> articles = dashboardMapper.selectLastThirtyDaysArticleData();
         List<DashboardData> users = dashboardMapper.selectLastThirtyDaysUserData();
         List<DashboardData> visits = dashboardMapper.selectLastThirtyDaysVisitData();
@@ -83,16 +84,16 @@ public class DashboardServiceImpl implements DashboardService {
         map.put("articles", articleData);
         map.put("users", userData);
         map.put("visits", visitData);
-        return map;
+        return Result.OK(map);
     }
 
     @Override
-    public Map history() {
-        Map map = new HashMap(4);
-        ArrayList<String> dates = new ArrayList(30);
-        ArrayList<Integer> articleData = new ArrayList(30);
-        ArrayList<Integer> userData = new ArrayList(30);
-        ArrayList<Integer> visitData = new ArrayList(30);
+    public Result<Map<String, Object>> history() {
+        Map<String,Object> map = new HashMap<>(4);
+        ArrayList<String> dates = new ArrayList<>(30);
+        ArrayList<Integer> articleData = new ArrayList<>(30);
+        ArrayList<Integer> userData = new ArrayList<>(30);
+        ArrayList<Integer> visitData = new ArrayList<>(30);
         List<DashboardData> articles = dashboardMapper.selectHistoryArticleData();
         List<DashboardData> users = dashboardMapper.selectHistoryUserData();
         List<DashboardData> visits = dashboardMapper.selectHistoryVisitData();
@@ -175,6 +176,6 @@ public class DashboardServiceImpl implements DashboardService {
         map.put("articles", articleData);
         map.put("users", userData);
         map.put("visits", visitData);
-        return map;
+        return Result.OK(map);
     }
 }

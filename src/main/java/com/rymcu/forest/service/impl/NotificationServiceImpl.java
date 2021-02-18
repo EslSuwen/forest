@@ -1,5 +1,7 @@
 package com.rymcu.forest.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.dto.ArticleDTO;
 import com.rymcu.forest.dto.Author;
@@ -37,8 +39,8 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
   private static final String unRead = "0";
 
   @Override
-  public List<Notification> findUnreadNotifications(Integer idUser) {
-    return notificationMapper.selectUnreadNotifications(idUser);
+  public IPage<Notification> findUnreadNotifications(Page<?> page, Integer idUser) {
+    return notificationMapper.selectUnreadNotifications(page, idUser);
   }
 
   @Override

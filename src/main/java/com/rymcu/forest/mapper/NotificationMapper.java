@@ -1,6 +1,8 @@
 package com.rymcu.forest.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.entity.Notification;
 import org.apache.ibatis.annotations.Param;
 
@@ -12,10 +14,11 @@ public interface NotificationMapper extends BaseMapper<Notification> {
   /**
    * 获取未读通知数据
    *
+   * @param page
    * @param idUser
    * @return
    */
-  List<Notification> selectUnreadNotifications(@Param("idUser") Integer idUser);
+  IPage<Notification> selectUnreadNotifications(Page<?> page, @Param("idUser") Integer idUser);
 
   /**
    * 获取消息数据

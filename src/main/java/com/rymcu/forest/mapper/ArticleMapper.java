@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.dto.ArticleDTO;
+import com.rymcu.forest.dto.ArticleListDTO;
 import com.rymcu.forest.dto.ArticleTagDTO;
 import com.rymcu.forest.dto.PortfolioArticleDTO;
 import com.rymcu.forest.entity.Article;
@@ -28,6 +29,13 @@ public interface ArticleMapper extends BaseMapper<Article> {
       @Param("searchText") String searchText,
       @Param("tag") String tag,
       @Param("topicUri") String topicUri);
+
+  /**
+   * 获取文章管理列表信息
+   * @param page 分页信息
+   * @return
+   */
+  IPage<ArticleListDTO> selectArticleList(Page<?> page);
 
   /**
    * 根据文章 ID 查询文章

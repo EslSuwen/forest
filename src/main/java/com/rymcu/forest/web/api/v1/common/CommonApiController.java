@@ -95,11 +95,8 @@ public class CommonApiController {
 
   @GetMapping("/article/{id}")
   @VisitLogger
-  public GlobalResult<Map<String, Object>> article(@PathVariable Integer id) {
-    ArticleDTO articleDTO = articleService.findArticleDTOById(id, 1);
-    Map<String, Object> map = new HashMap<>(1);
-    map.put("article", articleDTO);
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<?> article(@PathVariable Integer id) {
+    return Result.OK(articleService.findArticleDTOById(id, 1));
   }
 
   @GetMapping("/token/{token}")
