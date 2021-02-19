@@ -6,6 +6,7 @@ import com.rymcu.forest.dto.Author;
 import com.rymcu.forest.dto.PortfolioArticleDTO;
 import com.rymcu.forest.dto.PortfolioDTO;
 import com.rymcu.forest.dto.UserDTO;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Portfolio;
 import com.rymcu.forest.entity.User;
 import com.rymcu.forest.mapper.PortfolioMapper;
@@ -20,9 +21,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /** @author ronger */
 @Service
@@ -80,31 +79,24 @@ public class PortfolioServiceImpl extends ServiceImpl<PortfolioMapper, Portfolio
   }
 
   @Override
-  public Map findUnbindArticles(
-      Integer pageNum, Integer pageS, String searchText, Integer idPortfolio)
+  public Result<?> findUnbindArticles(Page<?> page, String searchText, Integer idPortfolio)
       throws BaseApiException {
-    Map map = new HashMap(1);
     User user = UserUtils.getCurrentUserByToken();
     Portfolio portfolio = getById(idPortfolio);
     if (portfolio == null) {
-      map.put("message", "该作品集不存在或已被删除!");
+      return Result.error("该作品集不存在或已被删除!");
     } else {
       if (!user.getIdUser().equals(portfolio.getPortfolioAuthorId())) {
-        map.put("message", "非法操作!");
+        return Result.error("非法操作!");
       } else {
-        /*  TODO page 改造
-        List<ArticleDTO> articles =
-               articleService.selectUnbindArticles(idPortfolio, searchText, user.getIdUser());
-           PageInfo<ArticleDTO> pageInfo = new PageInfo(articles);
-           map = Utils.getArticlesGlobalResult(pageInfo);*/
+        return Result.OK(
+            articleService.selectUnbindArticles(page, idPortfolio, searchText, user.getIdUser()));
       }
     }
-    return map;
   }
 
   @Override
-  public Map bindArticle(PortfolioArticleDTO portfolioArticle) {
-    Map map = new HashMap(1);
+  public Result<?> bindArticle(PortfolioArticleDTO portfolioArticle) {
     Integer count =
         portfolioMapper.selectCountPortfolioArticle(
             portfolioArticle.getIdArticle(), portfolioArticle.getIdPortfolio());
@@ -112,73 +104,54 @@ public class PortfolioServiceImpl extends ServiceImpl<PortfolioMapper, Portfolio
       Integer maxSortNo = portfolioMapper.selectMaxSortNo(portfolioArticle.getIdPortfolio());
       portfolioMapper.insertPortfolioArticle(
           portfolioArticle.getIdArticle(), portfolioArticle.getIdPortfolio(), maxSortNo);
-      map.put("message", "绑定成功!");
+      return Result.OK();
     } else {
-      map.put("message", "该文章已经在作品集下!!");
+      return Result.error("该文章已经在作品集下!!");
     }
-    return map;
   }
 
   @Override
-  public Map updateArticleSortNo(PortfolioArticleDTO portfolioArticle) {
-    Map map = new HashMap(1);
+  public Result<?> updateArticleSortNo(PortfolioArticleDTO portfolioArticle) {
     if (portfolioArticle.getIdPortfolio() == null || portfolioArticle.getIdPortfolio().equals(0)) {
-      map.put("message", "作品集数据异常!");
+      return Result.error("作品集数据异常!");
     }
     if (portfolioArticle.getIdArticle() == null || portfolioArticle.getIdArticle().equals(0)) {
-      map.put("message", "文章数据异常!");
+      return Result.error("文章数据异常!");
     }
     if (portfolioArticle.getSortNo() == null) {
-      map.put("message", "排序号不能为空!");
+      return Result.error("排序号不能为空!");
     }
     Integer result =
         portfolioMapper.updateArticleSortNo(
             portfolioArticle.getIdPortfolio(),
             portfolioArticle.getIdArticle(),
             portfolioArticle.getSortNo());
-    if (result > 0) {
-      map.put("message", "更新成功!");
-    } else {
-      map.put("message", "更新失败!");
-    }
-    return map;
+    return result > 0 ? Result.OK() : Result.error("更新失败!");
   }
 
   @Override
-  public Map unbindArticle(Integer idPortfolio, Integer idArticle) {
-    Map map = new HashMap(1);
+  public Result<?> unbindArticle(Integer idPortfolio, Integer idArticle) {
     if (idPortfolio == null || idPortfolio.equals(0)) {
-      map.put("message", "作品集数据异常");
+      return Result.error("作品集数据异常!");
     }
     if (idArticle == null || idArticle.equals(0)) {
-      map.put("message", "文章数据异常");
+      return Result.error("文章数据异常!");
     }
     Integer result = portfolioMapper.unbindArticle(idPortfolio, idArticle);
-    if (result > 0) {
-      map.put("message", "操作成功!");
-    } else {
-      map.put("message", "操作失败!");
-    }
-    return map;
+    return result > 0 ? Result.OK() : Result.error("操作失败!");
   }
 
   @Override
-  public Map deletePortfolio(Integer idPortfolio) {
-    Map map = new HashMap(1);
+  public Result<?> deletePortfolio(Integer idPortfolio) {
     if (idPortfolio == null || idPortfolio.equals(0)) {
-      map.put("message", "作品集数据异常");
+      return Result.error("作品集数据异常!");
     }
-
     Integer articleNumber = portfolioMapper.selectCountArticleNumber(idPortfolio);
     if (articleNumber > 0) {
-      map.put("message", "该作品集已绑定文章不允许删除!");
+      return Result.error("该作品集已绑定文章不允许删除!");
     } else {
-      if (removeById(idPortfolio)) {
-        map.put("message", "操作失败!");
-      }
+      return removeById(idPortfolio) ? Result.OK() : Result.error("操作失败!");
     }
-
-    return map;
   }
 
   private PortfolioDTO genPortfolioAuthor(PortfolioDTO portfolioDTO, Author author) {

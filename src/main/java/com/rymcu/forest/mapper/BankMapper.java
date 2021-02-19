@@ -1,6 +1,7 @@
 package com.rymcu.forest.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.dto.BankDTO;
 import com.rymcu.forest.entity.Bank;
@@ -14,5 +15,5 @@ public interface BankMapper extends BaseMapper<Bank> {
    *
    * @return
    */
-  List<BankDTO> selectBanks(Page<?> page);
+  IPage<BankDTO> selectBanks(Page<?> page);
 }

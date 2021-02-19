@@ -32,6 +32,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
   /**
    * 获取文章管理列表信息
+   *
    * @param page 分页信息
    * @return
    */
@@ -136,7 +137,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
    * @param idUser
    * @return
    */
-  List<ArticleDTO> selectDrafts(Page<?> page, @Param("idUser") Integer idUser);
+  IPage<ArticleDTO> selectDrafts(Page<?> page, @Param("idUser") Integer idUser);
 
   /**
    * 删除未使用的文章标签
@@ -152,7 +153,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
    * @param idPortfolio
    * @return
    */
-  List<ArticleDTO> selectArticlesByIdPortfolio(
+  IPage<ArticleDTO> selectArticlesByIdPortfolio(
       Page<?> page, @Param("idPortfolio") Integer idPortfolio);
 
   /**
@@ -163,7 +164,8 @@ public interface ArticleMapper extends BaseMapper<Article> {
    * @param idUser
    * @return
    */
-  List<ArticleDTO> selectUnbindArticlesByIdPortfolio(
+  IPage<ArticleDTO> selectUnbindArticlesByIdPortfolio(
+      Page<?> page,
       @Param("idPortfolio") Integer idPortfolio,
       @Param("searchText") String searchText,
       @Param("idUser") Integer idUser);

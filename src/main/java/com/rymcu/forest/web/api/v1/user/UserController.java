@@ -1,14 +1,11 @@
 package com.rymcu.forest.web.api.v1.user;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.rymcu.forest.core.result.GlobalResult;
-import com.rymcu.forest.core.result.GlobalResultGenerator;
 import com.rymcu.forest.core.service.log.annotation.VisitLogger;
 import com.rymcu.forest.dto.ArticleDTO;
 import com.rymcu.forest.dto.PortfolioDTO;
 import com.rymcu.forest.dto.UserDTO;
 import com.rymcu.forest.dto.result.Result;
-import com.rymcu.forest.entity.UserExtend;
 import com.rymcu.forest.service.ArticleService;
 import com.rymcu.forest.service.FollowService;
 import com.rymcu.forest.service.PortfolioService;
@@ -30,9 +27,8 @@ public class UserController {
 
   @GetMapping("/{nickname}")
   @VisitLogger
-  public GlobalResult detail(@PathVariable String nickname) {
-    UserDTO userDTO = userService.findUserDTOByNickname(nickname);
-    return GlobalResultGenerator.genSuccessResult(userDTO);
+  public Result<UserDTO> detail(@PathVariable String nickname) {
+    return Result.OK(userService.findUserDTOByNickname(nickname));
   }
 
   @GetMapping("/{nickname}/articles")
@@ -90,8 +86,7 @@ public class UserController {
   }
 
   @GetMapping("/{nickname}/user-extend")
-  public GlobalResult userExtend(@PathVariable String nickname) {
-    UserExtend userExtend = userService.selectUserExtendByNickname(nickname);
-    return GlobalResultGenerator.genSuccessResult(userExtend);
+  public Result<?> userExtend(@PathVariable String nickname) {
+    return Result.OK(userService.selectUserExtendByNickname(nickname));
   }
 }

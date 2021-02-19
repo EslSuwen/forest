@@ -2,9 +2,6 @@ package com.rymcu.forest.web.api.v1.common;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.rymcu.forest.core.result.GlobalResult;
-import com.rymcu.forest.core.result.GlobalResultGenerator;
-import com.rymcu.forest.core.result.GlobalResultMessage;
 import com.rymcu.forest.core.service.log.annotation.VisitLogger;
 import com.rymcu.forest.dto.*;
 import com.rymcu.forest.dto.result.Result;
@@ -15,9 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /** @author ronger */
 @RestController
@@ -28,48 +22,33 @@ public class CommonApiController {
   @Resource private UserService userService;
   @Resource private ArticleService articleService;
   @Resource private PortfolioService portfolioService;
-  @Resource private SearchService SearchService;
+  @Resource private SearchService searchService;
 
   @GetMapping("/get-email-code")
-  public GlobalResult<Map<String, String>> getEmailCode(@RequestParam("email") String email)
-      throws MessagingException {
-    Map<String, String> map = new HashMap<>(1);
-    map.put("message", GlobalResultMessage.SEND_SUCCESS.getMessage());
+  public Result<?> getEmailCode(@RequestParam("email") String email) throws MessagingException {
     User user = userService.findByAccount(email);
     if (user != null) {
-      map.put("message", "该邮箱已被注册！");
-    } else {
-      Integer result = javaMailService.sendEmailCode(email);
-      if (result == 0) {
-        map.put("message", GlobalResultMessage.SEND_FAIL.getMessage());
-      }
+      return Result.error("该邮箱已被注册！");
     }
-    return GlobalResultGenerator.genSuccessResult(map);
+    Integer result = javaMailService.sendEmailCode(email);
+    return result != 0 ? Result.OK("验证码已发送至邮箱！") : Result.error("发送失败，请稍后再试！");
   }
 
   @GetMapping("/get-forget-password-email")
-  public GlobalResult<Map<Object, Object>> getForgetPasswordEmail(
-      @RequestParam("email") String email) throws MessagingException {
-    Map<Object, Object> map = new HashMap<>(1);
-    map.put("message", GlobalResultMessage.SEND_SUCCESS.getMessage());
+  public Result<?> getForgetPasswordEmail(@RequestParam("email") String email)
+      throws MessagingException {
     User user = userService.findByAccount(email);
-    if (user != null) {
-      Integer result = javaMailService.sendForgetPasswordEmail(email);
-      if (result == 0) {
-        map.put("message", GlobalResultMessage.SEND_FAIL.getMessage());
-      }
-    } else {
-      map.put("message", "该邮箱未注册！");
+    if (user == null) {
+      return Result.error("该邮箱未注册！");
     }
-    return GlobalResultGenerator.genSuccessResult(map);
+    Integer result = javaMailService.sendForgetPasswordEmail(email);
+    return result != 0 ? Result.OK("验证码已发送至邮箱！") : Result.error("发送失败，请稍后再试！");
   }
 
   @PostMapping("/register")
-  public GlobalResult<Map> register(@RequestBody UserRegisterInfoDTO registerInfo) {
-    Map map =
-        userService.register(
-            registerInfo.getEmail(), registerInfo.getPassword(), registerInfo.getCode());
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<?> register(@RequestBody UserRegisterInfoDTO registerInfo) {
+    return userService.register(
+        registerInfo.getEmail(), registerInfo.getPassword(), registerInfo.getCode());
   }
 
   @PostMapping("/login")
@@ -78,8 +57,8 @@ public class CommonApiController {
   }
 
   @GetMapping("/heartbeat")
-  public GlobalResult heartbeat() {
-    return GlobalResultGenerator.genSuccessResult("heartbeat");
+  public Result<String> heartbeat() {
+    return Result.OK("heartbeat");
   }
 
   @GetMapping("/articles")
@@ -88,7 +67,6 @@ public class CommonApiController {
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows,
       ArticleSearchDTO searchDTO) {
-
     IPage<ArticleDTO> list = articleService.findArticles(new Page<>(page, rows), searchDTO);
     return Result.OK(list);
   }
@@ -100,38 +78,26 @@ public class CommonApiController {
   }
 
   @GetMapping("/token/{token}")
-  public GlobalResult<TokenUser> token(@PathVariable String token) {
-    TokenUser tokenUser = UserUtils.getTokenUser(token);
-    return GlobalResultGenerator.genSuccessResult(tokenUser);
+  public Result<?> token(@PathVariable String token) {
+    return Result.OK(UserUtils.getTokenUser(token));
   }
 
   @PatchMapping("/forget-password")
-  public GlobalResult<Map> forgetPassword(@RequestBody ForgetPasswordDTO forgetPassword) {
-    Map map = userService.forgetPassword(forgetPassword.getCode(), forgetPassword.getPassword());
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<?> forgetPassword(@RequestBody ForgetPasswordDTO forgetPassword) {
+    return userService.forgetPassword(forgetPassword.getCode(), forgetPassword.getPassword());
   }
 
   @GetMapping("/portfolio/{id}")
   @VisitLogger
-  public GlobalResult<Map<String, Object>> portfolio(@PathVariable Integer id) {
-    PortfolioDTO portfolioDTO = portfolioService.findPortfolioDTOById(id, 1);
-    Map<String, Object> map = new HashMap<>(1);
-    map.put("portfolio", portfolioDTO);
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<PortfolioDTO> portfolio(@PathVariable Integer id) {
+    return Result.OK(portfolioService.findPortfolioDTOById(id, 1));
   }
 
   @GetMapping("/portfolio/{id}/articles")
-  public Result<List<ArticleDTO>> articles(
+  public Result<IPage<ArticleDTO>> articles(
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows,
       @PathVariable Integer id) {
-    List<ArticleDTO> list = articleService.findArticlesByIdPortfolio(new Page<>(page, rows), id);
-    return Result.OK(list);
-  }
-
-  @GetMapping("/initial-search")
-  public GlobalResult initialSearch() {
-    List<SearchModel> list = SearchService.initialSearch();
-    return GlobalResultGenerator.genSuccessResult(list);
+    return Result.OK(articleService.findArticlesByIdPortfolio(new Page<>(page, rows), id));
   }
 }

@@ -1,7 +1,6 @@
 package com.rymcu.forest.web.api.v1.bank;
 
-import com.rymcu.forest.core.result.GlobalResult;
-import com.rymcu.forest.core.result.GlobalResultGenerator;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.TransactionRecord;
 import com.rymcu.forest.service.TransactionRecordService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +18,8 @@ public class TransactionRecordController {
   @Resource private TransactionRecordService transactionRecordService;
 
   @PostMapping("/transfer")
-  public GlobalResult transfer(@RequestBody TransactionRecord transactionRecord) throws Exception {
-    transactionRecord = transactionRecordService.transfer(transactionRecord);
-    return GlobalResultGenerator.genSuccessResult(transactionRecord);
+  public Result<TransactionRecord> transfer(@RequestBody TransactionRecord transactionRecord)
+      throws Exception {
+    return Result.OK(transactionRecordService.transfer(transactionRecord));
   }
 }

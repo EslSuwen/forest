@@ -1,7 +1,5 @@
 package com.rymcu.forest.web.api.v1.user;
 
-import com.rymcu.forest.core.result.GlobalResult;
-import com.rymcu.forest.core.result.GlobalResultGenerator;
 import com.rymcu.forest.dto.ChangeEmailDTO;
 import com.rymcu.forest.dto.UpdatePasswordDTO;
 import com.rymcu.forest.dto.UserInfoDTO;
@@ -11,7 +9,6 @@ import com.rymcu.forest.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 /** @author ronger */
 @RestController
@@ -41,14 +38,12 @@ public class UserInfoController {
   }
 
   @PatchMapping("/update-email")
-  public GlobalResult updateEmail(@RequestBody ChangeEmailDTO changeEmailDTO) {
-    Map map = userService.updateEmail(changeEmailDTO);
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<?> updateEmail(@RequestBody ChangeEmailDTO changeEmailDTO) {
+    return userService.updateEmail(changeEmailDTO);
   }
 
   @PatchMapping("/update-password")
-  public GlobalResult updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
-    Map map = userService.updatePassword(updatePasswordDTO);
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<?> updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
+    return userService.updatePassword(updatePasswordDTO);
   }
 }

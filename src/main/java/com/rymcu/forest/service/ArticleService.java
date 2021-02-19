@@ -13,7 +13,6 @@ import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.Map;
 
 /** @author ronger */
 public interface ArticleService extends IService<Article> {
@@ -77,7 +76,7 @@ public interface ArticleService extends IService<Article> {
    * @throws BaseApiException
    * @return
    */
-  Map postArticle(ArticleDTO article, HttpServletRequest request)
+  Result<?> postArticle(ArticleDTO article, HttpServletRequest request)
       throws UnsupportedEncodingException, BaseApiException;
 
   /**
@@ -102,7 +101,7 @@ public interface ArticleService extends IService<Article> {
    * @throws BaseApiException
    * @return
    */
-  Map share(Integer id) throws BaseApiException;
+  String share(Integer id) throws BaseApiException;
 
   /**
    * 查询草稿文章类别
@@ -111,7 +110,7 @@ public interface ArticleService extends IService<Article> {
    * @return
    * @param page
    */
-  List<ArticleDTO> findDrafts(Page<?> page) throws BaseApiException;
+  IPage<ArticleDTO> findDrafts(Page<?> page) throws BaseApiException;
 
   /**
    * 查询作品集下文章
@@ -119,17 +118,19 @@ public interface ArticleService extends IService<Article> {
    * @param idPortfolio
    * @return
    */
-  List<ArticleDTO> findArticlesByIdPortfolio(Page<?> page, Integer idPortfolio);
+  IPage<ArticleDTO> findArticlesByIdPortfolio(Page<?> page, Integer idPortfolio);
 
   /**
    * 查询作品集下未绑定文章
    *
+   *
+   * @param page
    * @param idPortfolio
    * @param searchText
    * @param idUser
    * @return
    */
-  List<ArticleDTO> selectUnbindArticles(Integer idPortfolio, String searchText, Integer idUser);
+  IPage<ArticleDTO> selectUnbindArticles(Page<?> page,Integer idPortfolio, String searchText, Integer idUser);
 
   /**
    * 更新文章标签
@@ -140,7 +141,7 @@ public interface ArticleService extends IService<Article> {
    * @throws UnsupportedEncodingException
    * @throws BaseApiException
    */
-  Map updateTags(Integer idArticle, String tags)
+  Result<?> updateTags(Integer idArticle, String tags)
       throws UnsupportedEncodingException, BaseApiException;
 
   /**
@@ -150,5 +151,5 @@ public interface ArticleService extends IService<Article> {
    * @param articlePerfect
    * @return
    */
-  Map updatePerfect(Integer idArticle, String articlePerfect);
+  Result<?> updatePerfect(Integer idArticle, String articlePerfect);
 }

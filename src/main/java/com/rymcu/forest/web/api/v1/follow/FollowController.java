@@ -1,7 +1,6 @@
 package com.rymcu.forest.web.api.v1.follow;
 
-import com.rymcu.forest.core.result.GlobalResult;
-import com.rymcu.forest.core.result.GlobalResultGenerator;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Follow;
 import com.rymcu.forest.service.FollowService;
 import com.rymcu.forest.web.api.v1.exception.BaseApiException;
@@ -17,22 +16,18 @@ public class FollowController {
   @Resource private FollowService followService;
 
   @GetMapping("/is-follow")
-  public GlobalResult isFollow(
-      @RequestParam Integer followingId, @RequestParam String followingType)
+  public Result<?> isFollow(@RequestParam Integer followingId, @RequestParam String followingType)
       throws BaseApiException {
-    Boolean b = followService.isFollow(followingId, followingType);
-    return GlobalResultGenerator.genSuccessResult(b);
+    return Result.OK(followService.isFollow(followingId, followingType));
   }
 
   @PostMapping
-  public GlobalResult follow(@RequestBody Follow follow) throws BaseApiException {
-    Boolean b = followService.follow(follow);
-    return GlobalResultGenerator.genSuccessResult(b);
+  public Result<?> follow(@RequestBody Follow follow) throws BaseApiException {
+    return Result.OK(followService.follow(follow));
   }
 
   @PostMapping("cancel-follow")
-  public GlobalResult cancelFollow(@RequestBody Follow follow) throws BaseApiException {
-    Boolean b = followService.cancelFollow(follow);
-    return GlobalResultGenerator.genSuccessResult(b);
+  public Result<?> cancelFollow(@RequestBody Follow follow) throws BaseApiException {
+    return Result.OK(followService.cancelFollow(follow));
   }
 }

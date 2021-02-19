@@ -1,6 +1,8 @@
 package com.rymcu.forest.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.dto.admin.TagDTO;
 import com.rymcu.forest.dto.admin.TopicDTO;
 import com.rymcu.forest.entity.Tag;
@@ -25,10 +27,12 @@ public interface TopicMapper extends BaseMapper<Topic> {
   TopicDTO selectTopicByTopicUri(@Param("topicUri") String topicUri);
 
   /**
+   *
+   * @param page
    * @param idTopic
    * @return
    */
-  List<TagDTO> selectTopicTag(@Param("idTopic") Integer idTopic);
+  IPage<TagDTO> selectTopicTag(Page<?> page,@Param("idTopic") Integer idTopic);
 
   /**
    * 更新
@@ -60,8 +64,8 @@ public interface TopicMapper extends BaseMapper<Topic> {
    * @param tagTitle
    * @return
    */
-  List<Tag> selectUnbindTagsById(
-      @Param("idTopic") Integer idTopic, @Param("tagTitle") String tagTitle);
+  IPage<Tag> selectUnbindTagsById(
+      Page<?> page, @Param("idTopic") Integer idTopic, @Param("tagTitle") String tagTitle);
 
   Integer insertTopicTag(@Param("idTopic") Integer idTopic, @Param("idTag") Integer idTag);
 

@@ -2,6 +2,7 @@ package com.rymcu.forest.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.dto.ArticleDTO;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Sponsor;
 import com.rymcu.forest.entity.TransactionRecord;
 import com.rymcu.forest.entity.User;
@@ -16,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Objects;
 
 /** @author ronger */
 @Service
@@ -29,13 +32,11 @@ public class SponsorServiceImpl extends ServiceImpl<SponsorMapper, Sponsor>
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public Map sponsorship(Sponsor sponsor) throws Exception {
-    Map map = new HashMap(2);
+  public Result<?> sponsorship(Sponsor sponsor) throws Exception {
     if (Objects.isNull(sponsor)
         || Objects.isNull(sponsor.getDataId())
         || Objects.isNull(sponsor.getDataType())) {
-      map.put("success", false);
-      map.put("message", "数据异常");
+      return Result.error("数据异常");
     } else {
       SponsorEnum result =
           Arrays.stream(SponsorEnum.values())
@@ -55,14 +56,12 @@ public class SponsorServiceImpl extends ServiceImpl<SponsorMapper, Sponsor>
             transactionRecordService.transferByUserId(
                 articleDTO.getArticleAuthorId(), user.getIdUser(), money);
         if (Objects.isNull(transactionRecord.getIdTransactionRecord())) {
-          throw new Exception("余额不足");
+          return Result.error("余额不足");
         }
         // 更新文章赞赏数
         sponsorMapper.updateArticleSponsorCount(articleDTO.getIdArticle());
       }
-      map.put("success", true);
-      map.put("message", "赞赏成功");
+      return Result.OK("赞赏成功");
     }
-    return map;
   }
 }

@@ -48,15 +48,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public Map register(String email, String password, String code) {
-    Map map = new HashMap(2);
-    map.put("message", "验证码无效！");
+  public Result<?> register(String email, String password, String code) {
     String vCode = redisService.get(email);
     if (StringUtils.isNotBlank(vCode)) {
       if (vCode.equals(code)) {
         User user = userMapper.findByAccount(email);
         if (user != null) {
-          map.put("message", "该邮箱已被注册！");
+          return Result.error("该邮箱已被注册！");
         } else {
           user = new User();
           String nickname = email.split("@")[0];
@@ -72,13 +70,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
           user = userMapper.findByAccount(email);
           Role role = roleMapper.selectRoleByInputCode("user");
           userMapper.insertUserRole(user.getIdUser(), role.getIdRole());
-          map.put("message", "注册成功！");
-          map.put("flag", 1);
           redisService.delete(email);
+          return Result.OK(1);
         }
       }
     }
-    return map;
+    return Result.error("验证码无效！");
   }
 
   private String checkNickname(String nickname) {
@@ -116,40 +113,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
   }
 
   @Override
-  public Map forgetPassword(String code, String password) {
-    Map map = new HashMap<>(2);
+  public Result<?> forgetPassword(String code, String password) {
     String account = redisService.get(code);
     System.out.println("account:\n" + account);
     if (StringUtils.isBlank(account)) {
-      map.put("message", "链接已失效");
+      return Result.error("链接已失效");
     } else {
       userMapper.updatePasswordByAccount(account, Utils.entryptPassword(password));
-      map.put("message", "修改成功，正在跳转登录登陆界面！");
-      map.put("flag", 1);
+      return Result.OK("修改成功，正在跳转登录登陆界面！", 1);
     }
-    return map;
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public Map updateUserRole(Integer idUser, Integer idRole) {
-    Map map = new HashMap(1);
+  public Result<?> updateUserRole(Integer idUser, Integer idRole) {
     Integer result = userMapper.updateUserRole(idUser, idRole);
-    if (result == 0) {
-      map.put("message", "更新失败!");
-    }
-    return map;
+    return result != 0 ? Result.OK() : Result.error("更新失败!");
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public Map updateStatus(Integer idUser, String status) {
-    Map map = new HashMap(1);
+  public Result<?> updateStatus(Integer idUser, String status) {
     Integer result = userMapper.updateStatus(idUser, status);
-    if (result == 0) {
-      map.put("message", "更新失败!");
-    }
-    return map;
+    return result != 0 ? Result.OK() : Result.error("更新失败!");
   }
 
   @Override
@@ -239,9 +225,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
   }
 
   @Override
-  public Map updateEmail(ChangeEmailDTO changeEmailDTO) {
-    Map map = new HashMap(2);
-    map.put("message", "验证码无效！");
+  public Result<?> updateEmail(ChangeEmailDTO changeEmailDTO) {
     Integer idUser = changeEmailDTO.getIdUser();
     String email = changeEmailDTO.getEmail();
     String code = changeEmailDTO.getCode();
@@ -249,19 +233,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     if (StringUtils.isNotBlank(vCode)) {
       if (vCode.equals(code)) {
         userMapper.updateEmail(idUser, email);
-        map.put("message", "更新成功！");
-        map.put("email", email);
+        return Result.OK(email);
       }
     }
-    return map;
+    return Result.error("验证码无效！");
   }
 
   @Override
-  public Map updatePassword(UpdatePasswordDTO updatePasswordDTO) {
-    Map map = new HashMap(1);
+  public Result<?> updatePassword(UpdatePasswordDTO updatePasswordDTO) {
     String password = Utils.entryptPassword(updatePasswordDTO.getPassword());
     userMapper.updatePasswordById(updatePasswordDTO.getIdUser(), password);
-    map.put("message", "更新成功!");
-    return map;
+    return Result.OK();
   }
 }

@@ -28,7 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 /** @author ronger */
 @Service
@@ -88,10 +90,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
   @Override
   public IPage<ArticleDTO> findArticlesByTopicUri(Page<?> page, String name) {
     IPage<ArticleDTO> articleIPage = articleMapper.selectArticlesByTopicUri(page, name);
-    articleIPage.getRecords().forEach(
-        articleDTO -> {
-          genArticle(articleDTO, 0);
-        });
+    articleIPage
+        .getRecords()
+        .forEach(
+            articleDTO -> {
+              genArticle(articleDTO, 0);
+            });
     return articleIPage;
   }
 
@@ -113,16 +117,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 
   @Override
   @Transactional(rollbackFor = {UnsupportedEncodingException.class, BaseApiException.class})
-  public Map postArticle(ArticleDTO article, HttpServletRequest request)
+  public Result<?> postArticle(ArticleDTO article, HttpServletRequest request)
       throws UnsupportedEncodingException, BaseApiException {
-    Map map = new HashMap(1);
     if (StringUtils.isBlank(article.getArticleTitle())) {
-      map.put("message", "标题不能为空！");
-      return map;
+      Result.error("标题不能为空！");
     }
     if (StringUtils.isBlank(article.getArticleContent())) {
-      map.put("message", "正文不能为空！");
-      return map;
+      Result.error("正文不能为空！");
     }
     boolean isUpdate = false;
     String articleTitle = article.getArticleTitle();
@@ -135,8 +136,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
     if (StringUtils.isNotBlank(reservedTag)) {
       Integer roleWeights = userService.findRoleWeightsByUser(user.getIdUser());
       if (roleWeights > 2) {
-        map.put("message", StringEscapeUtils.unescapeJava(reservedTag) + "标签为系统保留标签!");
-        return map;
+        return Result.error(StringEscapeUtils.unescapeJava(reservedTag) + "标签为系统保留标签!");
       } else {
         notification = true;
       }
@@ -158,8 +158,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
       // 如果文章之前状态为草稿则应视为新发布文章
       isUpdate = defaultStatus.equals(newArticle.getArticleStatus());
       if (!user.getIdUser().equals(newArticle.getArticleAuthorId())) {
-        map.put("message", "非法访问！");
-        return map;
+        return Result.error("非法访问！");
       }
       newArticle.setArticleTitle(articleTitle);
       newArticle.setArticleTags(articleTags);
@@ -234,8 +233,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
       }
     }
 
-    map.put("id", newArticle.getIdArticle());
-    return map;
+    return Result.OK(newArticle.getIdArticle());
   }
 
   private String checkTags(String articleTags) {
@@ -301,78 +299,57 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
   }
 
   @Override
-  public Map share(Integer id) throws BaseApiException {
+  public String share(Integer id) throws BaseApiException {
     Article article = getById(id);
     User user = UserUtils.getCurrentUserByToken();
     StringBuilder shareUrl = new StringBuilder(article.getArticlePermalink());
     shareUrl.append("?s=").append(user.getNickname());
-    Map map = new HashMap(1);
-    map.put("shareUrl", shareUrl);
-    return map;
+    return shareUrl.toString();
   }
 
   @Override
-  public List<ArticleDTO> findDrafts(Page<?> page) throws BaseApiException {
+  public IPage<ArticleDTO> findDrafts(Page<?> page) throws BaseApiException {
     User user = UserUtils.getCurrentUserByToken();
-    List<ArticleDTO> list = articleMapper.selectDrafts(page, user.getIdUser());
-    list.forEach(
-        article -> {
-          genArticle(article, 0);
-        });
+    IPage<ArticleDTO> list = articleMapper.selectDrafts(page, user.getIdUser());
+    list.getRecords().forEach(article -> genArticle(article, 0));
     return list;
   }
 
   @Override
-  public List<ArticleDTO> findArticlesByIdPortfolio(Page<?> page, Integer idPortfolio) {
-    List<ArticleDTO> list = articleMapper.selectArticlesByIdPortfolio(page, idPortfolio);
-    list.forEach(
-        article -> {
-          genArticle(article, 0);
-        });
+  public IPage<ArticleDTO> findArticlesByIdPortfolio(Page<?> page, Integer idPortfolio) {
+    IPage<ArticleDTO> list = articleMapper.selectArticlesByIdPortfolio(page, idPortfolio);
+    list.getRecords().forEach(article -> genArticle(article, 0));
     return list;
   }
 
   @Override
-  public List<ArticleDTO> selectUnbindArticles(
-      Integer idPortfolio, String searchText, Integer idUser) {
-    List<ArticleDTO> list =
-        articleMapper.selectUnbindArticlesByIdPortfolio(idPortfolio, searchText, idUser);
-    list.forEach(
-        article -> {
-          genArticle(article, 0);
-        });
+  public IPage<ArticleDTO> selectUnbindArticles(
+      Page<?> page, Integer idPortfolio, String searchText, Integer idUser) {
+    IPage<ArticleDTO> list =
+        articleMapper.selectUnbindArticlesByIdPortfolio(page, idPortfolio, searchText, idUser);
+    list.getRecords().forEach(article -> genArticle(article, 0));
     return list;
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public Map updateTags(Integer idArticle, String tags)
+  public Result<?> updateTags(Integer idArticle, String tags)
       throws UnsupportedEncodingException, BaseApiException {
-    Map map = new HashMap(2);
     Article article = getById(idArticle);
     if (Objects.nonNull(article)) {
       article.setArticleTags(tags);
       articleMapper.updateArticleTags(idArticle, tags);
       tagService.saveTagArticle(article, "");
-      map.put("success", true);
+      return Result.OK();
     } else {
-      map.put("success", false);
-      map.put("message", "更新失败,文章不存在!");
+      return Result.error("更新失败,文章不存在!");
     }
-    return map;
   }
 
   @Override
-  public Map updatePerfect(Integer idArticle, String articlePerfect) {
-    Map map = new HashMap(2);
+  public Result<?> updatePerfect(Integer idArticle, String articlePerfect) {
     int result = articleMapper.updatePerfect(idArticle, articlePerfect);
-    if (result == 0) {
-      map.put("success", false);
-      map.put("message", "设置优选文章失败!");
-    } else {
-      map.put("success", true);
-    }
-    return map;
+    return result != 0 ? Result.OK() : Result.error("设置优选文章失败!");
   }
 
   private ArticleDTO genArticle(ArticleDTO article, Integer type) {

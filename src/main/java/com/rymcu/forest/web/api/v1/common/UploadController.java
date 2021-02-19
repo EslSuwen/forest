@@ -1,9 +1,8 @@
 package com.rymcu.forest.web.api.v1.common;
 
-import com.rymcu.forest.core.result.GlobalResult;
-import com.rymcu.forest.core.result.GlobalResultGenerator;
 import com.rymcu.forest.dto.LinkToImageUrlDTO;
 import com.rymcu.forest.dto.TokenUser;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.jwt.def.JwtConstants;
 import com.rymcu.forest.util.FileUtils;
 import com.rymcu.forest.util.SpringContextHolder;
@@ -43,12 +42,11 @@ public class UploadController {
   private static Environment env = SpringContextHolder.getBean(Environment.class);
 
   @PostMapping("/file")
-  public GlobalResult uploadPicture(
+  public Result<?> uploadPicture(
       @RequestParam(value = "file", required = false) MultipartFile multipartFile,
-      @RequestParam(defaultValue = "1") Integer type,
-      HttpServletRequest request) {
+      @RequestParam(defaultValue = "1") Integer type) {
     if (multipartFile == null) {
-      return GlobalResultGenerator.genErrorResult("请选择要上传的文件");
+      return Result.error("请选择要上传的文件");
     }
     String typePath = getTypePath(type);
     // 图片存储路径
@@ -58,30 +56,23 @@ public class UploadController {
     if (!file.exists()) {
       file.mkdirs(); // 创建文件根目录
     }
-
     String localPath = Utils.getProperty("resource.file-path") + "/" + typePath + "/";
-
     String orgName = multipartFile.getOriginalFilename();
     String fileName = System.currentTimeMillis() + "." + FileUtils.getExtend(orgName).toLowerCase();
-
     String savePath = file.getPath() + File.separator + fileName;
-
-    Map data = new HashMap(2);
     File saveFile = new File(savePath);
     try {
       FileCopyUtils.copy(multipartFile.getBytes(), saveFile);
-      data.put("url", localPath + fileName);
     } catch (IOException e) {
-      data.put("message", "上传失败!");
+      return Result.error("上传失败!");
     }
-    return GlobalResultGenerator.genSuccessResult(data);
+    return Result.OK(localPath + fileName);
   }
 
   @PostMapping("/file/batch")
-  public GlobalResult batchFileUpload(
+  public Result<?> batchFileUpload(
       @RequestParam(value = "file[]", required = false) MultipartFile[] multipartFiles,
-      @RequestParam(defaultValue = "1") Integer type,
-      HttpServletRequest request) {
+      @RequestParam(defaultValue = "1") Integer type) {
     String typePath = getTypePath(type);
     // 图片存储路径
     String ctxHeadPicPath = env.getProperty("resource.pic-path");
@@ -92,17 +83,14 @@ public class UploadController {
     }
 
     String localPath = Utils.getProperty("resource.file-path") + "/" + typePath + "/";
-    Map succMap = new HashMap(10);
-    Set errFiles = new HashSet();
+    Map<String, Object> succMap = new HashMap<>(10);
+    Set<Object> errFiles = new HashSet<>();
 
-    for (int i = 0, len = multipartFiles.length; i < len; i++) {
-      MultipartFile multipartFile = multipartFiles[i];
+    for (MultipartFile multipartFile : multipartFiles) {
       String orgName = multipartFile.getOriginalFilename();
       String fileName =
           System.currentTimeMillis() + "." + FileUtils.getExtend(orgName).toLowerCase();
-
       String savePath = file.getPath() + File.separator + fileName;
-
       File saveFile = new File(savePath);
       try {
         FileCopyUtils.copy(multipartFile.getBytes(), saveFile);
@@ -111,10 +99,10 @@ public class UploadController {
         errFiles.add(orgName);
       }
     }
-    Map data = new HashMap(2);
+    Map<String, Object> data = new HashMap<>(2);
     data.put("errFiles", errFiles);
     data.put("succMap", succMap);
-    return GlobalResultGenerator.genSuccessResult(data);
+    return Result.OK(data);
   }
 
   private static String getTypePath(Integer type) {
@@ -136,36 +124,37 @@ public class UploadController {
   }
 
   @GetMapping("/simple/token")
-  public GlobalResult uploadSimpleToken(HttpServletRequest request) throws BaseApiException {
+  public Result<?> uploadSimpleToken(HttpServletRequest request) throws BaseApiException {
     String authHeader = request.getHeader(JwtConstants.AUTHORIZATION);
     if (StringUtils.isBlank(authHeader)) {
       throw new BaseApiException(ErrorCode.UNAUTHORIZED);
     }
     TokenUser tokenUser = UserUtils.getTokenUser(authHeader);
-    Map map = new HashMap(2);
+    Map<String, Object> map = new HashMap<>(2);
     map.put("uploadToken", tokenUser.getToken());
     map.put("uploadURL", UPLOAD_SIMPLE_URL);
     map.put("linkToImageURL", LINK_TO_IMAGE_URL);
-    return GlobalResultGenerator.genSuccessResult(map);
+    return Result.OK(map);
   }
 
   @GetMapping("/token")
-  public GlobalResult uploadToken(HttpServletRequest request) throws BaseApiException {
+  public Result<Map<String, Object>> uploadToken(HttpServletRequest request)
+      throws BaseApiException {
     String authHeader = request.getHeader(JwtConstants.AUTHORIZATION);
     if (StringUtils.isBlank(authHeader)) {
       throw new BaseApiException(ErrorCode.UNAUTHORIZED);
     }
     TokenUser tokenUser = UserUtils.getTokenUser(authHeader);
-    Map map = new HashMap(2);
+    Map<String, Object> map = new HashMap<>(2);
     map.put("uploadToken", tokenUser.getToken());
     map.put("uploadURL", UPLOAD_URL);
     map.put("linkToImageURL", LINK_TO_IMAGE_URL);
-    return GlobalResultGenerator.genSuccessResult(map);
+    return Result.OK(map);
   }
 
   @PostMapping("/file/link")
-  public GlobalResult linkToImageUrl(@RequestBody LinkToImageUrlDTO linkToImageUrlDTO)
-      throws IOException {
+  public Result<Map<String, Object>> linkToImageUrl(
+      @RequestBody LinkToImageUrlDTO linkToImageUrlDTO) throws IOException {
     String url = linkToImageUrlDTO.getUrl();
     URL link = new URL(url);
     HttpURLConnection conn = (HttpURLConnection) link.openConnection();
@@ -176,7 +165,6 @@ public class UploadController {
         "User-Agent",
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36");
     conn.setRequestProperty("referer", "");
-
     // 得到输入流
     InputStream inputStream = conn.getInputStream();
     // 获取自己数组
@@ -201,7 +189,7 @@ public class UploadController {
 
     String savePath = file.getPath() + File.separator + fileName;
 
-    Map data = new HashMap(2);
+    Map<String, Object> data = new HashMap<>(2);
     File saveFile = new File(savePath);
     try {
       FileCopyUtils.copy(getData, saveFile);
@@ -210,7 +198,7 @@ public class UploadController {
     } catch (IOException e) {
       data.put("message", "上传失败!");
     }
-    return GlobalResultGenerator.genSuccessResult(data);
+    return Result.OK(data);
   }
 
   public static String uploadBase64File(String fileStr, Integer type) {

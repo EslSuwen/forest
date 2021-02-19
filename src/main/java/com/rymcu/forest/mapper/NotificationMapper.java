@@ -6,8 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.entity.Notification;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
 /** @author ronger */
 public interface NotificationMapper extends BaseMapper<Notification> {
 
@@ -23,10 +21,12 @@ public interface NotificationMapper extends BaseMapper<Notification> {
   /**
    * 获取消息数据
    *
+   *
+   * @param page
    * @param idUser
    * @return
    */
-  List<Notification> selectNotifications(@Param("idUser") Integer idUser);
+  IPage<Notification> selectNotifications(Page<?> page,@Param("idUser") Integer idUser);
 
   /**
    * 获取消息数据

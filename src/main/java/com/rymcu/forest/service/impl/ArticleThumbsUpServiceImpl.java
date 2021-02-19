@@ -1,6 +1,7 @@
 package com.rymcu.forest.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Article;
 import com.rymcu.forest.entity.ArticleThumbsUp;
 import com.rymcu.forest.entity.User;
@@ -14,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /** @author ronger */
@@ -28,17 +27,14 @@ public class ArticleThumbsUpServiceImpl extends ServiceImpl<ArticleThumbsUpMappe
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public Map thumbsUp(ArticleThumbsUp articleThumbsUp) throws BaseApiException {
-    Map map = new HashMap(3);
+  public Result<?> thumbsUp(ArticleThumbsUp articleThumbsUp) throws BaseApiException {
     if (Objects.isNull(articleThumbsUp) || Objects.isNull(articleThumbsUp.getIdArticle())) {
-      map.put("message", "数据异常,文章不存在!");
-      map.put("success", false);
+      return Result.error("数据异常,文章不存在!");
     } else {
-      Integer thumbsUpNumber = 1;
+      int thumbsUpNumber = 1;
       Article article = articleService.getById(String.valueOf(articleThumbsUp.getIdArticle()));
       if (Objects.isNull(article)) {
-        map.put("message", "数据异常,文章不存在!");
-        map.put("success", false);
+        return Result.error("数据异常,文章不存在!");
       } else {
         User user = UserUtils.getCurrentUserByToken();
         articleThumbsUp.setIdUser(user.getIdUser());
@@ -54,15 +50,10 @@ public class ArticleThumbsUpServiceImpl extends ServiceImpl<ArticleThumbsUpMappe
         }
         articleThumbsUpMapper.updateArticleThumbsUpNumber(
             articleThumbsUp.getIdArticle(), thumbsUpNumber);
-        map.put("success", true);
-        map.put("thumbsUpNumber", thumbsUpNumber);
-        if (thumbsUpNumber > 0) {
-          map.put("message", "点赞成功");
-        } else {
-          map.put("message", "已取消点赞");
-        }
+        return thumbsUpNumber > 0
+            ? Result.OK("点赞成功", thumbsUpNumber)
+            : Result.OK("已取消点赞", thumbsUpNumber);
       }
     }
-    return map;
   }
 }

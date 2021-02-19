@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.core.constant.NotificationConstant;
 import com.rymcu.forest.dto.Author;
 import com.rymcu.forest.dto.CommentDTO;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Article;
 import com.rymcu.forest.entity.Comment;
 import com.rymcu.forest.mapper.CommentMapper;
@@ -63,24 +64,19 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment>
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public Map postComment(Comment comment, HttpServletRequest request) {
-    Map map = new HashMap(1);
+  public Result<?> postComment(Comment comment, HttpServletRequest request) {
     if (comment.getCommentArticleId() == null) {
-      map.put("message", "非法访问,文章主键异常！");
-      return map;
+      return Result.error("非法访问,文章主键异常！");
     }
     if (comment.getCommentAuthorId() == null) {
-      map.put("message", "非法访问,用户未登录！");
-      return map;
+      return Result.error("非法访问,用户未登录！");
     }
     if (StringUtils.isBlank(comment.getCommentContent())) {
-      map.put("message", "回帖内容不能为空！");
-      return map;
+      return Result.error("回帖内容不能为空！");
     }
     Article article = articleService.getById(comment.getCommentArticleId().toString());
     if (article == null) {
-      map.put("message", "文章不存在！");
-      return map;
+      return Result.error("文章不存在！");
     }
     String ip = Utils.getIpAddress(request);
     String ua = request.getHeader("user-agent");
@@ -122,7 +118,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment>
         }
       }
     }
-
-    return map;
+    return Result.OK();
   }
 }

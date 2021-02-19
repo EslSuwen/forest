@@ -1,10 +1,7 @@
 package com.rymcu.forest.web.api.v1.tag;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.rymcu.forest.core.result.GlobalResult;
-import com.rymcu.forest.core.result.GlobalResultGenerator;
 import com.rymcu.forest.dto.ArticleDTO;
-import com.rymcu.forest.dto.LabelModel;
 import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.service.ArticleService;
 import com.rymcu.forest.service.TagService;
@@ -31,8 +28,7 @@ public class TagController {
   }
 
   @GetMapping("/tags")
-  public GlobalResult tags() {
-    List<LabelModel> list = tagService.findTagLabels();
-    return GlobalResultGenerator.genSuccessResult(list);
+  public Result<?> tags() {
+    return Result.OK(tagService.findTagLabels());
   }
 }

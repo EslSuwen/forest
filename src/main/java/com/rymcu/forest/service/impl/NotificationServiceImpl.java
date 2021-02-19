@@ -44,29 +44,32 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
   }
 
   @Override
-  public List<NotificationDTO> findNotifications(Integer idUser) {
-    List<Notification> list = notificationMapper.selectNotifications(idUser);
+  public IPage<NotificationDTO> findNotifications(Page<?> page, Integer idUser) {
+    IPage<Notification> list = notificationMapper.selectNotifications(page, idUser);
     List<NotificationDTO> notifications = new ArrayList<>();
-    list.forEach(
-        notification -> {
-          NotificationDTO notificationDTO = genNotification(notification);
-          // 判断关联数据是否已删除
-          if (Objects.nonNull(notificationDTO.getAuthor())) {
-            notifications.add(notificationDTO);
-          } else {
-            // 关联数据已删除,且未读
-            if (unRead.equals(notification.getHasRead())) {
-              notificationMapper.readNotification(notification.getIdNotification());
-            }
-            NotificationDTO dto = new NotificationDTO();
-            dto.setDataSummary("该消息已被撤销!");
-            dto.setDataType("-1");
-            dto.setHasRead("1");
-            dto.setCreatedTime(notification.getCreatedTime());
-            notifications.add(dto);
-          }
-        });
-    return notifications;
+    list.getRecords()
+        .forEach(
+            notification -> {
+              NotificationDTO notificationDTO = genNotification(notification);
+              // 判断关联数据是否已删除
+              if (Objects.nonNull(notificationDTO.getAuthor())) {
+                notifications.add(notificationDTO);
+              } else {
+                // 关联数据已删除,且未读
+                if (unRead.equals(notification.getHasRead())) {
+                  notificationMapper.readNotification(notification.getIdNotification());
+                }
+                NotificationDTO dto = new NotificationDTO();
+                dto.setDataSummary("该消息已被撤销!");
+                dto.setDataType("-1");
+                dto.setHasRead("1");
+                dto.setCreatedTime(notification.getCreatedTime());
+                notifications.add(dto);
+              }
+            });
+    Page<NotificationDTO> pageResult = new Page<>(page.getCurrent(), page.getSize());
+    pageResult.setRecords(notifications);
+    return pageResult;
   }
 
   private NotificationDTO genNotification(Notification notification) {

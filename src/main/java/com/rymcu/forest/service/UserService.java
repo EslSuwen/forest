@@ -7,8 +7,6 @@ import com.rymcu.forest.entity.User;
 import com.rymcu.forest.entity.UserExtend;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 
-import java.util.Map;
-
 /**
  * @author CodeGenerator
  * @date 2018/05/29
@@ -32,7 +30,7 @@ public interface UserService extends IService<User> {
    * @param code 验证码
    * @return Map
    */
-  Map register(String email, String password, String code);
+  Result<?> register(String email, String password, String code);
 
   /**
    * 登录接口
@@ -58,7 +56,7 @@ public interface UserService extends IService<User> {
    * @param password 密码
    * @return Map
    */
-  Map forgetPassword(String code, String password);
+  Result<?> forgetPassword(String code, String password);
 
   /**
    * 更新用户角色接口
@@ -67,7 +65,7 @@ public interface UserService extends IService<User> {
    * @param idRole 角色 id
    * @return Map
    */
-  Map updateUserRole(Integer idUser, Integer idRole);
+  Result<?> updateUserRole(Integer idUser, Integer idRole);
 
   /**
    * 更新用户状态
@@ -76,7 +74,7 @@ public interface UserService extends IService<User> {
    * @param status 状态
    * @return Map
    */
-  Map updateStatus(Integer idUser, String status);
+  Result<?> updateStatus(Integer idUser, String status);
 
   /**
    * 获取用户信息
@@ -141,7 +139,7 @@ public interface UserService extends IService<User> {
    * @param changeEmailDTO
    * @return
    */
-  Map updateEmail(ChangeEmailDTO changeEmailDTO);
+  Result<?> updateEmail(ChangeEmailDTO changeEmailDTO);
 
   /**
    * 更新密码
@@ -149,5 +147,5 @@ public interface UserService extends IService<User> {
    * @param updatePasswordDTO
    * @return
    */
-  Map updatePassword(UpdatePasswordDTO updatePasswordDTO);
+  Result<?> updatePassword(UpdatePasswordDTO updatePasswordDTO);
 }

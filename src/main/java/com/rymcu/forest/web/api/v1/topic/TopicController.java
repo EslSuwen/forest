@@ -2,8 +2,6 @@ package com.rymcu.forest.web.api.v1.topic;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.rymcu.forest.core.result.GlobalResult;
-import com.rymcu.forest.core.result.GlobalResultGenerator;
 import com.rymcu.forest.core.service.log.annotation.VisitLogger;
 import com.rymcu.forest.dto.ArticleDTO;
 import com.rymcu.forest.dto.result.Result;
@@ -23,9 +21,8 @@ public class TopicController {
   @Resource private TopicService topicService;
 
   @GetMapping("/topic-nav")
-  public GlobalResult topicNav() {
-    List<Topic> topics = topicService.findTopicNav();
-    return GlobalResultGenerator.genSuccessResult(topics);
+  public Result<List<Topic>> topicNav() {
+    return Result.OK(topicService.findTopicNav());
   }
 
   @GetMapping("/{name}")

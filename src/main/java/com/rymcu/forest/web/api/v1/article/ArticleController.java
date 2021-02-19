@@ -1,10 +1,8 @@
 package com.rymcu.forest.web.api.v1.article;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.rymcu.forest.core.result.GlobalResult;
-import com.rymcu.forest.core.result.GlobalResultGenerator;
 import com.rymcu.forest.dto.ArticleDTO;
-import com.rymcu.forest.dto.CommentDTO;
 import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Article;
 import com.rymcu.forest.entity.ArticleThumbsUp;
@@ -19,9 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /** @author ronger */
 @RestController
@@ -52,17 +47,15 @@ public class ArticleController {
   }
 
   @PostMapping("/post")
-  public GlobalResult postArticle(@RequestBody ArticleDTO article, HttpServletRequest request)
+  public Result<?> postArticle(@RequestBody ArticleDTO article, HttpServletRequest request)
       throws BaseApiException, UnsupportedEncodingException {
-    Map map = articleService.postArticle(article, request);
-    return GlobalResultGenerator.genSuccessResult(map);
+    return articleService.postArticle(article, request);
   }
 
   @PutMapping("/post")
-  public GlobalResult updateArticle(@RequestBody ArticleDTO article, HttpServletRequest request)
+  public Result<?> updateArticle(@RequestBody ArticleDTO article, HttpServletRequest request)
       throws BaseApiException, UnsupportedEncodingException {
-    Map map = articleService.postArticle(article, request);
-    return GlobalResultGenerator.genSuccessResult(map);
+    return articleService.postArticle(article, request);
   }
 
   @DeleteMapping("/delete/{id}")
@@ -71,51 +64,41 @@ public class ArticleController {
   }
 
   @GetMapping("/{id}/comments")
-  public GlobalResult<Map<String, Object>> commons(@PathVariable Integer id) {
-    List<CommentDTO> commentDTOList = commentService.getArticleComments(id);
-    Map map = new HashMap<>(1);
-    map.put("comments", commentDTOList);
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<?> commons(@PathVariable Integer id) {
+    return Result.OK(commentService.getArticleComments(id));
   }
 
   @GetMapping("/drafts")
-  public Result<List<ArticleDTO>> drafts(
+  public Result<IPage<ArticleDTO>> drafts(
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows)
       throws BaseApiException {
-    List<ArticleDTO> list = articleService.findDrafts(new Page<>(page, rows));
-    return Result.OK(list);
+    return Result.OK(articleService.findDrafts(new Page<>(page, rows)));
   }
 
   @GetMapping("/{id}/share")
-  public GlobalResult share(@PathVariable Integer id) throws BaseApiException {
-    Map map = articleService.share(id);
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<String> share(@PathVariable Integer id) throws BaseApiException {
+    return Result.OK(articleService.share(id));
   }
 
   @PostMapping("/{id}/update-tags")
-  public GlobalResult updateTags(@PathVariable Integer id, @RequestBody Article article)
+  public Result<?> updateTags(@PathVariable Integer id, @RequestBody Article article)
       throws BaseApiException, UnsupportedEncodingException {
-    Map map = articleService.updateTags(id, article.getArticleTags());
-    return GlobalResultGenerator.genSuccessResult(map);
+    return articleService.updateTags(id, article.getArticleTags());
   }
 
   @PatchMapping("/update-perfect")
-  public GlobalResult updatePerfect(@RequestBody Article article) {
-    Map map = articleService.updatePerfect(article.getIdArticle(), article.getArticlePerfect());
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<?> updatePerfect(@RequestBody Article article) {
+    return articleService.updatePerfect(article.getIdArticle(), article.getArticlePerfect());
   }
 
   @PostMapping("/thumbs-up")
-  public GlobalResult thumbsUp(@RequestBody ArticleThumbsUp articleThumbsUp)
-      throws BaseApiException {
-    Map map = articleThumbsUpService.thumbsUp(articleThumbsUp);
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<?> thumbsUp(@RequestBody ArticleThumbsUp articleThumbsUp) throws BaseApiException {
+    return articleThumbsUpService.thumbsUp(articleThumbsUp);
   }
 
   @PostMapping("/sponsor")
-  public GlobalResult sponsor(@RequestBody Sponsor sponsor) throws Exception {
-    Map map = sponsorService.sponsorship(sponsor);
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<?> sponsor(@RequestBody Sponsor sponsor) throws Exception {
+    return sponsorService.sponsorship(sponsor);
   }
 }

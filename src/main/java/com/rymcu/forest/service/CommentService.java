@@ -2,6 +2,7 @@ package com.rymcu.forest.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rymcu.forest.dto.CommentDTO;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Comment;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,5 +14,5 @@ public interface CommentService extends IService<Comment> {
 
   List<CommentDTO> getArticleComments(Integer idArticle);
 
-  Map postComment(Comment comment, HttpServletRequest request);
+  Result<?> postComment(Comment comment, HttpServletRequest request);
 }

@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.rymcu.forest.dto.PortfolioArticleDTO;
 import com.rymcu.forest.dto.PortfolioDTO;
 import com.rymcu.forest.dto.UserDTO;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Portfolio;
 import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 
 import java.util.List;
-import java.util.Map;
 
 /** @author ronger */
 public interface PortfolioService extends IService<Portfolio> {
@@ -46,13 +46,12 @@ public interface PortfolioService extends IService<Portfolio> {
    * 查询作品集下未绑定文章
    *
    * @param page
-   * @param rows
    * @param searchText
    * @param idPortfolio
    * @throws BaseApiException
    * @return
    */
-  Map findUnbindArticles(Integer page, Integer rows, String searchText, Integer idPortfolio)
+  Result<?> findUnbindArticles(Page<?> page, String searchText, Integer idPortfolio)
       throws BaseApiException;
 
   /**
@@ -61,7 +60,7 @@ public interface PortfolioService extends IService<Portfolio> {
    * @param portfolioArticle
    * @return
    */
-  Map bindArticle(PortfolioArticleDTO portfolioArticle);
+  Result<?> bindArticle(PortfolioArticleDTO portfolioArticle);
 
   /**
    * 更新文章排序号
@@ -69,7 +68,7 @@ public interface PortfolioService extends IService<Portfolio> {
    * @param portfolioArticle
    * @return
    */
-  Map updateArticleSortNo(PortfolioArticleDTO portfolioArticle);
+  Result<?> updateArticleSortNo(PortfolioArticleDTO portfolioArticle);
 
   /**
    * 取消绑定文章
@@ -78,7 +77,7 @@ public interface PortfolioService extends IService<Portfolio> {
    * @param idArticle
    * @return
    */
-  Map unbindArticle(Integer idPortfolio, Integer idArticle);
+  Result<?> unbindArticle(Integer idPortfolio, Integer idArticle);
 
   /**
    * 删除作品集
@@ -86,5 +85,5 @@ public interface PortfolioService extends IService<Portfolio> {
    * @param idPortfolio
    * @return
    */
-  Map deletePortfolio(Integer idPortfolio);
+  Result<?> deletePortfolio(Integer idPortfolio);
 }

@@ -1,11 +1,11 @@
 package com.rymcu.forest.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Role;
 import com.rymcu.forest.entity.User;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author CodeGenerator
@@ -36,7 +36,7 @@ public interface RoleService extends IService<Role> {
    * @param status
    * @return
    */
-  Map updateStatus(Integer idRole, String status);
+  Result<?> updateStatus(Integer idRole, String status);
 
   /**
    * 添加/更新角色
@@ -44,5 +44,5 @@ public interface RoleService extends IService<Role> {
    * @param role
    * @return
    */
-  Map saveRole(Role role);
+  Role saveRole(Role role);
 }

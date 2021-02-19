@@ -1,17 +1,15 @@
 package com.rymcu.forest.web.api.v1.portfolio;
 
-import com.rymcu.forest.core.result.GlobalResult;
-import com.rymcu.forest.core.result.GlobalResultGenerator;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.dto.PortfolioArticleDTO;
 import com.rymcu.forest.dto.PortfolioDTO;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Portfolio;
 import com.rymcu.forest.service.PortfolioService;
 import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
 
 /** @author ronger */
 @RestController
@@ -21,58 +19,48 @@ public class PortfolioController {
   @Resource private PortfolioService portfolioService;
 
   @GetMapping("/detail/{id}")
-  public GlobalResult detail(
+  public Result<PortfolioDTO> detail(
       @PathVariable Integer id, @RequestParam(defaultValue = "0") Integer type) {
-    PortfolioDTO portfolio = portfolioService.findPortfolioDTOById(id, type);
-    Map map = new HashMap<>(1);
-    map.put("portfolio", portfolio);
-    return GlobalResultGenerator.genSuccessResult(map);
+    return Result.OK(portfolioService.findPortfolioDTOById(id, type));
   }
 
   @PostMapping("/post")
-  public GlobalResult add(@RequestBody Portfolio portfolio) throws BaseApiException {
-    portfolio = portfolioService.postPortfolio(portfolio);
-    return GlobalResultGenerator.genSuccessResult(portfolio);
+  public Result<Portfolio> add(@RequestBody Portfolio portfolio) throws BaseApiException {
+    return Result.OK(portfolioService.postPortfolio(portfolio));
   }
 
   @PutMapping("/post")
-  public GlobalResult update(@RequestBody Portfolio portfolio) throws BaseApiException {
-    portfolio = portfolioService.postPortfolio(portfolio);
-    return GlobalResultGenerator.genSuccessResult(portfolio);
+  public Result<Portfolio> update(@RequestBody Portfolio portfolio) throws BaseApiException {
+    return Result.OK(portfolioService.postPortfolio(portfolio));
   }
 
   @GetMapping("/{id}/unbind-articles")
-  public GlobalResult unbindArticles(
+  public Result<?> unbindArticles(
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows,
       @RequestParam(defaultValue = "") String searchText,
       @PathVariable Integer id)
       throws BaseApiException {
-    Map map = portfolioService.findUnbindArticles(page, rows, searchText, id);
-    return GlobalResultGenerator.genSuccessResult(map);
+    return portfolioService.findUnbindArticles(new Page<>(page, rows), searchText, id);
   }
 
   @PostMapping("/bind-article")
-  public GlobalResult bindArticle(@RequestBody PortfolioArticleDTO portfolioArticle) {
-    Map map = portfolioService.bindArticle(portfolioArticle);
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<?> bindArticle(@RequestBody PortfolioArticleDTO portfolioArticle) {
+    return portfolioService.bindArticle(portfolioArticle);
   }
 
   @PutMapping("/update-article-sort-no")
-  public GlobalResult updateArticleSortNo(@RequestBody PortfolioArticleDTO portfolioArticle) {
-    Map map = portfolioService.updateArticleSortNo(portfolioArticle);
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<?> updateArticleSortNo(@RequestBody PortfolioArticleDTO portfolioArticle) {
+    return portfolioService.updateArticleSortNo(portfolioArticle);
   }
 
   @DeleteMapping("/unbind-article")
-  public GlobalResult unbindArticle(Integer idArticle, Integer idPortfolio) {
-    Map map = portfolioService.unbindArticle(idPortfolio, idArticle);
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<?> unbindArticle(Integer idArticle, Integer idPortfolio) {
+    return portfolioService.unbindArticle(idPortfolio, idArticle);
   }
 
   @DeleteMapping("/delete")
-  public GlobalResult delete(Integer idPortfolio) {
-    Map map = portfolioService.deletePortfolio(idPortfolio);
-    return GlobalResultGenerator.genSuccessResult(map);
+  public Result<?> delete(Integer idPortfolio) {
+    return portfolioService.deletePortfolio(idPortfolio);
   }
 }

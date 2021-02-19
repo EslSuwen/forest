@@ -1,8 +1,6 @@
 package com.rymcu.forest.web.api.v1.bank;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.rymcu.forest.core.result.GlobalResult;
-import com.rymcu.forest.core.result.GlobalResultGenerator;
 import com.rymcu.forest.dto.BankAccountDTO;
 import com.rymcu.forest.dto.BankAccountSearchDTO;
 import com.rymcu.forest.dto.result.Result;
@@ -30,8 +28,7 @@ public class BankAccountController {
   }
 
   @GetMapping("/{idUser}")
-  public GlobalResult detail(@PathVariable Integer idUser) {
-    BankAccountDTO bankAccount = bankAccountService.findBankAccountByIdUser(idUser);
-    return GlobalResultGenerator.genSuccessResult(bankAccount);
+  public Result<BankAccountDTO> detail(@PathVariable Integer idUser) {
+    return Result.OK(bankAccountService.findBankAccountByIdUser(idUser));
   }
 }

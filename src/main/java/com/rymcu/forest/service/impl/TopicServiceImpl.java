@@ -1,10 +1,12 @@
 package com.rymcu.forest.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.rymcu.forest.dto.admin.TagDTO;
 import com.rymcu.forest.dto.admin.TopicDTO;
 import com.rymcu.forest.dto.admin.TopicTagDTO;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Tag;
 import com.rymcu.forest.entity.Topic;
 import com.rymcu.forest.mapper.TopicMapper;
@@ -15,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /** @author ronger */
 @Service
@@ -27,8 +27,7 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
 
   @Override
   public List<Topic> findTopicNav() {
-    List<Topic> topics = topicMapper.selectTopicNav();
-    return topics;
+    return topicMapper.selectTopicNav();
   }
 
   @Override
@@ -38,17 +37,14 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public Map saveTopic(Topic topic) {
-    Map map = new HashMap(1);
+  public Result<?> saveTopic(Topic topic) {
     if (topic.getIdTopic() == null) {
       if (StringUtils.isBlank(topic.getTopicTitle())) {
-        map.put("message", "标签名不能为空!");
-        return map;
+        return Result.error("标签名不能为空!");
       } else {
         if (!list(new LambdaQueryWrapper<Topic>().eq(Topic::getTopicTitle, topic.getTopicTitle()))
             .isEmpty()) {
-          map.put("message", "专题 '" + topic.getTopicTitle() + "' 已存在!");
-          return map;
+          return Result.error("专题 '" + topic.getTopicTitle() + "' 已存在!");
         }
       }
       Topic newTopic = new Topic();
@@ -76,62 +72,37 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
           topic.getTopicDescription(),
           topic.getTopicDescriptionHtml());
     }
-
-    map.put("topic", topic);
-    return map;
+    return Result.OK(topic);
   }
 
   @Override
-  public List<Tag> findUnbindTagsById(Integer idTopic, String tagTitle) {
+  public IPage<Tag> findUnbindTagsById(Page<?> page, Integer idTopic, String tagTitle) {
     if (StringUtils.isBlank(tagTitle)) {
       tagTitle = "";
     }
-    return baseMapper.selectUnbindTagsById(idTopic, tagTitle);
+    return baseMapper.selectUnbindTagsById(page, idTopic, tagTitle);
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public Map bindTopicTag(TopicTagDTO topicTag) {
+  public Result<?> bindTopicTag(TopicTagDTO topicTag) {
     Integer result = baseMapper.insertTopicTag(topicTag.getIdTopic(), topicTag.getIdTag());
-    Map map = new HashMap(1);
-    if (result == 0) {
-      map.put("message", "操作失败!");
-    } else {
-      map.put("topicTag", topicTag);
-    }
-    return map;
+    return result != 0 ? Result.OK(topicTag) : Result.error("操作失败!");
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public Map unbindTopicTag(TopicTagDTO topicTag) {
+  public Result<?> unbindTopicTag(TopicTagDTO topicTag) {
     Integer result = baseMapper.deleteTopicTag(topicTag.getIdTopic(), topicTag.getIdTag());
-    Map map = new HashMap(1);
-    if (result == 0) {
-      map.put("message", "操作失败!");
-    } else {
-      map.put("topicTag", topicTag);
-    }
-    return map;
+    return result != 0 ? Result.OK(topicTag) : Result.error("操作失败!");
   }
 
   @Override
-  public Map findTagsByTopicUri(String topicUri, Integer page, Integer rows) {
-    Map map = new HashMap(2);
+  public Result<?> findTagsByTopicUri(Page<?> page, String topicUri) {
     TopicDTO topic = baseMapper.selectTopicByTopicUri(topicUri);
     if (topic == null) {
-      return map;
+      return Result.error("专题不存在！");
     }
-/* TODO 分页
-  PageHelper.startPage(page, rows);
-    List<TagDTO> list = baseMapper.selectTopicTag(topic.getIdTopic());
-    PageInfo pageInfo = new PageInfo(list);
-    map.put("tags", pageInfo.getList());
-    Map pagination = new HashMap(3);
-    pagination.put("pageSize", pageInfo.getPageSize());
-    pagination.put("total", pageInfo.getTotal());
-    pagination.put("currentPage", pageInfo.getPageNum());
-    map.put("pagination", pagination);*/
-    return map;
+    return Result.OK(baseMapper.selectTopicTag(page, topic.getIdTopic()));
   }
 }

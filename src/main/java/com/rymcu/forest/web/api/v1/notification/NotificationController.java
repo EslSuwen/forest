@@ -1,10 +1,9 @@
 package com.rymcu.forest.web.api.v1.notification;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.rymcu.forest.core.result.GlobalResult;
-import com.rymcu.forest.core.result.GlobalResultGenerator;
+import com.rymcu.forest.dto.NotificationDTO;
 import com.rymcu.forest.dto.result.Result;
-import com.rymcu.forest.entity.Notification;
 import com.rymcu.forest.entity.User;
 import com.rymcu.forest.service.NotificationService;
 import com.rymcu.forest.util.UserUtils;
@@ -12,7 +11,6 @@ import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 消息通知
@@ -26,16 +24,13 @@ public class NotificationController {
   @Resource private NotificationService notificationService;
 
   @GetMapping("/all")
-  public GlobalResult notifications(
+  public Result<IPage<NotificationDTO>> notifications(
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows)
       throws BaseApiException {
-    /*    User user = UserUtils.getCurrentUserByToken();
-    PageHelper.startPage(page, rows);
-    List<NotificationDTO> list = notificationService.findNotifications(user.getIdUser());
-    PageInfo<NotificationDTO> pageInfo = new PageInfo(list);
-    Map map = Utils.getNotificationDTOsGlobalResult(pageInfo);*/
-    return GlobalResultGenerator.genSuccessResult();
+    User user = UserUtils.getCurrentUserByToken();
+    return Result.OK(
+        notificationService.findNotifications(new Page<>(page, rows), user.getIdUser()));
   }
 
   @GetMapping("/unread")
@@ -43,16 +38,14 @@ public class NotificationController {
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows)
       throws BaseApiException {
-        User user = UserUtils.getCurrentUserByToken();
-    return Result.OK(notificationService.findUnreadNotifications(new Page<>(page,rows), user.getIdUser()));
+    User user = UserUtils.getCurrentUserByToken();
+    return Result.OK(
+        notificationService.findUnreadNotifications(new Page<>(page, rows), user.getIdUser()));
   }
 
   @PutMapping("/read/{id}")
-  public GlobalResult read(@PathVariable Integer id) {
+  public Result<?> read(@PathVariable Integer id) {
     Integer result = notificationService.readNotification(id);
-    if (result == 0) {
-      return GlobalResultGenerator.genErrorResult("标记已读失败");
-    }
-    return GlobalResultGenerator.genSuccessResult("标记已读成功");
+    return result != 0 ? Result.OK("标记已读成功") : Result.error("标记已读失败");
   }
 }

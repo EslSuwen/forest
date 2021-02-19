@@ -1,12 +1,14 @@
 package com.rymcu.forest.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rymcu.forest.dto.admin.TopicTagDTO;
+import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Tag;
 import com.rymcu.forest.entity.Topic;
 
 import java.util.List;
-import java.util.Map;
 
 /** @author ronger */
 public interface TopicService extends IService<Topic> {
@@ -32,16 +34,18 @@ public interface TopicService extends IService<Topic> {
    * @param topic 主题信息
    * @return
    */
-  Map saveTopic(Topic topic);
+  Result<?> saveTopic(Topic topic);
 
   /**
    * 查询未绑定标签
    *
+   *
+   * @param page
    * @param idTopic
    * @param tagTitle
    * @return
    */
-  List<Tag> findUnbindTagsById(Integer idTopic, String tagTitle);
+  IPage<Tag> findUnbindTagsById(Page<?> page, Integer idTopic, String tagTitle);
 
   /**
    * 绑定标签
@@ -49,7 +53,7 @@ public interface TopicService extends IService<Topic> {
    * @param topicTag
    * @return
    */
-  Map bindTopicTag(TopicTagDTO topicTag);
+  Result<?> bindTopicTag(TopicTagDTO topicTag);
 
   /**
    * 取消绑定标签
@@ -57,15 +61,14 @@ public interface TopicService extends IService<Topic> {
    * @param topicTag
    * @return
    */
-  Map unbindTopicTag(TopicTagDTO topicTag);
+  Result<?> unbindTopicTag(TopicTagDTO topicTag);
 
   /**
    * 获取主题下标签列表
    *
-   * @param topicUri
    * @param page
-   * @param rows
+   * @param topicUri
    * @return
    */
-  Map findTagsByTopicUri(String topicUri, Integer page, Integer rows);
+  Result<?> findTagsByTopicUri(Page<?> page, String topicUri);
 }

@@ -2,8 +2,6 @@ package com.rymcu.forest.lucene.api;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.rymcu.forest.core.result.GlobalResult;
-import com.rymcu.forest.core.result.GlobalResultGenerator;
 import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.lucene.model.UserDic;
 import com.rymcu.forest.lucene.service.UserDicService;
