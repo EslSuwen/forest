@@ -12,9 +12,9 @@ import com.rymcu.forest.entity.Article;
 import com.rymcu.forest.entity.ArticleContent;
 import com.rymcu.forest.entity.Tag;
 import com.rymcu.forest.entity.User;
+import com.rymcu.forest.lucene.service.LuceneService;
 import com.rymcu.forest.mapper.ArticleMapper;
 import com.rymcu.forest.service.ArticleService;
-import com.rymcu.forest.service.CommentService;
 import com.rymcu.forest.service.TagService;
 import com.rymcu.forest.service.UserService;
 import com.rymcu.forest.util.*;
@@ -40,7 +40,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
   @Resource private ArticleMapper articleMapper;
   @Resource private TagService tagService;
   @Resource private UserService userService;
-  @Resource private CommentService commentService;
+  @Resource private LuceneService luceneService;
 
   @Value("${resource.domain}")
   private String domain;
@@ -63,12 +63,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
           articleMapper.selectArticles(
               page, searchDTO.getSearchText(), searchDTO.getTag(), searchDTO.getTopicUri());
     }
-    articlePage
-        .getRecords()
-        .forEach(
-            article -> {
-              genArticle(article, 0);
-            });
+    articlePage.getRecords().forEach(article -> genArticle(article, 0));
     return articlePage;
   }
 
@@ -90,12 +85,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
   @Override
   public IPage<ArticleDTO> findArticlesByTopicUri(Page<?> page, String name) {
     IPage<ArticleDTO> articleIPage = articleMapper.selectArticlesByTopicUri(page, name);
-    articleIPage
-        .getRecords()
-        .forEach(
-            articleDTO -> {
-              genArticle(articleDTO, 0);
-            });
+    articleIPage.getRecords().forEach(articleDTO -> genArticle(articleDTO, 0));
     return articleIPage;
   }
 
@@ -108,10 +98,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
   @Override
   public List<ArticleDTO> findUserArticlesByIdUser(Page<?> page, Integer idUser) {
     List<ArticleDTO> list = articleMapper.selectUserArticles(page, idUser);
-    list.forEach(
-        article -> {
-          genArticle(article, 0);
-        });
+    list.forEach(article -> genArticle(article, 0));
     return list;
   }
 
@@ -232,7 +219,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         BaiDuUtils.sendSEOData(newArticle.getArticlePermalink());
       }
     }
-
+    /* TODO 实现实时更新索引
+     try {
+      System.out.println("开始增加索引");
+      luceneService.writeArticle(newArticle.getIdArticle().toString());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }*/
     return Result.OK(newArticle.getIdArticle());
   }
 

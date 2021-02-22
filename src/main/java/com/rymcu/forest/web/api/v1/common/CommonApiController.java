@@ -22,7 +22,6 @@ public class CommonApiController {
   @Resource private UserService userService;
   @Resource private ArticleService articleService;
   @Resource private PortfolioService portfolioService;
-  @Resource private SearchService searchService;
 
   @GetMapping("/get-email-code")
   public Result<?> getEmailCode(@RequestParam("email") String email) throws MessagingException {
