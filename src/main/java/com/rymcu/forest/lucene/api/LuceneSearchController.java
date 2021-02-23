@@ -8,7 +8,6 @@ import com.rymcu.forest.lucene.service.LuceneService;
 import com.rymcu.forest.lucene.service.UserDicService;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -29,7 +28,7 @@ public class LuceneSearchController {
   @Resource private LuceneService luceneService;
   @Resource private UserDicService dicService;
 
-  @PostConstruct // TODO 测试关闭启动创建索引
+  // @PostConstruct  TODO 测试关闭启动创建索引
   public void createIndex() {
     ExecutorService executor = Executors.newSingleThreadExecutor();
     CompletableFuture<String> future =
