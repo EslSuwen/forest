@@ -1,6 +1,7 @@
 package com.rymcu.forest.web.api.v1.common;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.alibaba.fastjson.JSONObject;
@@ -38,9 +39,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @Author scott
+ * ThirdLoginController 第三方登录控制器
  *
- * @since 2018-12-17
+ * @author suwen
+ * @date 2021/2/23 14:05
  */
 @Controller
 @RequestMapping("/api/v1/thirdLogin")
@@ -102,15 +104,6 @@ public class ThirdLoginController {
       }
       // 生成token
       TokenUser token = saveToken(user);
-      log.info(
-          StrUtil.format(
-              "{}token={}&idUser={}&weights={}&nickname={}&avatarURL={}",
-              loginCallBackUrl,
-              token.getToken(),
-              token.getIdUser(),
-              token.getWeights(),
-              token.getNickname(),
-              token.getAvatarUrl()));
       httpServletResponse.sendRedirect(
           StrUtil.format(
               "{}token={}&idUser={}&weights={}&nickname={}&avatarURL={}",
@@ -118,7 +111,7 @@ public class ThirdLoginController {
               token.getToken(),
               token.getIdUser(),
               token.getWeights(),
-              token.getNickname(),
+              URLUtil.encode(token.getNickname()),
               token.getAvatarUrl()));
     } else {
       httpServletResponse.sendRedirect(loginCallBackUrl + "loginFailed");
