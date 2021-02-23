@@ -92,4 +92,20 @@ baidu:
     appId: xxx # 百度AI-文字识别 应用 appId
     appKey: xxxx # 百度AI-文字识别 应用 appKey
     secretKey: xxxx # 百度AI-文字识别 应用 secretKey
-
+#第三方登录
+justauth:
+  enabled: true
+  type:
+    GITLAB:
+      client-id: 3e06178e2a8730ae7f89dcbcf00708eb072d605ba1ad7e4d1462c75a1a93ef87
+      client-secret: 8f0a663e8addcf6621ddc4937f2f5d2041ff8c614948062ec31e28f1630ffe31
+      redirect-uri: http://localhost:8099/forest/api/v1/thirdLogin/gitlab/callback
+  cache:
+    type: default
+    prefix: 'NEBULA::THIRD_LOGIN'
+    timeout: 1h
+third:
+  authorize: http://10.26.201.103:9000/oauth/authorize
+  accessToken: http://10.26.201.103:9000/oauth/token
+  userInfo: http://10.26.201.103:9000/api/v4/user
+  loginCallBackUrl: http://localhost:3000/login?

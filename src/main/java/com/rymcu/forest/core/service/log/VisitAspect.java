@@ -66,7 +66,7 @@ public class VisitAspect {
     visit.setVisitUa(ua);
     visit.setVisitCity("");
     visit.setVisitDeviceId("");
-    visit.setVisitRefererUrl(referer);
+    visit.setVisitRefererUrl(referer.split("token")[0]);
     visit.setCreatedTime(new Date());
     String authHeader = request.getHeader(JwtConstants.AUTHORIZATION);
     if (StringUtils.isNotBlank(authHeader)) {
