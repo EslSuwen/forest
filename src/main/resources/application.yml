@@ -11,7 +11,6 @@ spring:
     cache: false
   redis:
     host: 127.0.0.1
-#    port: 6688
     port: 6379
     database: 1
     timeout: 3000
@@ -22,10 +21,9 @@ spring:
         max-idle: 500
         min-idle: 0
   datasource:
-    url: jdbc:mysql://47.115.8.44:3306/forest?characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
-#    url: jdbc:mysql://localhost:3306/forest?characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
-    username: root
-    password: Liyu8824 # 数据库密码
+    url: jdbc:mysql://10.26.200.29:3306/forest-dev?characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: szms
+    password: szms@12345
     driver-class-name: com.mysql.cj.jdbc.Driver
     resources:
       add-mappings: true
