@@ -60,6 +60,7 @@ public class VisitAspect {
     String url = request.getRequestURL().toString();
     String ua = request.getHeader("user-agent");
     String referer = request.getHeader("Referer");
+    referer = referer == null ? "null" : referer;
     Visit visit = new Visit();
     visit.setVisitUrl(url);
     visit.setVisitIp(ip);
