@@ -1,5 +1,6 @@
 package com.rymcu.forest.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rymcu.forest.dto.UserDTO;
@@ -55,7 +56,7 @@ public interface FollowService extends IService<Follow> {
    * @param userDTO
    * @return
    */
-  List<UserDTO> findUserFollowersByUser(Page<?> page, UserDTO userDTO);
+  IPage<UserDTO> findUserFollowersByUser(Page<?> page, UserDTO userDTO);
 
   /**
    * 查询用户关注用户
@@ -65,5 +66,5 @@ public interface FollowService extends IService<Follow> {
    * @param userDTO
    * @return
    */
-  List<UserDTO> findUserFollowingsByUser(Page<?> page, UserDTO userDTO);
+  IPage<UserDTO> findUserFollowingsByUser(Page<?> page, UserDTO userDTO);
 }

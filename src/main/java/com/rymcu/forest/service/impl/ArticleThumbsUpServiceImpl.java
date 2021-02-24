@@ -1,5 +1,6 @@
 package com.rymcu.forest.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Article;
@@ -38,7 +39,11 @@ public class ArticleThumbsUpServiceImpl extends ServiceImpl<ArticleThumbsUpMappe
       } else {
         User user = UserUtils.getCurrentUserByToken();
         articleThumbsUp.setIdUser(user.getIdUser());
-        ArticleThumbsUp thumbsUp = getById(articleThumbsUp);
+        ArticleThumbsUp thumbsUp =
+            getOne(
+                new LambdaQueryWrapper<ArticleThumbsUp>()
+                    .eq(ArticleThumbsUp::getIdArticle, articleThumbsUp.getIdArticle())
+                    .eq(ArticleThumbsUp::getIdUser, articleThumbsUp.getIdUser()));
         if (Objects.isNull(thumbsUp)) {
           articleThumbsUp.setThumbsUpTime(new Date());
           save(articleThumbsUp);

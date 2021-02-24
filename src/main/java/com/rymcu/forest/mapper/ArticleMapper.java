@@ -31,6 +31,20 @@ public interface ArticleMapper extends BaseMapper<Article> {
       @Param("topicUri") String topicUri);
 
   /**
+   * 获取文章列表 v2.0
+   *
+   * @param searchText
+   * @param tag
+   * @param topicUri
+   * @return
+   */
+  IPage<ArticleDTO> listArticles(
+      Page<?> page,
+      @Param("searchText") String searchText,
+      @Param("tag") String tag,
+      @Param("topicUri") String topicUri);
+
+  /**
    * 获取文章管理列表信息
    *
    * @param page 分页信息
@@ -103,7 +117,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
    * @param idUser
    * @return
    */
-  List<ArticleDTO> selectUserArticles(Page<?> page, @Param("idUser") Integer idUser);
+  IPage<ArticleDTO> selectUserArticles(Page<?> page, @Param("idUser") Integer idUser);
 
   /**
    * 删除文章标签

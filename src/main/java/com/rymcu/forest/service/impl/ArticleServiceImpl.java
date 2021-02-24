@@ -63,7 +63,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
           articleMapper.selectArticles(
               page, searchDTO.getSearchText(), searchDTO.getTag(), searchDTO.getTopicUri());
     }
-    articlePage.getRecords().forEach(article -> genArticle(article, 0));
     return articlePage;
   }
 
@@ -96,10 +95,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
   }
 
   @Override
-  public List<ArticleDTO> findUserArticlesByIdUser(Page<?> page, Integer idUser) {
-    List<ArticleDTO> list = articleMapper.selectUserArticles(page, idUser);
-    list.forEach(article -> genArticle(article, 0));
-    return list;
+  public IPage<ArticleDTO> findUserArticlesByIdUser(Page<?> page, Integer idUser) {
+    return articleMapper.selectUserArticles(page, idUser);
   }
 
   @Override

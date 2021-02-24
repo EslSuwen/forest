@@ -1,5 +1,6 @@
 package com.rymcu.forest.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rymcu.forest.dto.PortfolioArticleDTO;
@@ -22,7 +23,7 @@ public interface PortfolioService extends IService<Portfolio> {
    * @param userDTO
    * @return
    */
-  List<PortfolioDTO> findUserPortfoliosByUser(Page<?> page, UserDTO userDTO);
+  IPage<PortfolioDTO> findUserPortfoliosByUser(Page<?> page, UserDTO userDTO);
 
   /**
    * 查询作品集

@@ -2,7 +2,6 @@ package com.rymcu.forest.web.api.v1.user;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.core.service.log.annotation.VisitLogger;
-import com.rymcu.forest.dto.ArticleDTO;
 import com.rymcu.forest.dto.PortfolioDTO;
 import com.rymcu.forest.dto.UserDTO;
 import com.rymcu.forest.dto.result.Result;
@@ -40,9 +39,8 @@ public class UserController {
     if (userDTO == null) {
       return Result.error("用户不存在！");
     }
-    List<ArticleDTO> list =
-        articleService.findUserArticlesByIdUser(new Page<>(page, rows), userDTO.getIdUser());
-    return Result.OK(list);
+    return Result.OK(
+        articleService.findUserArticlesByIdUser(new Page<>(page, rows), userDTO.getIdUser()));
   }
 
   @GetMapping("/{nickname}/portfolios")
@@ -54,9 +52,7 @@ public class UserController {
     if (userDTO == null) {
       return Result.error("用户不存在！");
     }
-    List<PortfolioDTO> list =
-        portfolioService.findUserPortfoliosByUser(new Page<>(page, rows), userDTO);
-    return Result.OK(list);
+    return Result.OK(portfolioService.findUserPortfoliosByUser(new Page<>(page, rows), userDTO));
   }
 
   @GetMapping("/{nickname}/followers")
@@ -68,8 +64,7 @@ public class UserController {
     if (userDTO == null) {
       return Result.error("用户不存在！");
     }
-    List<UserDTO> list = followService.findUserFollowersByUser(new Page<>(page, rows), userDTO);
-    return Result.OK(list);
+    return Result.OK(followService.findUserFollowersByUser(new Page<>(page, rows), userDTO));
   }
 
   @GetMapping("/{nickname}/followings")
@@ -81,8 +76,7 @@ public class UserController {
     if (userDTO == null) {
       return Result.error("用户不存在！");
     }
-    List<UserDTO> list = followService.findUserFollowingsByUser(new Page<>(page, rows), userDTO);
-    return Result.OK(list);
+    return Result.OK(followService.findUserFollowingsByUser(new Page<>(page, rows), userDTO));
   }
 
   @GetMapping("/{nickname}/user-extend")

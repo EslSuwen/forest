@@ -1,5 +1,6 @@
 package com.rymcu.forest.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.dto.Author;
@@ -21,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
-import java.util.List;
 
 /** @author ronger */
 @Service
@@ -33,16 +33,14 @@ public class PortfolioServiceImpl extends ServiceImpl<PortfolioMapper, Portfolio
   @Resource private ArticleService articleService;
 
   @Override
-  public List<PortfolioDTO> findUserPortfoliosByUser(Page<?> page, UserDTO userDTO) {
-    List<PortfolioDTO> list = portfolioMapper.selectUserPortfoliosByIdUser(userDTO.getIdUser());
+  public IPage<PortfolioDTO> findUserPortfoliosByUser(Page<?> page, UserDTO userDTO) {
+    IPage<PortfolioDTO> list =
+        portfolioMapper.selectUserPortfoliosByIdUser(page, userDTO.getIdUser());
     Author author = new Author();
     author.setIdUser(userDTO.getIdUser());
     author.setUserAvatarURL(userDTO.getAvatarUrl());
     author.setUserNickname(userDTO.getNickname());
-    list.forEach(
-        portfolioDTO -> {
-          genPortfolioAuthor(portfolioDTO, author);
-        });
+    list.getRecords().forEach(portfolioDTO -> genPortfolioAuthor(portfolioDTO, author));
     return list;
   }
 

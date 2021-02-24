@@ -1,11 +1,11 @@
 package com.rymcu.forest.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.dto.PortfolioDTO;
 import com.rymcu.forest.entity.Portfolio;
 import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 /** @author ronger */
 public interface PortfolioMapper extends BaseMapper<Portfolio> {
@@ -15,7 +15,7 @@ public interface PortfolioMapper extends BaseMapper<Portfolio> {
    * @param idUser
    * @return
    */
-  List<PortfolioDTO> selectUserPortfoliosByIdUser(@Param("idUser") Integer idUser);
+  IPage<PortfolioDTO> selectUserPortfoliosByIdUser(Page<?> page, @Param("idUser") Integer idUser);
 
   /**
    * 查询作品集

@@ -65,7 +65,7 @@ public interface ArticleService extends IService<Article> {
    * @param idUser
    * @return
    */
-  List<ArticleDTO> findUserArticlesByIdUser(Page<?> page, Integer idUser);
+  IPage<ArticleDTO> findUserArticlesByIdUser(Page<?> page, Integer idUser);
 
   /**
    * 新增/更新文章

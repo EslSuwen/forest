@@ -1,6 +1,7 @@
 package com.rymcu.forest.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.core.constant.NotificationConstant;
@@ -64,12 +65,12 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
   }
 
   @Override
-  public List<UserDTO> findUserFollowersByUser(Page<?> page, UserDTO userDTO) {
+  public IPage<UserDTO> findUserFollowersByUser(Page<?> page, UserDTO userDTO) {
     return followMapper.selectUserFollowersByUser(page, userDTO.getIdUser());
   }
 
   @Override
-  public List<UserDTO> findUserFollowingsByUser(Page<?> page, UserDTO userDTO) {
-    return followMapper.selectUserFollowingsByUser(userDTO.getIdUser());
+  public IPage<UserDTO> findUserFollowingsByUser(Page<?> page, UserDTO userDTO) {
+    return followMapper.selectUserFollowingsByUser(page, userDTO.getIdUser());
   }
 }

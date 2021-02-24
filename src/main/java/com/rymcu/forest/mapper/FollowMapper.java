@@ -1,6 +1,7 @@
 package com.rymcu.forest.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rymcu.forest.dto.UserDTO;
 import com.rymcu.forest.entity.Follow;
@@ -29,7 +30,7 @@ public interface FollowMapper extends BaseMapper<Follow> {
    * @param idUser
    * @return
    */
-  List<UserDTO> selectUserFollowersByUser(Page<?> page, @Param("idUser") Integer idUser);
+  IPage<UserDTO> selectUserFollowersByUser(Page<?> page, @Param("idUser") Integer idUser);
 
   /**
    * 查询用户关注用户
@@ -37,5 +38,5 @@ public interface FollowMapper extends BaseMapper<Follow> {
    * @param idUser
    * @return
    */
-  List<UserDTO> selectUserFollowingsByUser(@Param("idUser") Integer idUser);
+  IPage<UserDTO> selectUserFollowingsByUser(IPage<?> page, @Param("idUser") Integer idUser);
 }
