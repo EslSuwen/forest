@@ -8,8 +8,8 @@ spring:
       content-type: text/html
     cache: false
   redis:
-    database: 2
-    host: 127.0.0.1
+    database: 5
+    host: 47.115.8.44
     lettuce:
       pool:
         max-active: 8   #最大连接数据库连接数,设 0 为没有限制
@@ -17,8 +17,6 @@ spring:
         max-wait: -1ms  #最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制。
         min-idle: 0     #最小等待连接中的数量,设 0 为没有限制
       shutdown-timeout: 100ms
-    password: ''
-    port: 6379
   datasource:
     url: jdbc:mysql://10.26.200.29:3306/forest-dev?characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: szms
@@ -94,9 +92,9 @@ justauth:
   enabled: true
   type:
     GITLAB:
-      client-id: 3e06178e2a8730ae7f89dcbcf00708eb072d605ba1ad7e4d1462c75a1a93ef87
-      client-secret: 8f0a663e8addcf6621ddc4937f2f5d2041ff8c614948062ec31e28f1630ffe31
-      redirect-uri: http://localhost:8099/forest/api/v1/thirdLogin/gitlab/callback
+      client-id: ac02d296205b1e36faa01a86ac511e55fbc875b57f3f093a475119c41f614929
+      client-secret: e7aca5dc9115dc6fdc23b59cd04e88bc72c838159897a1cda9938e30215d405b
+      redirect-uri: http://10.26.201.17:32241/forest/api/v1/thirdLogin/gitlab/callback
   cache:
     type: default
     prefix: 'NEBULA::THIRD_LOGIN'
@@ -105,4 +103,4 @@ third:
   authorize: http://10.26.201.103:9000/oauth/authorize
   accessToken: http://10.26.201.103:9000/oauth/token
   userInfo: http://10.26.201.103:9000/api/v4/user
-  loginCallBackUrl: http://localhost:3000/login?
+  loginCallBackUrl: http://10.26.201.17:32240/login?
