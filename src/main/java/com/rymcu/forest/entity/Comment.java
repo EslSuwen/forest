@@ -1,6 +1,7 @@
 package com.rymcu.forest.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -32,8 +33,10 @@ public class Comment implements Serializable, Cloneable {
   /** 状态 */
   private String commentStatus;
   /** 评论 IP */
+  @TableField(value = "comment_ip", select = false)
   private String commentIP;
   /** User-Agent */
+  @TableField(value = "comment_ua", select = false)
   private String commentUA;
   /** 0：公开回帖，1：匿名回帖 */
   private String commentAnonymous;

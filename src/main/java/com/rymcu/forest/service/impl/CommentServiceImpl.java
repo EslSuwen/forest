@@ -118,6 +118,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment>
         }
       }
     }
-    return Result.OK();
+    return Result.OK("评论成功");
   }
 }
