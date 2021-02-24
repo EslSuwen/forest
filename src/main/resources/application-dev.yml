@@ -8,7 +8,7 @@ spring:
       content-type: text/html
     cache: false
   redis:
-    host: 127.0.0.1
+    host: 47.115.8.44
     port: 6379
     database: 1
     timeout: 3000
