@@ -6,6 +6,7 @@ import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.lucene.model.ArticleLucene;
 import com.rymcu.forest.lucene.service.LuceneService;
 import com.rymcu.forest.lucene.service.UserDicService;
+import com.rymcu.forest.lucene.util.ArticleIndexUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -30,6 +31,8 @@ public class LuceneSearchController {
 
   // @PostConstruct  TODO 测试关闭启动创建索引
   public void createIndex() {
+    // 删除系统运行时保存的索引，重新创建索引
+    ArticleIndexUtil.deleteAllIndex();
     ExecutorService executor = Executors.newSingleThreadExecutor();
     CompletableFuture<String> future =
         CompletableFuture.supplyAsync(
@@ -80,7 +83,10 @@ public class LuceneSearchController {
     for (int i = 0; i < articleDTOList.size(); i++) {
       temp = articleDTOList.get(i);
       temp.setArticleTitle(subList.get(i).getArticleTitle());
-      temp.setArticlePreviewContent(subList.get(i).getArticleContent());
+      if (subList.get(i).getArticleContent().length() > 10) {
+        // 内容中命中太少则不替换
+        temp.setArticlePreviewContent(subList.get(i).getArticleContent());
+      }
       articleDTOList.set(i, temp);
     }
     page.setRecords(articleDTOList);

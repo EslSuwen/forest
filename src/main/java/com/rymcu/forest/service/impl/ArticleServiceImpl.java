@@ -216,13 +216,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         BaiDuUtils.sendSEOData(newArticle.getArticlePermalink());
       }
     }
-    /* TODO 实现实时更新索引
-     try {
-      System.out.println("开始增加索引");
+    System.out.println("开始增加索引");
+    if (isUpdate) {
       luceneService.writeArticle(newArticle.getIdArticle().toString());
-    } catch (Exception e) {
-      e.printStackTrace();
-    }*/
+    } else {
+      luceneService.updateArticle(newArticle.getIdArticle().toString());
+    }
     return Result.OK(newArticle.getIdArticle());
   }
 
@@ -270,6 +269,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         return Result.error("删除失败!");
       }
     }
+    luceneService.deleteArticle(id.toString());
     return Result.OK();
   }
 
