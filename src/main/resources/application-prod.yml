@@ -65,12 +65,6 @@ wx:
         aesKey: #微信小程序消息服务器配置的 EncodingAESKey
         msgDataFormat: JSON
 env: dev
-logging:
-  file:
-    path: /logs/forest
-  level:
-    com:
-      rymcu: info
 server:
   port: 8099
   servlet:
