@@ -243,6 +243,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
   public Result<?> updatePassword(UpdatePasswordDTO updatePasswordDTO) {
     String password = Utils.entryptPassword(updatePasswordDTO.getPassword());
     userMapper.updatePasswordById(updatePasswordDTO.getIdUser(), password);
-    return Result.OK();
+    return Result.OK("修改成功");
   }
 }

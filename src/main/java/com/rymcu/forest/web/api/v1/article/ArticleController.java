@@ -46,14 +46,10 @@ public class ArticleController {
     return Result.OK(articleService.updateById(article));
   }
 
-  @PostMapping("/post")
+  @RequestMapping(
+      value = "/post",
+      method = {RequestMethod.POST, RequestMethod.PUT})
   public Result<?> postArticle(@RequestBody ArticleDTO article, HttpServletRequest request)
-      throws BaseApiException, UnsupportedEncodingException {
-    return articleService.postArticle(article, request);
-  }
-
-  @PutMapping("/post")
-  public Result<?> updateArticle(@RequestBody ArticleDTO article, HttpServletRequest request)
       throws BaseApiException, UnsupportedEncodingException {
     return articleService.postArticle(article, request);
   }

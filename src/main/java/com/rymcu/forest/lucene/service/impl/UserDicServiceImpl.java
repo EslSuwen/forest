@@ -74,7 +74,7 @@ public class UserDicServiceImpl extends ServiceImpl<UserDicMapper, UserDic>
       fw.flush();
       fw.close();
       Dictionary.getSingleton().updateUserDict();
-    } catch (IOException e) {
+    } catch (IOException | IllegalStateException e) {
       e.printStackTrace();
     }
   }

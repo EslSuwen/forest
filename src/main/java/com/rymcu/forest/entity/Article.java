@@ -47,10 +47,11 @@ public class Article implements Serializable, Cloneable {
   /** 更新时间 */
   private Date updatedTime;
   /** 文章状态 */
-  @TableLogic(value = "0", delval = "9")
   private String articleStatus;
   /** 点赞总数 */
   private Integer articleThumbsUpCount;
   /** 赞赏总数 */
   private Integer articleSponsorCount;
+  /** 逻辑删除状态 */
+  @TableLogic private Integer deleted;
 }

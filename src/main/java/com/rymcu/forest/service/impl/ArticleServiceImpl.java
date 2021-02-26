@@ -257,18 +257,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
   @Override
   @Transactional(rollbackFor = Exception.class)
   public Result<?> delete(Integer id) {
-    // 判断是否有评论
-    boolean isHavComment = articleMapper.existsCommentWithPrimaryKey(id);
-    if (isHavComment) {
-      return Result.error("已有评论的文章不允许删除!");
-    } else {
-      // 删除关联数据(作品集关联关系,标签关联关系)
-      deleteLinkedData(id);
-      // 删除文章
-      if (!removeById(id)) {
-        return Result.error("删除失败!");
-      }
-    }
+    // 删除关联数据(作品集关联关系,标签关联关系)
+    // TODO 开发中暂不删除关联数据 deleteLinkedData(id);
+    removeById(id);
     luceneService.deleteArticle(id.toString());
     return Result.OK();
   }
@@ -330,7 +321,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
       article.setArticleTags(tags);
       articleMapper.updateArticleTags(idArticle, tags);
       tagService.saveTagArticle(article, "");
-      return Result.OK();
+      return Result.OK("更新成功");
     } else {
       return Result.error("更新失败,文章不存在!");
     }

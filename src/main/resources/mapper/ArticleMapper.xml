@@ -237,6 +237,7 @@
         from forest_article art
                  left join forest_user user
         on art.article_author_id = user.id
+        order by updated_time desc
     </select>
     <select id="listArticles" resultType="com.rymcu.forest.dto.ArticleDTO">
         select art.*,su.nickname,su.avatar_url from forest_article art join forest_user su on art.article_author_id =

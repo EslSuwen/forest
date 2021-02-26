@@ -22,10 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /** @author ronger */
 @Service
@@ -93,14 +91,14 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
       return 1;
     } else {
       if (StringUtils.isNotBlank(articleContentHtml)) {
-        List<TagNlpDTO> list =
-            BaiDuAipUtils.getKeywords(article.getArticleTitle(), articleContentHtml);
-        if (list.size() > 0) {
-          StringBuilder tags = new StringBuilder();
-          for (TagNlpDTO tagNlpDTO : list) {
-            tags.append(tagNlpDTO.getTag()).append(",");
-          }
-          article.setArticleTags(tags.toString());
+        String tags =
+            Objects.requireNonNull(
+                    BaiDuAipUtils.getKeywords(article.getArticleTitle(), articleContentHtml))
+                .stream()
+                .map(TagNlpDTO::getTag)
+                .collect(Collectors.joining(","));
+        if (tags.length() > 0) {
+          article.setArticleTags(tags);
         } else {
           article.setArticleTags("待分类");
         }

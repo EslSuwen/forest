@@ -9,6 +9,7 @@ import com.rymcu.forest.lucene.service.UserDicService;
 import com.rymcu.forest.lucene.util.ArticleIndexUtil;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.io.FileNotFoundException;
 import java.util.List;
