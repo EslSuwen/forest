@@ -216,11 +216,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         BaiDuUtils.sendSEOData(newArticle.getArticlePermalink());
       }
     }
-    System.out.println("开始增加索引");
-    if (isUpdate) {
-      luceneService.writeArticle(newArticle.getIdArticle().toString());
-    } else {
-      luceneService.updateArticle(newArticle.getIdArticle().toString());
+    // 草稿不更新索引
+    if ("0".equals(article.getArticleStatus())) {
+      System.out.println("开始增加索引");
+      if (isUpdate) {
+        luceneService.writeArticle(newArticle.getIdArticle().toString());
+      } else {
+        luceneService.updateArticle(newArticle.getIdArticle().toString());
+      }
     }
     return Result.OK(newArticle.getIdArticle());
   }
