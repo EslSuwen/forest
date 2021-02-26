@@ -65,23 +65,6 @@ wx:
         aesKey: #微信小程序消息服务器配置的 EncodingAESKey
         msgDataFormat: JSON
 env: dev
-server:
-  port: 8099
-  servlet:
-    context-path: /forest
-version: 1.0
-resource:
-  domain: http://yourdomain.com # 网站域名
-  file-path: http://yourdomain.com # 上传文件前缀域名
-  pic-path: /yoursrc/xx/nebula/static # 上传文件存储地址
-baidu:
-  data:
-    site: https://yourdomain.com # 百度搜索绑定网站域名
-    token: xxxx
-  ai:
-    appId: xxx # 百度AI-文字识别 应用 appId
-    appKey: xxxx # 百度AI-文字识别 应用 appKey
-    secretKey: xxxx # 百度AI-文字识别 应用 secretKey
 #第三方登录
 justauth:
   enabled: true

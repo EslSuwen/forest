@@ -81,7 +81,6 @@ public class ThirdLoginController {
     log.info(JSONObject.toJSONString(response));
     if (response.getCode() == 2000) {
       JSONObject data = JSONObject.parseObject(JSONObject.toJSONString(response.getData()));
-      String nickname = data.getString("nickname");
       String avatar = data.getString("avatar");
       String uuid = data.getString("uuid");
       User user;
@@ -98,7 +97,6 @@ public class ThirdLoginController {
       } else {
         // 已存在更新用户数据
         user = userList.get(0);
-        user.setNickname(nickname);
         user.setAvatarUrl(avatar);
         userService.updateById(user);
       }

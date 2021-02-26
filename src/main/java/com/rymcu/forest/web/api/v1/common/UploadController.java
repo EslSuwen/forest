@@ -10,6 +10,7 @@ import com.rymcu.forest.util.UserUtils;
 import com.rymcu.forest.util.Utils;
 import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 import com.rymcu.forest.web.api.v1.exception.ErrorCode;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.core.env.Environment;
@@ -31,6 +32,7 @@ import java.util.*;
  *
  * @author ronger
  */
+@Log4j2
 @RestController
 @RequestMapping("/api/v1/upload")
 public class UploadController {
@@ -70,13 +72,14 @@ public class UploadController {
   }
 
   @PostMapping("/file/batch")
-  public Result<?> batchFileUpload(
+  public Object batchFileUpload(
       @RequestParam(value = "file[]", required = false) MultipartFile[] multipartFiles,
       @RequestParam(defaultValue = "1") Integer type) {
     String typePath = getTypePath(type);
     // 图片存储路径
     String ctxHeadPicPath = env.getProperty("resource.pic-path");
     String dir = ctxHeadPicPath + "/" + typePath;
+    System.out.println(dir);
     File file = new File(dir);
     if (!file.exists()) {
       file.mkdirs(); // 创建文件根目录
@@ -102,7 +105,10 @@ public class UploadController {
     Map<String, Object> data = new HashMap<>(2);
     data.put("errFiles", errFiles);
     data.put("succMap", succMap);
-    return Result.OK(data);
+    Map<String, Object> result = new HashMap<>(1);
+    result.put("data", data);
+    log.info(result);
+    return result;
   }
 
   private static String getTypePath(Integer type) {
