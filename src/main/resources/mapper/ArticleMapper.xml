@@ -122,6 +122,7 @@
         select art.*,su.nickname,su.avatar_url from forest_article art join forest_user su on art.article_author_id =
         su.id
         where article_status = 0
+        and deleted=0
         <if test="topicUri != 'news'">
             and FIND_IN_SET('划水',art.article_tags) = 0
         </if>
@@ -144,6 +145,7 @@
         from forest_article art
                  join forest_user su on art.article_author_id = su.id
         where art.article_status = 0
+          and deleted = 0
           and exists(select *
                      from forest_tag_article vta
                      where vta.id_article = art.id
