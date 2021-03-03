@@ -11,38 +11,15 @@ import com.rymcu.forest.util.UserUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.mail.MessagingException;
 
 /** @author ronger */
 @RestController
 @RequestMapping("/api/console")
 public class CommonApiController {
 
-  @Resource private JavaMailService javaMailService;
   @Resource private UserService userService;
   @Resource private ArticleService articleService;
   @Resource private PortfolioService portfolioService;
-
-  @GetMapping("/get-email-code")
-  public Result<?> getEmailCode(@RequestParam("email") String email) throws MessagingException {
-    User user = userService.findByAccount(email);
-    if (user != null) {
-      return Result.error("该邮箱已被注册！");
-    }
-    Integer result = javaMailService.sendEmailCode(email);
-    return result != 0 ? Result.OK("验证码已发送至邮箱！") : Result.error("发送失败，请稍后再试！");
-  }
-
-  @GetMapping("/get-forget-password-email")
-  public Result<?> getForgetPasswordEmail(@RequestParam("email") String email)
-      throws MessagingException {
-    User user = userService.findByAccount(email);
-    if (user == null) {
-      return Result.error("该邮箱未注册！");
-    }
-    Integer result = javaMailService.sendForgetPasswordEmail(email);
-    return result != 0 ? Result.OK("验证码已发送至邮箱！") : Result.error("发送失败，请稍后再试！");
-  }
 
   @PostMapping("/register")
   public Result<?> register(@RequestBody UserRegisterInfoDTO registerInfo) {
