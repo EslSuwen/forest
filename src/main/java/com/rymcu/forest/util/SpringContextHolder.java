@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @Lazy(false)
 public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
 
-	@Value("${version}")
+	@Value("${version:1.0}")
 	private String version;
 
 	private static ApplicationContext applicationContext = null;

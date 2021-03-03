@@ -42,10 +42,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
   @Resource private UserService userService;
   @Resource private LuceneService luceneService;
 
-  @Value("${resource.domain}")
+  @Value("${resource.domain:http://10.26.201.17:32240/static}")
   private String domain;
 
-  @Value("${env}")
+  @Value("${env:dev}")
   private String env;
 
   private static final int MAX_PREVIEW = 200;

@@ -33,7 +33,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
   @Resource private UserService userService;
   @Resource private FollowService followService;
 
-  @Value("${resource.domain}")
+  @Value("${resource.domain:http://10.26.201.17:32240/static}")
   private String domain;
 
   private static final String unRead = "0";

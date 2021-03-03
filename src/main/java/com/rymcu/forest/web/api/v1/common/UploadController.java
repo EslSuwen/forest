@@ -52,7 +52,7 @@ public class UploadController {
     }
     String typePath = getTypePath(type);
     // 图片存储路径
-    String ctxHeadPicPath = env.getProperty("resource.pic-path");
+    String ctxHeadPicPath = env.getProperty("resource.pic-path:../static");
     String dir = ctxHeadPicPath + "/" + typePath;
     File file = new File(dir);
     if (!file.exists()) {
@@ -77,7 +77,7 @@ public class UploadController {
       @RequestParam(defaultValue = "1") Integer type) {
     String typePath = getTypePath(type);
     // 图片存储路径
-    String ctxHeadPicPath = env.getProperty("resource.pic-path");
+    String ctxHeadPicPath = env.getProperty("resource.pic-path:../static");
     String dir = ctxHeadPicPath + "/" + typePath;
     System.out.println(dir);
     File file = new File(dir);
@@ -181,7 +181,7 @@ public class UploadController {
     }
     String typePath = getTypePath(type);
     // 图片存储路径
-    String ctxHeadPicPath = env.getProperty("resource.pic-path");
+    String ctxHeadPicPath = env.getProperty("resource.pic-path:../static");
     String dir = ctxHeadPicPath + "/" + typePath;
     File file = new File(dir);
     if (!file.exists()) {
@@ -213,7 +213,7 @@ public class UploadController {
     }
     String typePath = getTypePath(type);
     // 图片存储路径
-    String ctxHeadPicPath = env.getProperty("resource.pic-path");
+    String ctxHeadPicPath = env.getProperty("resource.pic-path:../static");
     String dir = ctxHeadPicPath + "/" + typePath;
     File file = new File(dir);
     if (!file.exists()) {

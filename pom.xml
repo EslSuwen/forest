@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.rymcu</groupId>
     <artifactId>forest</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <packaging>jar</packaging>
     <name>forest</name>
     <description>forest(森林) —— 一款现代化的知识社区后台项目，使用 SpringBoot + Shrio + MyBatis + JWT + Redis 实现。</description>
@@ -153,21 +153,6 @@
             <version>5.0.13</version>
         </dependency>
         <dependency>
-            <groupId>com.github.binarywang</groupId>
-            <artifactId>weixin-java-open</artifactId>
-            <version>3.9.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-codec</groupId>
-                    <artifactId>commons-codec</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-io</groupId>
-                    <artifactId>commons-io</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>com.github.jedis-lock</groupId>
             <artifactId>jedis-lock</artifactId>
             <version>1.0.0</version>
@@ -228,68 +213,15 @@
         </dependency>
 
     </dependencies>
-    <!-- 环境 -->
-    <profiles>
-        <!-- 开发 -->
-        <profile>
-            <id>dev</id>
-            <activation>
-                <!--默认激活配置-->
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <!--当前环境-->
-                <profile.name>dev</profile.name>
-            </properties>
-        </profile>
-        <!-- 测试 -->
-        <profile>
-            <id>test</id>
-            <properties>
-                <!--当前环境-->
-                <profile.name>test</profile.name>
-            </properties>
-        </profile>
-        <!-- 生产 -->
-        <profile>
-            <id>prod</id>
-            <properties>
-                <!--当前环境,生产环境为空-->
-                <profile.name>prod</profile.name>
-            </properties>
-        </profile>
-    </profiles>
     <build>
-        <!-- 程序编译时默认不会把 src/main/java 目录下文件添加到 jar 包中，需手动添加 -->
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.mapper</include>
-                    <include>**/**/*.mapper</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
                 <configuration>
-                    <delimiters>@</delimiters>
-                    <useDefaultDelimiters>false</useDefaultDelimiters>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
-
         </plugins>
-        <finalName>vertical-console</finalName>
     </build>
-
 </project>

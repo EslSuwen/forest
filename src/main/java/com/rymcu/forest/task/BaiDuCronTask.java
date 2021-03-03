@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class BaiDuCronTask {
 
-    @Value("${resource.domain}")
+    @Value("${resource.domainhttp://10.26.201.17:32240/static}")
     private String domain;
-    @Value(("${env}"))
+    @Value(("${env:dev}"))
     private String env;
 
     /**
