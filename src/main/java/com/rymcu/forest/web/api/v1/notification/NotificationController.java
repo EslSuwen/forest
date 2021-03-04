@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  * @author ronger
  */
 @RestController
-@RequestMapping("/api/v1/notification")
+@RequestMapping("/api/notification")
 public class NotificationController {
 
   @Resource private NotificationService notificationService;

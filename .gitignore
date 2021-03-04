@@ -36,3 +36,7 @@ build/
 ### lucene ###
 index
 userDic
+
+rebel.xml
+
+static

@@ -20,7 +20,7 @@ import java.io.UnsupportedEncodingException;
 
 /** @author ronger */
 @RestController
-@RequestMapping("/api/v1/article")
+@RequestMapping("/api/article")
 public class ArticleController {
 
   @Resource private ArticleService articleService;

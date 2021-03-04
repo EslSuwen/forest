@@ -45,7 +45,7 @@ import java.util.List;
  * @date 2021/2/23 14:05
  */
 @Controller
-@RequestMapping("/api/v1/thirdLogin")
+@RequestMapping("/api/thirdLogin")
 @Slf4j
 public class ThirdLoginController {
 

@@ -12,7 +12,7 @@ import java.util.List;
 
 /** @author ronger */
 @RestController
-@RequestMapping("/api/v1/tag")
+@RequestMapping("/api/tag")
 public class TagController {
 
   @Resource private ArticleService articleService;

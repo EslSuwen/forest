@@ -13,7 +13,7 @@ import java.util.Map;
 
 /** @author ronger */
 @RestController
-@RequestMapping("/api/v1/answer")
+@RequestMapping("/api/answer")
 public class AnswerController {
 
   private static final String ANSWER_API_URL = "http://101.132.237.86:8089/question";

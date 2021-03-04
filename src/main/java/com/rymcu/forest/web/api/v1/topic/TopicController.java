@@ -15,7 +15,7 @@ import java.util.List;
 
 /** @author ronger */
 @RestController
-@RequestMapping("/api/v1/topic")
+@RequestMapping("/api/topic")
 public class TopicController {
   @Resource private ArticleService articleService;
   @Resource private TopicService topicService;

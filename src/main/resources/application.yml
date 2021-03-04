@@ -9,8 +9,6 @@ spring:
       max-request-size: 1024MB
 server:
   port: 8099
-  servlet:
-    context-path: /forest
 version: 1.0
 resource:
   domain: http://10.26.201.17:32240/static # 网站域名

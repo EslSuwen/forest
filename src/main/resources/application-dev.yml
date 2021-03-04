@@ -72,7 +72,7 @@ justauth:
     GITLAB:
       client-id: 3e06178e2a8730ae7f89dcbcf00708eb072d605ba1ad7e4d1462c75a1a93ef87
       client-secret: 8f0a663e8addcf6621ddc4937f2f5d2041ff8c614948062ec31e28f1630ffe31
-      redirect-uri: http://localhost:8099/forest/api/v1/thirdLogin/gitlab/callback
+      redirect-uri: http://localhost:8099/forest/api/thirdLogin/gitlab/callback
   cache:
     type: default
     prefix: 'NEBULA::THIRD_LOGIN'

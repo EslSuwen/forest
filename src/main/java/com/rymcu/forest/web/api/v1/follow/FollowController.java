@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 
 /** @author ronger */
 @RestController
-@RequestMapping("/api/v1/follow")
+@RequestMapping("/api/follow")
 public class FollowController {
 
   @Resource private FollowService followService;

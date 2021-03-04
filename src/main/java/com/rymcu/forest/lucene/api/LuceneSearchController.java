@@ -24,7 +24,7 @@ import java.util.concurrent.Executors;
  * @date 2021/2/3 10:41
  */
 @RestController
-@RequestMapping("/api/v1/lucene")
+@RequestMapping("/api/lucene")
 public class LuceneSearchController {
 
   @Resource private LuceneService luceneService;

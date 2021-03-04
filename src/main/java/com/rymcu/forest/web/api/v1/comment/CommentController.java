@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /** @author ronger */
 @RestController
-@RequestMapping("/api/v1/comment")
+@RequestMapping("/api/comment")
 public class CommentController {
 
   @Resource private CommentService commentService;

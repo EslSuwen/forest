@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 
 /** @author ronger */
 @RestController
-@RequestMapping("/api/v1/user-info")
+@RequestMapping("/api/user-info")
 public class UserInfoController {
 
   @Resource private UserService userService;

@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 
 /** @author ronger */
 @RestController
-@RequestMapping("/api/v1/rule/currency")
+@RequestMapping("/api/rule/currency")
 public class CurrencyRuleController {
 
   @Resource private CurrencyRuleService currencyRuleService;

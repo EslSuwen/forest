@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @date 2021/2/4 09:29
  */
 @RestController
-@RequestMapping("/api/v1/lucene/dic")
+@RequestMapping("/api/lucene/dic")
 public class UserDicController {
 
   @Resource private UserDicService dicService;

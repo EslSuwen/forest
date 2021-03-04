@@ -34,7 +34,7 @@ import java.util.*;
  */
 @Log4j2
 @RestController
-@RequestMapping("/api/v1/upload")
+@RequestMapping("/api/upload")
 public class UploadController {
 
   private static final String UPLOAD_SIMPLE_URL = "/api/upload/file";

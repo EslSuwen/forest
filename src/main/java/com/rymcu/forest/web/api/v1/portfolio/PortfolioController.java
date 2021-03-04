@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 
 /** @author ronger */
 @RestController
-@RequestMapping("/api/v1/portfolio")
+@RequestMapping("/api/portfolio")
 public class PortfolioController {
 
   @Resource private PortfolioService portfolioService;

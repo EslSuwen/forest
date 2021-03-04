@@ -12,7 +12,7 @@ import java.util.List;
 
 /** @author ronger */
 @RestController
-@RequestMapping("/api/v1/admin/bank-account")
+@RequestMapping("/api/admin/bank-account")
 public class BankAccountController {
 
   @Resource private BankAccountService bankAccountService;

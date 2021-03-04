@@ -15,7 +15,7 @@ import javax.mail.MessagingException;
 
 /** @author ronger */
 @RestController
-@RequestMapping("/api/v1/console")
+@RequestMapping("/api/console")
 public class CommonApiController {
 
   @Resource private JavaMailService javaMailService;

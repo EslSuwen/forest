@@ -16,7 +16,7 @@ import java.util.List;
 
 /** @author ronger */
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/user")
 public class UserController {
 
   @Resource private UserService userService;

@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 
 /** @author ronger */
 @RestController
-@RequestMapping("/api/v1/transaction")
+@RequestMapping("/api/transaction")
 public class TransactionRecordController {
 
   @Resource private TransactionRecordService transactionRecordService;

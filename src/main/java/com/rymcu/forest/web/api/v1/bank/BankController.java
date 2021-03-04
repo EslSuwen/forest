@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 
 /** @author ronger */
 @RestController
-@RequestMapping("/api/v1/admin/bank")
+@RequestMapping("/api/admin/bank")
 public class BankController {
 
   @Resource private BankService bankService;

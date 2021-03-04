@@ -11,7 +11,7 @@ import java.util.Map;
 
 /** @author ronger */
 @RestController
-@RequestMapping("/api/v1/admin/dashboard")
+@RequestMapping("/api/admin/dashboard")
 public class DashboardController {
 
   @Resource private DashboardService dashboardService;
