@@ -1,10 +1,6 @@
 package com.rymcu.forest.util;
 
 import com.rymcu.forest.entity.User;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.session.InvalidSessionException;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
 import org.springframework.core.env.Environment;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,22 +41,6 @@ public class Utils {
     return null;
   }
 
-  public static Session getSession() {
-    try {
-      Subject subject = SecurityUtils.getSubject();
-      Session session = subject.getSession(false);
-      if (session == null) {
-        session = subject.getSession();
-      }
-      if (session != null) {
-        return session;
-      }
-      subject.logout();
-    } catch (InvalidSessionException ignored) {
-
-    }
-    return null;
-  }
 
   public static Integer genCode() {
     Integer code = (int) ((Math.random() * 9 + 1) * 100000);

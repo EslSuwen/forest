@@ -157,11 +157,6 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
   @Override
   public List<LabelModel> findTagLabels() {
-    List<LabelModel> list = (List<LabelModel>) CacheUtils.get("tags");
-    if (list == null) {
-      list = baseMapper.selectTagLabels();
-      CacheUtils.put("tags", list);
-    }
-    return list;
+    return baseMapper.selectTagLabels();
   }
 }
