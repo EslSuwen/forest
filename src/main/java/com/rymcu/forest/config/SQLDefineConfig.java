@@ -1,31 +1,27 @@
 package com.rymcu.forest.config;
 
 import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.util.StrUtil;
 import org.apache.ibatis.jdbc.ScriptRunner;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/** @author suwen */
+/**
+ * 知识库模块数据库自检配置
+ *
+ * @author suwen
+ */
 @Configuration
 public class SQLDefineConfig {
 
-  @Value("${spring.datasource.url:}")
-  private String url;
-
-  @Value("${spring.datasource.username:}")
-  private String username;
-
-  @Value("${spring.datasource.password:}")
-  private String password;
-
   private Connection con;
+
+  @Resource private DataSource dataSource;
 
   public Connection getCon() {
     return con;
@@ -33,13 +29,7 @@ public class SQLDefineConfig {
 
   public void getConnection() {
     try {
-      Class.forName("com.mysql.cj.jdbc.Driver");
-      System.out.println("数据库驱动加载成功");
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-    try {
-      con = DriverManager.getConnection(url, username, password);
+      con = dataSource.getConnection();
       System.out.println("数据库连接成功");
     } catch (SQLException e) {
       e.printStackTrace();
@@ -71,7 +61,7 @@ public class SQLDefineConfig {
   @PostConstruct
   public void autoCreateTable() {
     System.out.println("开始数据库自检");
-    if (StrUtil.isBlank(url) || StrUtil.isBlank(username) || StrUtil.isBlank(password)) {
+    if (dataSource == null) {
       System.out.println("数据库连接信息未配置，跳过表存在检查");
       return;
     }
