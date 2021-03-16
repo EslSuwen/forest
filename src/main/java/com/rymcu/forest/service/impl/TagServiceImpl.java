@@ -12,7 +12,6 @@ import com.rymcu.forest.mapper.ArticleMapper;
 import com.rymcu.forest.mapper.TagMapper;
 import com.rymcu.forest.service.TagService;
 import com.rymcu.forest.util.BaiDuAipUtils;
-import com.rymcu.forest.util.CacheUtils;
 import com.rymcu.forest.util.UserUtils;
 import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 import org.apache.commons.lang.StringUtils;
@@ -157,11 +156,6 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
   @Override
   public List<LabelModel> findTagLabels() {
-    List<LabelModel> list = (List<LabelModel>) CacheUtils.get("tags");
-    if (list == null) {
-      list = baseMapper.selectTagLabels();
-      CacheUtils.put("tags", list);
-    }
-    return list;
+    return baseMapper.selectTagLabels();
   }
 }

@@ -91,8 +91,7 @@ public class ThirdLoginController {
         // 否则直接创建新账号
         user = saveThirdUser(data);
         userService.save(user);
-        // FIXME 测试时新建用户默认为管理员
-        Role role = roleMapper.selectRoleByInputCode("admin");
+        Role role = roleMapper.selectRoleByInputCode("user");
         userMapper.insertUserRole(user.getIdUser(), role.getIdRole());
       } else {
         // 已存在更新用户数据

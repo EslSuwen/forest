@@ -126,7 +126,7 @@
         <if test="topicUri != 'news'">
             and FIND_IN_SET('划水',art.article_tags) = 0
         </if>
-        order by updated_time desc
+        order by article_perfect desc, updated_time desc
     </select>
     <select id="selectArticleDTOById" resultMap="DTOResultMap">
         select art.*,su.nickname,su.avatar_url from forest_article art join forest_user su on art.article_author_id =
