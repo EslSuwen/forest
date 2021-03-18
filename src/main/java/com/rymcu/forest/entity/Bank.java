@@ -4,9 +4,11 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -33,6 +35,7 @@ public class Bank {
   /** 创建人 */
   private Integer createdBy;
   /** 创建时间 */
-  @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+  @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date createdTime;
 }

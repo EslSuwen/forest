@@ -1,9 +1,11 @@
 package com.rymcu.forest.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rymcu.forest.entity.Notification;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -23,7 +25,8 @@ public class NotificationDTO {
   /** 是否已读 */
   private String hasRead;
   /** 是否已读 */
-  @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+  @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date createdTime;
 
   private Integer idNotification;

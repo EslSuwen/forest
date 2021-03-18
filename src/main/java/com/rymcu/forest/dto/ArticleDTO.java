@@ -1,6 +1,8 @@
 package com.rymcu.forest.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -42,6 +44,8 @@ public class ArticleDTO {
   /** 文章状态 */
   private String articleStatus;
   /** 更新时间 */
+  @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date updatedTime;
 
   private Author articleAuthor;

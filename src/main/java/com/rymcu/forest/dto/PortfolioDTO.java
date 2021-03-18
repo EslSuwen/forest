@@ -1,6 +1,8 @@
 package com.rymcu.forest.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -22,6 +24,8 @@ public class PortfolioDTO {
   /** 作品集介绍 */
   private String portfolioDescription;
   /** 更新时间 */
+  @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date updatedTime;
   /** 过去时长 */
   private String timeAgo;

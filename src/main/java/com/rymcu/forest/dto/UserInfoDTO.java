@@ -1,7 +1,9 @@
 package com.rymcu.forest.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -32,6 +34,7 @@ public class UserInfoDTO implements Serializable {
 
   private String signature;
 
-  @JSONField(format = "yyyy-MM-dd HH:mm")
+  @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date lastLoginTime;
 }

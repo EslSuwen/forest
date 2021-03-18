@@ -108,7 +108,7 @@ public class AdminController {
       @RequestParam(defaultValue = "0") Integer page,
       @RequestParam(defaultValue = "10") Integer rows,
       @RequestParam Integer idTopic,
-      @RequestParam String tagTitle) {
+      @RequestParam(required = false) String tagTitle) {
     return Result.OK(topicService.findUnbindTagsById(new Page<>(page, rows), idTopic, tagTitle));
   }
 

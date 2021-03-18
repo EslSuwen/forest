@@ -1,7 +1,9 @@
 package com.rymcu.forest.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -24,6 +26,7 @@ public class TransactionRecordDTO {
   /** 交易类型 */
   private String transactionType;
   /** 交易时间 */
-  @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+  @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date transactionTime;
 }

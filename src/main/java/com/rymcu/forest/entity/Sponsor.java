@@ -3,9 +3,11 @@ package com.rymcu.forest.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -27,6 +29,8 @@ public class Sponsor implements Serializable, Cloneable {
   /** 赞赏人 */
   private Integer sponsor;
   /** 赞赏日期 */
+  @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date sponsorshipTime;
   /** 赞赏金额 */
   private BigDecimal sponsorshipMoney;

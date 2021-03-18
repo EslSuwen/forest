@@ -1,6 +1,8 @@
 package com.rymcu.forest.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -33,6 +35,8 @@ public class CommentDTO {
   /** 0：所有人可见，1：仅楼主和自己可见 */
   private String commentVisible;
   /** 创建时间 */
+  @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date createdTime;
 
   private Author commenter;
