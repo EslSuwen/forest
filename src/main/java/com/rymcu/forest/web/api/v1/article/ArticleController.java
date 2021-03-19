@@ -97,4 +97,9 @@ public class ArticleController {
   public Result<?> sponsor(@RequestBody Sponsor sponsor) throws Exception {
     return sponsorService.sponsorship(sponsor);
   }
+
+  @DeleteMapping("/revokeDelete/{idArticle}")
+  public Result<?> revokeDelete(@PathVariable Integer idArticle) {
+    return articleService.revokeDelete(idArticle);
+  }
 }

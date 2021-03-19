@@ -152,4 +152,6 @@ public interface ArticleService extends IService<Article> {
    * @return
    */
   Result<?> updatePerfect(Integer idArticle, String articlePerfect);
+
+  Result<?> revokeDelete(Integer idArticle);
 }

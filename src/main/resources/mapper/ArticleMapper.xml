@@ -45,6 +45,7 @@
         <result column="article_perfect" property="articlePerfect"></result>
         <result column="article_thumbs_up_count" property="articleThumbsUpCount"></result>
         <result column="article_sponsor_count" property="articleSponsorCount"></result>
+        <result column="deleted" property="deleted"></result>
     </resultMap>
     <resultMap id="ArticleContentResultMap" type="com.rymcu.forest.entity.ArticleContent">
         <result column="id_article" property="idArticle"/>
@@ -235,10 +236,11 @@
                art.updated_time,
                article_perfect,
                article_status,
-               nickname
+               nickname,
+               deleted
         from forest_article art
                  left join forest_user user
-        on art.article_author_id = user.id
+                           on art.article_author_id = user.id
         order by updated_time desc
     </select>
     <select id="listArticles" resultType="com.rymcu.forest.dto.ArticleDTO">
@@ -250,4 +252,12 @@
         </if>
         order by updated_time desc
     </select>
+
+    <update id="revokeDelete" parameterType="int">
+        update forest_article
+        set deleted=0
+        where deleted = 1
+          and id = #{idArticle};
+    </update>
+
 </mapper>

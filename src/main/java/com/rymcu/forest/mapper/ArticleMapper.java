@@ -251,4 +251,12 @@ public interface ArticleMapper extends BaseMapper<Article> {
    */
   int updatePerfect(
       @Param("idArticle") Integer idArticle, @Param("articlePerfect") String articlePerfect);
+
+  /**
+   * 撤销删除文章
+   *
+   * @param idArticle
+   * @return
+   */
+  int revokeDelete(@Param("idArticle") Integer idArticle);
 }

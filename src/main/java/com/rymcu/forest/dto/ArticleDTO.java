@@ -43,6 +43,8 @@ public class ArticleDTO {
   private String articleLink;
   /** 文章状态 */
   private String articleStatus;
+  /** 是否删除 */
+  private Integer deleted;
   /** 更新时间 */
   @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
   @DateTimeFormat(pattern = "yyyy-MM-dd")

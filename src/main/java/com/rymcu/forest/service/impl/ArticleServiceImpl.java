@@ -141,15 +141,17 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
       newArticle = getById(article.getIdArticle());
       // 如果文章之前状态为草稿则应视为新发布文章
       isUpdate = defaultStatus.equals(newArticle.getArticleStatus());
-      if (!user.getIdUser().equals(newArticle.getArticleAuthorId())) {
+      if (userService.findRoleWeightsByUser(user.getIdUser()) <= 2
+          || user.getIdUser().equals(newArticle.getArticleAuthorId())) {
+        newArticle.setArticleTitle(articleTitle);
+        newArticle.setArticleTags(articleTags);
+        newArticle.setArticleStatus(article.getArticleStatus());
+        newArticle.setUpdatedTime(new Date());
+        articleMapper.updateArticleContent(
+            newArticle.getIdArticle(), articleContent, articleContentHtml);
+      } else {
         return Result.error("非法访问！");
       }
-      newArticle.setArticleTitle(articleTitle);
-      newArticle.setArticleTags(articleTags);
-      newArticle.setArticleStatus(article.getArticleStatus());
-      newArticle.setUpdatedTime(new Date());
-      articleMapper.updateArticleContent(
-          newArticle.getIdArticle(), articleContent, articleContentHtml);
     }
 
     // 发送相关通知
@@ -334,6 +336,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
   public Result<?> updatePerfect(Integer idArticle, String articlePerfect) {
     int result = articleMapper.updatePerfect(idArticle, articlePerfect);
     return result != 0 ? Result.OK() : Result.error("设置优选文章失败!");
+  }
+
+  @Override
+  public Result<?> revokeDelete(Integer idArticle) {
+    return articleMapper.revokeDelete(idArticle) == 1 ? Result.OK() : Result.error("撤销删除失败！");
   }
 
   private ArticleDTO genArticle(ArticleDTO article, Integer type) {
