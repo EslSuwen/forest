@@ -32,7 +32,7 @@ public interface TopicMapper extends BaseMapper<Topic> {
    * @param idTopic
    * @return
    */
-  IPage<TagDTO> selectTopicTag(Page<?> page,@Param("idTopic") Integer idTopic);
+  IPage<Tag> selectTopicTag(Page<?> page,@Param("idTopic") Integer idTopic);
 
   /**
    * 更新

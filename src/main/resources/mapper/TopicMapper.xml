@@ -85,8 +85,8 @@
         from forest_topic
         where topic_uri = #{topicUri}
     </select>
-    <select id="selectTopicTag" resultMap="TagDTOResultMap">
-        select vt.id, vt.tag_title, vt.tag_uri, vt.tag_description, vt.tag_icon_path
+    <select id="selectTopicTag" resultMap="TagResultMap">
+        select vt.*
         from forest_tag vt
                  left join forest_topic_tag vtt on vt.id = vtt.id_tag
         where vtt.id_topic = #{idTopic}
