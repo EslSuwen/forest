@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rymcu.forest.core.constant.NotificationConstant;
-import com.rymcu.forest.core.constant.ProjectConstant;
 import com.rymcu.forest.dto.*;
 import com.rymcu.forest.dto.result.Result;
 import com.rymcu.forest.entity.Article;
@@ -17,7 +16,10 @@ import com.rymcu.forest.mapper.ArticleMapper;
 import com.rymcu.forest.service.ArticleService;
 import com.rymcu.forest.service.TagService;
 import com.rymcu.forest.service.UserService;
-import com.rymcu.forest.util.*;
+import com.rymcu.forest.util.BaiDuAipUtils;
+import com.rymcu.forest.util.NotificationUtils;
+import com.rymcu.forest.util.UserUtils;
+import com.rymcu.forest.util.Utils;
 import com.rymcu.forest.web.api.v1.exception.BaseApiException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -208,16 +210,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
     }
     updateById(newArticle);
 
-    // 推送百度 SEO
-    if (!ProjectConstant.ENV.equals(env)
-        && defaultStatus.equals(newArticle.getArticleStatus())
-        && articleContent.length() >= MAX_PREVIEW) {
-      if (isUpdate) {
-        BaiDuUtils.sendUpdateSEOData(newArticle.getArticlePermalink());
-      } else {
-        BaiDuUtils.sendSEOData(newArticle.getArticlePermalink());
-      }
-    }
     // 草稿不更新索引
     if ("0".equals(article.getArticleStatus())) {
       System.out.println("开始增加索引");

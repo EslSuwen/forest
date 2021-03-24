@@ -1,5 +1,9 @@
 package com.rymcu.forest.web.api.v1.common;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.rymcu.forest.dto.LinkToImageUrlDTO;
 import com.rymcu.forest.dto.TokenUser;
 import com.rymcu.forest.dto.result.Result;
@@ -13,6 +17,7 @@ import com.rymcu.forest.web.api.v1.exception.ErrorCode;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +46,12 @@ public class UploadController {
   private static final String UPLOAD_URL = "/api/upload/file/batch";
   private static final String LINK_TO_IMAGE_URL = "/api/upload/file/link";
 
+  @Value("${resource.file-path}")
+  private String filePath;
+
+  @Value("${resource.real-path}")
+  private String realPath;
+
   private static Environment env = SpringContextHolder.getBean(Environment.class);
 
   @PostMapping("/file")
@@ -51,53 +62,52 @@ public class UploadController {
       return Result.error("请选择要上传的文件");
     }
     String typePath = getTypePath(type);
-    // 图片存储路径
-    String ctxHeadPicPath = env.getProperty("resource.pic-path");
-    String dir = ctxHeadPicPath + "/" + typePath;
-    File file = new File(dir);
-    if (!file.exists()) {
-      file.mkdirs(); // 创建文件根目录
-    }
-    String localPath = Utils.getProperty("resource.file-path") + "/" + typePath + "/";
+
     String orgName = multipartFile.getOriginalFilename();
-    String fileName = System.currentTimeMillis() + "." + FileUtils.getExtend(orgName).toLowerCase();
-    String savePath = file.getPath() + File.separator + fileName;
-    File saveFile = new File(savePath);
+    String fileName =
+        RandomUtil.randomString(12) + "." + FileUtils.getExtend(orgName).toLowerCase();
+    String localPath =
+        StrUtil.format(
+            "{}/{}/{}/{}/{}",
+            DateUtil.thisYear(),
+            DateUtil.thisMonth(),
+            DateUtil.thisDayOfMonth(),
+            typePath,
+            fileName);
+    File saveFile = FileUtil.touch(realPath + localPath);
     try {
       FileCopyUtils.copy(multipartFile.getBytes(), saveFile);
     } catch (IOException e) {
       return Result.error("上传失败!");
     }
-    return Result.OK(localPath + fileName);
+    return Result.OK(filePath + localPath);
   }
 
   @PostMapping("/file/batch")
   public Object batchFileUpload(
       @RequestParam(value = "file[]", required = false) MultipartFile[] multipartFiles,
       @RequestParam(defaultValue = "1") Integer type) {
-    String typePath = getTypePath(type);
-    // 图片存储路径
-    String ctxHeadPicPath = env.getProperty("resource.pic-path");
-    String dir = ctxHeadPicPath + "/" + typePath;
-    System.out.println(dir);
-    File file = new File(dir);
-    if (!file.exists()) {
-      file.mkdirs(); // 创建文件根目录
-    }
 
-    String localPath = Utils.getProperty("resource.file-path") + "/" + typePath + "/";
     Map<String, Object> succMap = new HashMap<>(10);
     Set<Object> errFiles = new HashSet<>();
 
     for (MultipartFile multipartFile : multipartFiles) {
       String orgName = multipartFile.getOriginalFilename();
       String fileName =
-          System.currentTimeMillis() + "." + FileUtils.getExtend(orgName).toLowerCase();
-      String savePath = file.getPath() + File.separator + fileName;
-      File saveFile = new File(savePath);
+          RandomUtil.randomString(12) + "." + FileUtils.getExtend(orgName).toLowerCase();
+      String localPath =
+          StrUtil.format(
+              "/{}/{}/{}/{}/{}",
+              DateUtil.thisYear(),
+              DateUtil.thisMonth(),
+              DateUtil.thisDayOfMonth(),
+              getTypePath(type),
+              fileName);
+      File saveFile = FileUtil.touch(realPath + localPath);
+      log.info(saveFile.getPath());
       try {
         FileCopyUtils.copy(multipartFile.getBytes(), saveFile);
-        succMap.put(orgName, localPath + fileName);
+        succMap.put(orgName, filePath + localPath);
       } catch (IOException e) {
         errFiles.add(orgName);
       }
