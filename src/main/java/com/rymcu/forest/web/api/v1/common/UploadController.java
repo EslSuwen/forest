@@ -49,8 +49,7 @@ public class UploadController {
   @Value("${resource.file-path}")
   private String filePath;
 
-  @Value("${resource.real-path}")
-  private String realPath;
+  private String realPath = System.getProperty("user.dir") + "/static";
 
   private static Environment env = SpringContextHolder.getBean(Environment.class);
 

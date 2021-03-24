@@ -13,4 +13,4 @@ version: 1.0
 resource:
   domain: http://10.26.201.17:32240 # 网站域名
   file-path: http://10.26.201.17:32240/static # 上传文件前缀域名
-  real-path: ../static # 上传文件存储地址
+
